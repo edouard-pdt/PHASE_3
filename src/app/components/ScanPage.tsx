@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import svgPaths from "../../imports/PageDepart-1/svg-cf8msoxdol";
+import Scanner from './Scanner';
 
 const colors = {
   yellow: "#F6C453",
@@ -141,38 +142,7 @@ function MenuBtn() {
 }
 
 function WebcamContainer() {
-  return (
-    <div
-      className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden"
-      style={{ backgroundColor: colors.black }}
-    >
-      {[
-        { top: 14, left: 14 },
-        { top: 14, right: 14 },
-        { bottom: 14, left: 14 },
-        { bottom: 14, right: 14 },
-      ].map((pos, i) => {
-        const isRight = "right" in pos;
-        const isBottom = "bottom" in pos;
-        return (
-          <div
-            key={i}
-            className="absolute"
-            style={{
-              ...pos,
-              width: 26,
-              height: 26,
-              borderTop: isBottom ? "none" : `3px solid ${colors.cream}`,
-              borderBottom: isBottom ? `3px solid ${colors.cream}` : "none",
-              borderLeft: isRight ? "none" : `3px solid ${colors.cream}`,
-              borderRight: isRight ? `3px solid ${colors.cream}` : "none",
-              opacity: 0.6,
-            }}
-          />
-        );
-      })}
-    </div>
-  );
+  return <Scanner />;
 }
 
 export function ScanPage({
