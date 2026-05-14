@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "motion/react";
 
 const colors = {
@@ -194,6 +195,26 @@ export function ExplicationPage({
   onNext: () => void;
 }) {
   const { scrollYProgress } = useScroll();
+
+  // Bloquer le scroll vers le bas une fois le CTA pleinement visible (progress >= 0.84)
+  useEffect(() => {
+    let touchStartY = 0;
+    const handleWheel = (e: WheelEvent) => {
+      if (scrollYProgress.get() >= 0.84 && e.deltaY > 0) e.preventDefault();
+    };
+    const handleTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (scrollYProgress.get() >= 0.84 && e.touches[0].clientY < touchStartY) e.preventDefault();
+    };
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [scrollYProgress]);
 
   return (
     <div style={{ height: "700vh", position: "relative", width: "100%" }}>
