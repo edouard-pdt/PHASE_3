@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "motion/react";
 import svgPaths from "../../imports/PageDepart-1/svg-cf8msoxdol";
 import Scanner from './Scanner';
@@ -141,10 +141,6 @@ function MenuBtn() {
   );
 }
 
-function WebcamContainer() {
-  return <Scanner />;
-}
-
 export function ScanPage({
   scanCount,
   onScan,
@@ -152,11 +148,14 @@ export function ScanPage({
   scanCount: number;
   onScan: () => void;
 }) {
+  // 1. CRÉATION DE LA TÉLÉCOMMANDE
+  const scannerRef = useRef<any>(null);
+
   return (
     <div className="relative flex flex-col items-center min-h-screen overflow-x-hidden py-5 gap-6"
       style={{ paddingLeft: 10, paddingRight: 10 }}>
 
-      {/* Header — marge 10px gérée par le padding du parent */}
+      {/* Header */}
       <div
         className="flex items-center justify-between w-full shrink-0 z-10"
         style={{
@@ -174,16 +173,21 @@ export function ScanPage({
         </div>
       </div>
 
-      {/* WebcamContainer */}
+      {/* WebcamContainer - 2. CONNEXION DE LA TÉLÉCOMMANDE AU MOTEUR */}
       <div className="flex flex-1 items-center justify-center w-full">
-        <WebcamContainer />
+        <Scanner ref={scannerRef} />
       </div>
 
-      {/* Bouton bleu */}
+      {/* Bouton bleu - 3. ACTION SUR LE CLIC */}
       <motion.button
         whileHover={{ scale: 1.04, y: -2 }}
         whileTap={{ scale: 0.97 }}
-        onClick={onScan}
+        onClick={() => {
+          // On appelle la fonction de scan de l'IA
+          scannerRef.current?.lancerLeScan();
+          // On garde la fonction onScan d'origine (pour la navigation ou l'historique)
+          onScan(); 
+        }}
         className="shrink-0 rounded-full px-14 py-4 focus:outline-none focus-visible:ring-4"
         style={{
           backgroundColor: colors.blue,
