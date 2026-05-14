@@ -45,24 +45,15 @@ function IntroPage({ onNext }: { onNext: () => void }) {
 
   const hintOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
-  // Bloquer le scroll vers le bas une fois le CTA pleinement visible (progress >= 0.92)
+  // Snap le scroll au seuil du CTA dès que l'utilisateur dépasse — robuste même avec l'inertie
   useEffect(() => {
-    let touchStartY = 0;
-    const handleWheel = (e: WheelEvent) => {
-      if (scrollYProgress.get() >= 0.92 && e.deltaY > 0) e.preventDefault();
-    };
-    const handleTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
-    const handleTouchMove = (e: TouchEvent) => {
-      if (scrollYProgress.get() >= 0.92 && e.touches[0].clientY < touchStartY) e.preventDefault();
-    };
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-    };
+    const LOCK = 0.92;
+    return scrollYProgress.on("change", (v) => {
+      if (v > LOCK) {
+        const maxY = LOCK * (document.documentElement.scrollHeight - window.innerHeight);
+        window.scrollTo(0, maxY);
+      }
+    });
   }, [scrollYProgress]);
 
   return (
