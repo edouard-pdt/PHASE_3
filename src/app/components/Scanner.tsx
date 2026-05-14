@@ -9,8 +9,8 @@ const Scanner = forwardRef((props, ref) => {
   const [cameraError, setCameraError] = useState<string | null>(null);
   
   // GARDE TES LIENS ICI
-  const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/TON_ID_DE_MODELE/";
-  const URL_WEBHOOK_N8N = "https://ton-nom.app.n8n.cloud/webhook-test/recherche-objet";
+  const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/AwpIVAUJl/";
+  const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook-test/recherche_objet";
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const modelRef = useRef<tmImage.CustomMobileNet | null>(null);
