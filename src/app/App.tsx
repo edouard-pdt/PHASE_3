@@ -10,6 +10,7 @@ import { Logo } from "./components/Logo";
 import { Fond } from "./components/Fond";
 import { NamePage } from "./components/NamePage";
 import { ValidationPage } from "./components/ValidationPage";
+import { ExplicationPage } from "./components/ExplicationPage";
 
 const colors = {
   yellow: "#F6C453",
@@ -166,7 +167,7 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  const [page, setPage] = useState<"intro" | "name" | "validation">("intro");
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication">("intro");
   const [userName, setUserName] = useState("");
 
   // Reset scroll when changing page
@@ -233,7 +234,23 @@ export default function App() {
             <StaticFondBackground />
             <ValidationPage
               prenom={userName}
-              onAccept={() => console.log("camera ok")}
+              onAccept={() => setPage("explication")}
+            />
+          </motion.div>
+        )}
+        {page === "explication" && (
+          <motion.div
+            key="explication"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative" }}
+          >
+            <StaticFondBackground />
+            <ExplicationPage
+              userName={userName}
+              onNext={() => console.log("explication done")}
             />
           </motion.div>
         )}
