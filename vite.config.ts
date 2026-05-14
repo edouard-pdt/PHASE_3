@@ -17,7 +17,7 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
-  base: '/nom-de-ton-depot-github/',
+  base: '/PHASE_3/',
   plugins: [
     figmaAssetResolver(),
     react(),
