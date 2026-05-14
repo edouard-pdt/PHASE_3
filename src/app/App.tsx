@@ -11,6 +11,7 @@ import { Fond } from "./components/Fond";
 import { NamePage } from "./components/NamePage";
 import { ValidationPage } from "./components/ValidationPage";
 import { ExplicationPage } from "./components/ExplicationPage";
+import { ScanPage } from "./components/ScanPage";
 
 const colors = {
   yellow: "#F6C453",
@@ -43,6 +44,26 @@ function IntroPage({ onNext }: { onNext: () => void }) {
   const { scrollYProgress } = useScroll();
 
   const hintOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+
+  // Bloquer le scroll vers le bas une fois le CTA pleinement visible (progress >= 0.92)
+  useEffect(() => {
+    let touchStartY = 0;
+    const handleWheel = (e: WheelEvent) => {
+      if (scrollYProgress.get() >= 0.92 && e.deltaY > 0) e.preventDefault();
+    };
+    const handleTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (scrollYProgress.get() >= 0.92 && e.touches[0].clientY < touchStartY) e.preventDefault();
+    };
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [scrollYProgress]);
 
   return (
     <div
@@ -167,8 +188,9 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication">("intro");
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan">("intro");
   const [userName, setUserName] = useState("");
+  const [scanCount, setScanCount] = useState(0);
 
   // Reset scroll when changing page
   useEffect(() => {
@@ -186,9 +208,11 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
-        <Logo />
-      </header>
+      {page !== "scan" && (
+        <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
+          <Logo />
+        </header>
+      )}
 
       <AnimatePresence mode="wait">
         {page === "intro" && (
@@ -250,7 +274,23 @@ export default function App() {
             <StaticFondBackground />
             <ExplicationPage
               userName={userName}
-              onNext={() => console.log("explication done")}
+              onNext={() => setPage("scan")}
+            />
+          </motion.div>
+        )}
+        {page === "scan" && (
+          <motion.div
+            key="scan"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative", minHeight: "100vh" }}
+          >
+            <StaticFondBackground />
+            <ScanPage
+              scanCount={scanCount}
+              onScan={() => setScanCount((c) => Math.min(c + 1, 10))}
             />
           </motion.div>
         )}
