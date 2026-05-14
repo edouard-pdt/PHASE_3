@@ -1,20 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import * as tmImage from '@teachablemachine/image';
 
-export default function Scanner() {
+// On utilise forwardRef pour permettre au parent (ScanPage) de contrôler le scanner
+const Scanner = forwardRef((props, ref) => {
   const [resultatIA, setResultatIA] = useState<string | null>(null);
   const [ficheObjet, setFicheObjet] = useState<any | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   
-  // ⚠️ 1. REMPLACE CECI PAR TON LIEN TEACHABLE MACHINE (Garde bien le / à la fin)
-  const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/AwpIVAUJl/";
-  
-  // ⚠️ 2. REMPLACE CECI PAR TON LIEN WEBHOOK N8N
-  const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook-test/recherche_objet";
+  // GARDE TES LIENS ICI
+  const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/TON_ID_DE_MODELE/";
+  const URL_WEBHOOK_N8N = "https://ton-nom.app.n8n.cloud/webhook-test/recherche-objet";
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const modelRef = useRef<tmImage.CustomMobileNet | null>(null);
+
+  // Cette partie permet au bouton extérieur d'appeler la fonction "lancerLeScan"
+  useImperativeHandle(ref, () => ({
+    lancerLeScan
+  }));
 
   useEffect(() => {
     async function initCamAndModel() {
@@ -25,22 +29,20 @@ export default function Scanner() {
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
+          if (videoRef.current) { videoRef.current.srcObject = stream; }
         } else {
-          setCameraError("La caméra n'est pas supportée sur ce navigateur.");
+          setCameraError("Caméra non supportée.");
         }
       } catch (error) {
-        console.error("Erreur de chargement :", error);
-        setCameraError("Impossible de charger la caméra ou l'IA. Vérifie tes liens !");
+        setCameraError("Erreur de chargement de l'IA.");
       }
     }
     initCamAndModel();
   }, []);
 
   const lancerLeScan = async () => {
-    if (!modelRef.current || !videoRef.current) return;
+    if (!modelRef.current || !videoRef.current || isScanning) return;
+    
     setIsScanning(true);
     setResultatIA(null);
     setFicheObjet(null);
@@ -51,12 +53,9 @@ export default function Scanner() {
         (prev.probability > current.probability) ? prev : current
       );
 
-      const objetDetecte = bestPrediction.className;
-      setResultatIA(objetDetecte); 
-      
-      await envoyerAN8n(objetDetecte);
+      setResultatIA(bestPrediction.className);
+      await envoyerAN8n(bestPrediction.className);
     } catch (error) {
-      console.error("Erreur d'analyse :", error);
       setIsScanning(false);
     }
   };
@@ -68,60 +67,45 @@ export default function Scanner() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nom_objet: objetDetecte })
       });
-
       const data = await reponse.json();
       setFicheObjet(data);
       setIsScanning(false);
     } catch (error) {
-      console.error("Erreur n8n :", error);
       setIsScanning(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 p-8 bg-gray-50 rounded-xl">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Scanner Intelligent</h2>
-        <p className="text-gray-600">Placez l'objet devant la caméra.</p>
-      </div>
-
-      <div className="w-80 h-80 bg-black rounded-2xl overflow-hidden shadow-lg relative">
+    <div className="w-full flex flex-col items-center">
+      {/* Fenêtre de la caméra */}
+      <div className="w-full aspect-square bg-black rounded-2xl overflow-hidden relative shadow-inner">
         {cameraError ? (
-          <div className="absolute inset-0 flex items-center justify-center text-red-500 text-center p-4">
-            {cameraError}
-          </div>
+          <div className="absolute inset-0 flex items-center justify-center text-red-500 text-xs p-4">{cameraError}</div>
         ) : (
           <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
         )}
+        
+        {/* Indicateur de scan */}
+        {isScanning && (
+          <div className="absolute inset-0 border-4 border-blue-500 animate-pulse rounded-2xl"></div>
+        )}
       </div>
 
-      <button 
-        onClick={lancerLeScan} 
-        disabled={isScanning || cameraError !== null}
-        className={`px-8 py-4 rounded-full font-bold text-white transition-all shadow-md ${
-          isScanning ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-        }`}
-      >
-        {isScanning ? "Analyse en cours..." : "Scanner l'objet"}
-      </button>
+      {/* RESULTATS (Le bouton a été supprimé d'ici !) */}
+      <div className="w-full mt-4">
+        {resultatIA && !ficheObjet && (
+          <p className="text-gray-400 text-sm italic animate-bounce">Recherche de : {resultatIA}...</p>
+        )}
 
-      {resultatIA && !ficheObjet && (
-        <div className="text-gray-500 animate-pulse">
-          Détecté : <strong>{resultatIA}</strong>... Envoi à n8n...
-        </div>
-      )}
-
-      {ficheObjet && (
-        <div className="mt-4 p-6 border rounded-2xl bg-white shadow-xl w-full max-w-md">
-          <h3 className="text-2xl font-black text-gray-900">{ficheObjet.titre || resultatIA}</h3>
-          <p className="mt-3 text-gray-700">{ficheObjet.description}</p>
-          {ficheObjet.instructions_recyclage && (
-            <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-lg">
-              <strong>♻️ Recyclage :</strong> {ficheObjet.instructions_recyclage}
-            </div>
-          )}
-        </div>
-      )}
+        {ficheObjet && (
+          <div className="p-4 bg-white rounded-xl shadow-sm border border-gray-100 text-left">
+            <h4 className="font-bold text-gray-800 text-lg">{ficheObjet.titre || resultatIA}</h4>
+            <p className="text-gray-600 text-sm mt-1">{ficheObjet.description}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+});
+
+export default Scanner;
