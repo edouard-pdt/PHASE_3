@@ -30,7 +30,7 @@ export function ScanPage({
     
     // ✅ ON MET TON IMAGE LOCALE ICI
     // Note : on enlève "public/" car Vite le fait automatiquement
-    let img = "/image/1.png"; 
+    let img = "public/image/1.png"; 
 
     // (J'ai enlevé la condition if "canope" pour forcer ton image)
 
