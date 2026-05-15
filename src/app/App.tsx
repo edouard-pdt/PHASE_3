@@ -13,8 +13,8 @@ import { ValidationPage } from "./components/ValidationPage";
 import { ExplicationPage } from "./components/ExplicationPage";
 import { ScanPage } from "./components/ScanPage";
 import MapPage from "./components/MapPage"; 
-// 👇 1. ON IMPORTE LA NOUVELLE PAGE COLLECTION
-import CollectionPage from "./components/CollectionPage"; 
+import CollectionPage from "./components/CollectionPage";
+import CousinsPage from "./components/CousinsPage"; // 👈 L'import de ta nouvelle page
 
 const colors = {
   yellow: "#F6C453",
@@ -180,8 +180,8 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  // 👇 2. AJOUT DU MOT "collection" DANS LA LISTE DES PAGES AUTORISÉES
-  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection">("intro");
+  // 👇 On ajoute "cousins" dans la liste des pages autorisées
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
 
@@ -200,8 +200,8 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      {/* 👇 3. On cache le Logo global sur Scan, Map ET Collection */}
-      {page !== "scan" && page !== "map" && page !== "collection" && (
+      {/* 👇 On cache le Logo global sur Scan, Map, Collection ET Cousins */}
+      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && (
         <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
           <Logo />
         </header>
@@ -287,7 +287,8 @@ export default function App() {
               onScan={() => setScanCount((c) => Math.min(c + 1, 10))}
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")} 
-              onGoToCollection={() => setPage("collection")} // 👈 Connecté !
+              onGoToCollection={() => setPage("collection")}
+              onGoToCousins={() => setPage("cousins")} // 👈 Branchement de la navigation vers Cousins
             />
           </motion.div>
         )}
@@ -306,12 +307,11 @@ export default function App() {
               scanCount={scanCount}
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
-              onGoToCollection={() => setPage("collection")} // 👈 Connecté !
+              onGoToCollection={() => setPage("collection")} 
             />
           </motion.div>
         )}
 
-        {/* 👇 4. LA TOUTE NOUVELLE PAGE COLLECTION */}
         {page === "collection" && (
           <motion.div
             key="collection"
@@ -330,6 +330,27 @@ export default function App() {
             />
           </motion.div>
         )}
+
+        {/* 👇 LA NOUVELLE PAGE COUSINS */}
+        {page === "cousins" && (
+          <motion.div
+            key="cousins"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative", minHeight: "100vh" }}
+          >
+            <StaticFondBackground />
+            <CousinsPage
+              scanCount={scanCount}
+              onGoToMap={() => setPage("map")}
+              onGoToHome={() => setPage("scan")}
+              onGoToCollection={() => setPage("collection")}
+            />
+          </motion.div>
+        )}
+
       </AnimatePresence>
     </div>
   );
