@@ -91,11 +91,13 @@ function InfoBtn() {
   );
 }
 
-function CollectionBtn({ count }) {
+// 👇 BOUTON COLLECTION MIS À JOUR AVEC ONCLICK 👇
+function CollectionBtn({ count, onClick }) {
   const [hovered, setHovered] = useState(false);
   return (
     <motion.button
       title="Collection"
+      onClick={onClick} // Active la navigation !
       whileTap={{ scale: 0.93 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -123,8 +125,8 @@ function MenuBtn() {
   );
 }
 
-// 👑 LE COMPOSANT FINAL EXPORTÉ 👑
-export default function Header({ scanCount, onGoToMap, onGoToHome }) {
+// 👑 LE COMPOSANT FINAL EXPORTÉ (avec onGoToCollection) 👑
+export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection }) {
   return (
     <div className="flex items-center justify-between w-full shrink-0 z-10" style={{ backgroundColor: colors.cream, padding: 3, borderRadius: 30 }}>
       <button onClick={onGoToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
@@ -134,7 +136,7 @@ export default function Header({ scanCount, onGoToMap, onGoToHome }) {
       <div className="flex items-center" style={{ gap: 4 }}>
         <WorldBtn onClick={onGoToMap} />
         <InfoBtn />
-        <CollectionBtn count={scanCount} />
+        <CollectionBtn count={scanCount} onClick={onGoToCollection} /> {/* 👈 Connecté ! */}
         <MenuBtn />
       </div>
     </div>
