@@ -28,17 +28,15 @@ export function ScanPage({
   // Gère la transition quand le scanner a fini
   const handleScanSuccess = (data, className) => {
     
-    // ✅ ON MET TON IMAGE LOCALE ICI
-    // Note : on enlève "public/" car Vite le fait automatiquement
-    let img = "public/image/1.png"; 
-
-    // (J'ai enlevé la condition if "canope" pour forcer ton image)
+    // ✅ Utilisation de ton image locale
+    // Assure-toi que l'image est bien dans public/image/1.png
+    let img = "/image/1.png"; 
 
     setScannedData({
-       nom: data?.titre || className,
+       nom: className, // Le nom détecté par Teachable Machine
        image: img
     });
-    setStep("validation"); // On affiche la jolie carte !
+    setStep("validation"); // On affiche la carte de validation
   };
 
   return (
@@ -52,7 +50,7 @@ export function ScanPage({
         onGoToCollection={onGoToCollection} 
       />
 
-      {/* ÉTAT 1 : LA CAMÉRA (On la "cache" au lieu de la détruire pour ne pas couper la vidéo) */}
+      {/* ÉTAT 1 : LA CAMÉRA */}
       <div className={`flex-1 items-center justify-center w-full ${step === "camera" ? "flex" : "hidden"}`}>
         <Scanner ref={scannerRef} onScanSuccess={handleScanSuccess} />
       </div>
@@ -116,12 +114,19 @@ export function ScanPage({
                   </span>
                </motion.div>
 
-               {/* L'image de l'objet scanné */}
-               <img
-                  src={scannedData.image}
-                  alt="Objet scanné"
-                  className="w-4/5 h-auto object-contain drop-shadow-xl"
-               />
+               <div className="flex flex-col items-center gap-4 w-full">
+                   {/* L'image de l'objet scanné */}
+                   <img
+                      src={scannedData.image}
+                      alt="Objet scanné"
+                      className="w-4/5 h-auto object-contain drop-shadow-xl"
+                   />
+                   
+                   {/* ✅ Ajout du nom de l'objet */}
+                   <p className="text-xl font-bold text-center" style={{ color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
+                      {scannedData.nom}
+                   </p>
+               </div>
             </motion.div>
 
             {/* Le gros bouton de confirmation Jaune */}
