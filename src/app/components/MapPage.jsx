@@ -38,30 +38,33 @@ const createCustomIcon = (color, isScanned) => {
 
 // --- DONNÉES AVEC VRAIES COORDONNÉES ---
 const dataNetwork = [
-  { id: "chimú", lat: -8.11, lng: -79.03, color: "yellow", nom: "Vase Chimú", pays: "Pérou", description: "Vase rituel précolombien.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Moche_portrait_vessel.jpg/300px-Moche_portrait_vessel.jpg", links: [] },
-  { id: "canope", lat: 29.97, lng: 31.13, color: "purple", nom: "Vase Canope", pays: "Égypte", description: "Vase funéraire égyptien.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Canopic_jars_of_Neskhons.jpg/300px-Canopic_jars_of_Neskhons.jpg", links: [] },
-  { id: "cratère", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère", pays: "Grèce", description: "Vase pour mélanger le vin.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Volute_krater_BM_Vase_F277.jpg/300px-Volute_krater_BM_Vase_F277.jpg", links: [] },
-  { id: "urne", lat: -12.04, lng: -77.03, color: "yellow", nom: "Urne Moche", pays: "Pérou", description: "Céramique funéraire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moche_portrait_vessel_MNM.jpg/300px-Moche_portrait_vessel_MNM.jpg", links: [] },
-  { id: "hydrie", lat: 38.11, lng: 13.36, color: "blue", nom: "Hydrie", pays: "Grèce", description: "Vase à eau.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Hydria_Meidias_BM_E224.jpg/300px-Hydria_Meidias_BM_E224.jpg", links: [] },
-  { id: "masque", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Funerary_mask_of_Tutankhamun_MNM.jpg/300px-Funerary_mask_of_Tutankhamun_MNM.jpg", links: [] },
+  { id: "chimú", lat: -8.11, lng: -79.03, color: "yellow", nom: "Vase Chimú", pays: "Pérou", description: "Vase rituel précolombien.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Moche_portrait_vessel.jpg/300px-Moche_portrait_vessel.jpg" },
+  { id: "canope", lat: 29.97, lng: 31.13, color: "purple", nom: "Vase Canope", pays: "Égypte", description: "Vase funéraire égyptien.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Canopic_jars_of_Neskhons.jpg/300px-Canopic_jars_of_Neskhons.jpg" },
+  { id: "cratère", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère", pays: "Grèce", description: "Vase pour mélanger le vin.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Volute_krater_BM_Vase_F277.jpg/300px-Volute_krater_BM_Vase_F277.jpg" },
+  { id: "urne", lat: -12.04, lng: -77.03, color: "yellow", nom: "Urne Moche", pays: "Pérou", description: "Céramique funéraire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Moche_portrait_vessel_MNM.jpg/300px-Moche_portrait_vessel_MNM.jpg" },
+  { id: "hydrie", lat: 38.11, lng: 13.36, color: "blue", nom: "Hydrie", pays: "Grèce", description: "Vase à eau.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Hydria_Meidias_BM_E224.jpg/300px-Hydria_Meidias_BM_E224.jpg" },
+  { id: "masque", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Funerary_mask_of_Tutankhamun_MNM.jpg/300px-Funerary_mask_of_Tutankhamun_MNM.jpg" },
 ];
-
-// Générer toutes les paires uniques pour que tous les points soient reliés entre eux
-const allLinks = [];
-dataNetwork.forEach((objA, indexA) => {
-  dataNetwork.forEach((objB, indexB) => {
-    // Ne dessiner le lien qu'une seule fois par paire
-    if (indexA < indexB) {
-      allLinks.push([[objA.lat, objA.lng], [objB.lat, objB.lng]]);
-    }
-  });
-});
 
 export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
   const [selectedObj, setSelectedObj] = useState(null);
 
-  // Définir l'ID de l'objet "scanné" (actuellement le Vase Chimú)
+  // L'ID de l'objet "scanné" qui sera au centre du réseau
   const scannedObjectId = "chimú";
+
+  // --- NOUVELLE LOGIQUE DES LIENS ---
+  // On crée des liens UNIQUEMENT entre l'objet scanné et les autres (cousins)
+  const scannedObj = dataNetwork.find(obj => obj.id === scannedObjectId);
+  const starLinks = [];
+  
+  if (scannedObj) {
+    dataNetwork.forEach(obj => {
+      // Si ce n'est pas l'objet scanné, on tire un trait vers lui
+      if (obj.id !== scannedObjectId) {
+        starLinks.push([[scannedObj.lat, scannedObj.lng], [obj.lat, obj.lng]]);
+      }
+    });
+  }
 
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.cream }}>
@@ -92,12 +95,12 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
             attribution='&copy; OpenStreetMap'
           />
 
-          {/* TRAITS NOIRS (Réseau complet) */}
-          {allLinks.map((positions, index) => (
+          {/* TRAITS NOIRS (En étoile depuis l'objet scanné) */}
+          {starLinks.map((positions, index) => (
             <Polyline 
               key={`link-${index}`}
               positions={positions}
-              pathOptions={{ color: colors.black, weight: 2, opacity: 0.5 }} // Légèrement transparent
+              pathOptions={{ color: colors.black, weight: 2, opacity: 0.6 }} 
             />
           ))}
 
