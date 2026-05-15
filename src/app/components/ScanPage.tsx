@@ -1,9 +1,8 @@
 import { useRef } from "react";
 import { motion } from "motion/react";
 import Scanner from './Scanner';
-import Header from './Header'; // 👈 On importe la brique Lego du Header !
+import Header from './Header'; 
 
-// On ne garde que les couleurs utiles pour cette page spécifique (le bouton Scanner)
 const colors = {
   blue: "#4595D0",
   purple: "#6559A1",
@@ -13,8 +12,9 @@ const colors = {
 export function ScanPage({
   scanCount,
   onScan,
-  onGoToMap, // 👈 Nouveau pouvoir : aller vers la carte
-  onGoToHome // 👈 Nouveau pouvoir : revenir à l'accueil
+  onGoToMap,
+  onGoToHome,
+  onGoToCollection // 👈 1. On récupère la fonction depuis App.tsx
 }) {
   const scannerRef = useRef(null);
 
@@ -22,11 +22,12 @@ export function ScanPage({
     <div className="relative flex flex-col items-center min-h-screen overflow-x-hidden py-5 gap-6"
       style={{ paddingLeft: 10, paddingRight: 10 }}>
 
-      {/* TON NOUVEAU HEADER TOUT PROPRE EN UNE LIGNE */}
+      {/* 2. On la transmet au Header pour que le bouton 1/10 puisse l'utiliser */}
       <Header 
         scanCount={scanCount} 
         onGoToMap={onGoToMap} 
         onGoToHome={onGoToHome} 
+        onGoToCollection={onGoToCollection} 
       />
 
       {/* Le Scanner */}
