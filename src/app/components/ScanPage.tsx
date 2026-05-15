@@ -28,9 +28,8 @@ export function ScanPage({
   // Gère la transition quand le scanner a fini
   const handleScanSuccess = (data, className) => {
     
-    // ✅ Utilisation de ton image locale
-    // Assure-toi que l'image est bien dans public/image/1.png
-    let img = "/images/1.png"; 
+    // ✅ CORRECTION ICI : "./image/1.png" (le point et pas de "s")
+    let img = "./image/1.png"; 
 
     setScannedData({
        nom: className, // Le nom détecté par Teachable Machine
@@ -122,7 +121,7 @@ export function ScanPage({
                       className="w-4/5 h-auto object-contain drop-shadow-xl"
                    />
                    
-                   {/* ✅ Ajout du nom de l'objet */}
+                   {/* Ajout du nom de l'objet */}
                    <p className="text-xl font-bold text-center" style={{ color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
                       {scannedData.nom}
                    </p>
