@@ -17,7 +17,8 @@ export function ScanPage({
   onScan,
   onGoToMap,
   onGoToHome,
-  onGoToCollection 
+  onGoToCollection,
+  onGoToCousins // 👈 AJOUT DE LA PROP ICI
 }) {
   const scannerRef = useRef(null);
 
@@ -134,7 +135,7 @@ export function ScanPage({
                whileTap={{ scale: 0.95 }}
                onClick={() => {
                   onScan(); 
-                  onGoToCollection(); 
+                  onGoToCousins(); // 👈 MODIFICATION ICI : On va vers les cousins
                }}
                className="w-full mt-10 rounded-[30px] py-4 shadow-xl"
                style={{
