@@ -81,9 +81,10 @@ function WorldBtn({ onClick }) {
   );
 }
 
-function InfoBtn() {
+// 👇 BOUTON INFO MIS À JOUR AVEC ONCLICK 👇
+function InfoBtn({ onClick }) {
   return (
-    <HoverCircleBtn hoverBg={colors.pink} title="Info">
+    <HoverCircleBtn hoverBg={colors.pink} title="Info" onClick={onClick}>
       <svg width={BTN} height={BTN} viewBox="0 0 49 49" fill="none">
         <path d={svgPaths?.p24a25200 || ""} fill={colors.cream} />
       </svg>
@@ -91,13 +92,12 @@ function InfoBtn() {
   );
 }
 
-// 👇 BOUTON COLLECTION MIS À JOUR AVEC ONCLICK 👇
 function CollectionBtn({ count, onClick }) {
   const [hovered, setHovered] = useState(false);
   return (
     <motion.button
       title="Collection"
-      onClick={onClick} // Active la navigation !
+      onClick={onClick} 
       whileTap={{ scale: 0.93 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -125,8 +125,8 @@ function MenuBtn() {
   );
 }
 
-// 👑 LE COMPOSANT FINAL EXPORTÉ (avec onGoToCollection) 👑
-export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection }) {
+// 👑 LE COMPOSANT FINAL EXPORTÉ (avec onGoToInfo) 👑
+export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
   return (
     <div className="flex items-center justify-between w-full shrink-0 z-10" style={{ backgroundColor: colors.cream, padding: 3, borderRadius: 30 }}>
       <button onClick={onGoToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
@@ -135,8 +135,8 @@ export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollect
       
       <div className="flex items-center" style={{ gap: 4 }}>
         <WorldBtn onClick={onGoToMap} />
-        <InfoBtn />
-        <CollectionBtn count={scanCount} onClick={onGoToCollection} /> {/* 👈 Connecté ! */}
+        <InfoBtn onClick={onGoToInfo} /> {/* 👈 Connecté ! */}
+        <CollectionBtn count={scanCount} onClick={onGoToCollection} /> 
         <MenuBtn />
       </div>
     </div>
