@@ -12,7 +12,7 @@ const colors = {
   orange: "#DE5C44",
 };
 
-// Liste des 10 objets avec tes images locales (CORRIGÉ AVEC LES POINTS)
+// Liste des 10 objets avec tes images locales
 const collectionData = [
   { id: 1, nom: "Vase Chimú", image: "./image/1.png" },
   { id: 2, nom: "Vase Canope", image: "./image/2.png" },
@@ -28,7 +28,8 @@ const collectionData = [
 
 export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection }) {
   return (
-    <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.cream }}>
+    // ✅ 1. Le "backgroundColor" a été retiré ici pour laisser voir les formes !
+    <div className="relative flex flex-col items-center min-h-screen p-5 gap-6">
       
       {/* Header avec les bonnes fonctions de navigation */}
       <Header 
@@ -38,13 +39,11 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
         onGoToCollection={onGoToCollection} 
       />
 
-      <div className="w-full flex justify-between items-end px-2 mt-2">
-        <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '28px', color: colors.black, margin: 0 }}>
+      {/* ✅ 2. Compteur supprimé et Titre passé en Crème */}
+      <div className="w-full flex justify-start px-2 mt-2">
+        <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '28px', color: colors.cream, margin: 0 }}>
           Ma Collection
         </h2>
-        <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: colors.orange }}>
-          {scanCount}/10
-        </span>
       </div>
 
       {/* Grille des 10 objets */}
