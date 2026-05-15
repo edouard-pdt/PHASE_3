@@ -28,7 +28,7 @@ const Scanner = forwardRef((props, ref) => {
         modelRef.current = await tmImage.load(modelURL, metadataURL);
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
           if (videoRef.current) { videoRef.current.srcObject = stream; }
         } else {
           setCameraError("Caméra non supportée.");
