@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import svgPaths from "../../imports/PageDepart-1/svg-cf8msoxdol"; // Assure-toi que ce chemin est correct
+import Header from './Header'; // 👈 On importe la brique Lego du Header !
 
 // --- RÉPARATION DES ICÔNES LEAFLET ---
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -17,90 +17,9 @@ L.Marker.prototype.options.icon = DefaultIcon;
 // ---------------------------------------
 
 const colors = {
-  yellow: "#F6C453",
-  pink: "#EBA7BE",
-  cream: "#FFEFEC",
   black: "#131313",
-  purple: "#6559A1",
-  blue: "#4595D0",
-  orange: "#DE5C44",
+  cream: "#FFEFEC",
 };
-
-const BTN = 38;
-const LOGO_H = BTN;
-const LOGO_W = Math.round((200 / 83) * LOGO_H);
-
-// --- TES COMPOSANTS HEADER (Copiés à l'identique) ---
-function LogoSvg() {
-  return (
-    <svg width={LOGO_W} height={LOGO_H} viewBox="0 0 200 83" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", flexShrink: 0 }}>
-      <rect width="200" height="83" rx="41.5" fill="#131313" />
-      <path d="M65.3366 19.7532L91.1666 19.7532L91.1666 45.5833L65.3366 19.7532Z" fill="#6559A1" />
-      <path d="M116.997 19.7532L142.827 19.7532L142.827 45.5833L116.997 19.7532Z" fill="#DE5C44" />
-      <circle cx="52.4216" cy="32.6683" r="12.915" fill="#F6C453" />
-      <rect x="91.1666" y="19.7533" width="25.83" height="25.83" fill="#EBA7BE" />
-      <circle cx="155.742" cy="32.6683" r="12.915" fill="#4595D0" />
-      {/* J'ai raccourci le SVG ici pour la lisibilité, GARDE LE TIEN EN ENTIER dans ton vrai fichier */}
-      <path d="M51.3701 66.0899L56.208 50.5216H59.5783L64.3727 66.0899H60.5024L58.4041 57.1099L57.8605 54.6311H57.7844L57.3061 57.1099L55.1643 66.0899H51.3701Z" fill="#FFEFEC" />
-    </svg>
-  );
-}
-
-function HoverCircleBtn({ children, hoverBg, title }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <motion.button title={title} whileTap={{ scale: 0.93 }} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      className="relative shrink-0 flex items-center justify-center rounded-full focus:outline-none"
-      style={{ width: BTN, height: BTN, backgroundColor: hovered ? hoverBg : colors.black, transition: "background-color 0.2s" }}>
-      {children}
-    </motion.button>
-  );
-}
-
-function WorldBtn() {
-  return (
-    <HoverCircleBtn hoverBg={colors.purple} title="World">
-      <svg width="22" height="22" viewBox="0 0 25 25" fill="none">
-        <path d={svgPaths?.p39fc4580 || ""} fill={colors.cream} />
-      </svg>
-    </HoverCircleBtn>
-  );
-}
-
-function InfoBtn() {
-  return (
-    <HoverCircleBtn hoverBg={colors.pink} title="Info">
-      <svg width={BTN} height={BTN} viewBox="0 0 49 49" fill="none">
-        <path d={svgPaths?.p24a25200 || ""} fill={colors.cream} />
-      </svg>
-    </HoverCircleBtn>
-  );
-}
-
-function CollectionBtn({ count }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <motion.button title="Collection" whileTap={{ scale: 0.93 }} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      className="relative shrink-0 flex items-center justify-center rounded-[30px] focus:outline-none"
-      style={{ width: 62, height: BTN, backgroundColor: hovered ? colors.orange : colors.black, transition: "background-color 0.2s" }}>
-      <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: 17, color: colors.cream, letterSpacing: "-0.05em", lineHeight: 1 }}>
-        {count}/10
-      </span>
-    </motion.button>
-  );
-}
-
-function MenuBtn() {
-  return (
-    <HoverCircleBtn hoverBg={colors.blue} title="Menu">
-      <div className="flex flex-col gap-[4px]">
-        <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
-        <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
-        <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
-      </div>
-    </HoverCircleBtn>
-  );
-}
 
 // --- DONNÉES DE DÉMO (Golden Path) ---
 const mockData = {
@@ -119,7 +38,7 @@ const mockData = {
 };
 
 // --- LA PAGE DE LA CARTE ---
-export default function MapPage({ scanCount = 1 }) {
+export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
   const [activeObject, setActiveObject] = useState(null);
   const [showCousins, setShowCousins] = useState(false);
 
@@ -130,22 +49,18 @@ export default function MapPage({ scanCount = 1 }) {
   };
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen overflow-x-hidden py-5 gap-6"
+    <div className="relative flex flex-col items-center min-h-screen overflow-x-hidden p-5 gap-6"
       style={{ paddingLeft: 10, paddingRight: 10 }}>
 
-      {/* 1. TON HEADER INTACT */}
-      <div className="flex items-center justify-between w-full shrink-0 z-10"
-        style={{ backgroundColor: colors.cream, padding: 3, borderRadius: 30 }}>
-        <LogoSvg />
-        <div className="flex items-center" style={{ gap: 4 }}>
-          <WorldBtn />
-          <InfoBtn />
-          <CollectionBtn count={scanCount} />
-          <MenuBtn />
-        </div>
-      </div>
+      {/* 1. TON NOUVEAU HEADER TOUT PROPRE EN UNE LIGNE */}
+      {/* C'est lui qui gère le clic sur le logo et sur World ! */}
+      <Header 
+        scanCount={scanCount} 
+        onGoToMap={onGoToMap} 
+        onGoToHome={onGoToHome} 
+      />
 
-      {/* 2. LA ZONE DE LA CARTE (Remplace le scanner) */}
+      {/* 2. LA ZONE DE LA CARTE */}
       <div className="flex-1 w-full relative z-0" 
            style={{ 
              borderRadius: 30, 
@@ -155,18 +70,20 @@ export default function MapPage({ scanCount = 1 }) {
            }}>
         
         <MapContainer center={[20, -20]} zoom={2.5} style={{ height: "100%", width: "100%", minHeight: "60vh" }}>
+          
+          {/* NOUVELLE DA GRISE CLAIRE POUR LA CARTE */}
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; OpenStreetMap contributors'
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           />
 
-          {/* Marqueur de l'objet principal (Toujours visible sur cette page) */}
+          {/* Marqueur de l'objet principal */}
           <Marker 
             position={[mockData.objet_principal.lat, mockData.objet_principal.lng]} 
             eventHandlers={{ click: handleMainObjectClick }}
           />
 
-          {/* Marqueurs des cousins (Apparaissent APRES le clic) */}
+          {/* Marqueurs des cousins */}
           {showCousins && mockData.cousins.map((cousin, index) => (
             <Marker 
               key={index} 
@@ -177,7 +94,7 @@ export default function MapPage({ scanCount = 1 }) {
         </MapContainer>
       </div>
 
-      {/* 3. LA FICHE INFO EN BAS (Stylisée avec tes couleurs) */}
+      {/* 3. LA FICHE INFO EN BAS */}
       {activeObject && (
         <motion.div 
           initial={{ y: 50, opacity: 0 }}
