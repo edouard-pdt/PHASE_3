@@ -30,7 +30,7 @@ export function ScanPage({
     
     // ✅ Utilisation de ton image locale
     // Assure-toi que l'image est bien dans public/image/1.png
-    let img = "/image/1.png"; 
+    let img = "https://github.com/edouard-pdt/PHASE_3/blob/f2b938f20879703b49bda5949e679bfb07e45419/public/image/1.png"; 
 
     setScannedData({
        nom: className, // Le nom détecté par Teachable Machine
