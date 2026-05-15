@@ -14,7 +14,8 @@ import { ExplicationPage } from "./components/ExplicationPage";
 import { ScanPage } from "./components/ScanPage";
 import MapPage from "./components/MapPage"; 
 import CollectionPage from "./components/CollectionPage";
-import CousinsPage from "./components/CousinsPage"; // 👈 L'import de ta nouvelle page
+import CousinsPage from "./components/CousinsPage"; 
+import InfoPage from "./components/InfoPage"; // 👈 L'import de la page Info
 
 const colors = {
   yellow: "#F6C453",
@@ -180,8 +181,8 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  // 👇 On ajoute "cousins" dans la liste des pages autorisées
-  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins">("intro");
+  // 👇 On ajoute "info" dans la liste des pages autorisées
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "info">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
 
@@ -200,8 +201,8 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      {/* 👇 On cache le Logo global sur Scan, Map, Collection ET Cousins */}
-      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && (
+      {/* 👇 On cache le Logo global sur Scan, Map, Collection, Cousins ET Info */}
+      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "info" && (
         <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
           <Logo />
         </header>
@@ -288,7 +289,8 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
-              onGoToCousins={() => setPage("cousins")} // 👈 Branchement de la navigation vers Cousins
+              onGoToCousins={() => setPage("cousins")}
+              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
             />
           </motion.div>
         )}
@@ -308,6 +310,7 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")} 
+              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
             />
           </motion.div>
         )}
@@ -327,11 +330,11 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
+              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
             />
           </motion.div>
         )}
 
-        {/* 👇 LA NOUVELLE PAGE COUSINS */}
         {page === "cousins" && (
           <motion.div
             key="cousins"
@@ -347,6 +350,28 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
+              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
+            />
+          </motion.div>
+        )}
+
+        {/* 👇 LA NOUVELLE PAGE INFO */}
+        {page === "info" && (
+          <motion.div
+            key="info"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative", minHeight: "100vh" }}
+          >
+            <StaticFondBackground />
+            <InfoPage
+              scanCount={scanCount}
+              onGoToMap={() => setPage("map")}
+              onGoToHome={() => setPage("scan")}
+              onGoToCollection={() => setPage("collection")}
+              onGoToInfo={() => setPage("info")}
             />
           </motion.div>
         )}
