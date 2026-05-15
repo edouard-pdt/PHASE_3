@@ -51,8 +51,15 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
       
       <Header scanCount={scanCount} onGoToMap={onGoToMap} onGoToHome={onGoToHome} />
 
+   {/* LA ZONE DE LA CARTE */}
       <div className="flex-1 w-full relative z-0" 
-           style={{ borderRadius: 30, overflow: "hidden", border: `4px solid ${colors.black}`, boxShadow: "0 10px 30px rgba(0,0,0,0.15)" }}>
+           style={{ 
+             borderRadius: 30, 
+             overflow: "hidden", 
+             border: `4px solid ${colors.black}`, 
+             boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+             minHeight: "70vh" // 👈 LA SOLUTION EST ICI : On force la hauteur !
+           }}>
         
         <MapContainer center={[20, 0]} zoom={2} style={{ height: "100%", width: "100%" }} zoomControl={false}>
           
