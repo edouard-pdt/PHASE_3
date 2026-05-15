@@ -19,8 +19,8 @@ const colors = {
 
 // Création d'une fonction pour générer les icônes circulaires avec taille variable
 const createCustomIcon = (color, isScanned) => {
-  const size = isScanned ? 30 : 20; // Plus grand si scanné (30px contre 20px)
-  const anchor = size / 2; // Point d'ancrage central
+  const size = isScanned ? 30 : 20; 
+  const anchor = size / 2; 
   
   return L.divIcon({
     className: "custom-network-point",
@@ -46,20 +46,20 @@ const dataNetwork = [
   { id: "masque", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Funerary_mask_of_Tutankhamun_MNM.jpg/300px-Funerary_mask_of_Tutankhamun_MNM.jpg" },
 ];
 
-export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
+export default function MapPage({ 
+  scanCount = 1, 
+  onGoToMap, 
+  onGoToHome, 
+  onGoToCollection // 👈 1. ON RÉCUPÈRE LA FONCTION ICI
+}) {
   const [selectedObj, setSelectedObj] = useState(null);
-
-  // L'ID de l'objet "scanné" qui sera au centre du réseau
   const scannedObjectId = "chimú";
 
-  // --- NOUVELLE LOGIQUE DES LIENS ---
-  // On crée des liens UNIQUEMENT entre l'objet scanné et les autres (cousins)
   const scannedObj = dataNetwork.find(obj => obj.id === scannedObjectId);
   const starLinks = [];
   
   if (scannedObj) {
     dataNetwork.forEach(obj => {
-      // Si ce n'est pas l'objet scanné, on tire un trait vers lui
       if (obj.id !== scannedObjectId) {
         starLinks.push([[scannedObj.lat, scannedObj.lng], [obj.lat, obj.lng]]);
       }
@@ -69,33 +69,35 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.cream }}>
       
-      <Header scanCount={scanCount} onGoToMap={onGoToMap} onGoToHome={onGoToHome} />
+      {/* 2. ON LA TRANSMET AU HEADER */}
+      <Header 
+        scanCount={scanCount} 
+        onGoToMap={onGoToMap} 
+        onGoToHome={onGoToHome} 
+        onGoToCollection={onGoToCollection} 
+      />
 
-      {/* LA ZONE DE LA CARTE */}
       <div className="w-full relative z-0" 
            style={{ 
              borderRadius: 30, 
              overflow: "hidden", 
-             border: `4px solid ${colors.black}`, // Cadre noir impeccable
+             border: `4px solid ${colors.black}`,
              boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-             height: "65vh", // Hauteur fixe stricte
+             height: "65vh", 
              minHeight: "450px"
            }}>
         
         <MapContainer 
-          center={[15, -20]} // Centre ajusté pour mieux voir Europe/Amériques
-          zoom={2.5}         // Zoom légèrement plus fort
+          center={[15, -20]} 
+          zoom={2.5}         
           style={{ height: "100%", width: "100%" }} 
           zoomControl={false}
         >
-          
-          {/* FOND CLAIR TYPE GLOBE */}
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             attribution='&copy; OpenStreetMap'
           />
 
-          {/* TRAITS NOIRS (En étoile depuis l'objet scanné) */}
           {starLinks.map((positions, index) => (
             <Polyline 
               key={`link-${index}`}
@@ -104,7 +106,6 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
             />
           ))}
 
-          {/* POINTS COLORÉS + ÉTIQUETTES */}
           {dataNetwork.map(obj => {
             const isScanned = obj.id === scannedObjectId;
             
@@ -114,7 +115,7 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
                 position={[obj.lat, obj.lng]} 
                 icon={createCustomIcon(obj.color, isScanned)}
                 eventHandlers={{ click: () => setSelectedObj(obj) }}
-                zIndexOffset={isScanned ? 1000 : 0} // L'objet scanné passe au-dessus des lignes
+                zIndexOffset={isScanned ? 1000 : 0}
               >
                 <Tooltip direction="right" offset={[15, 0]} opacity={1} permanent>
                   <div style={{ fontFamily: 'Poppins', fontSize: '11px', lineHeight: '1.2' }}>
@@ -128,7 +129,6 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
         </MapContainer>
       </div>
 
-      {/* FICHE INFO POPUP */}
       {selectedObj && (
         <motion.div 
           initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
