@@ -14,7 +14,7 @@ const colors = {
 
 // Liste des 10 objets avec tes images locales
 const collectionData = [
-  { id: 1, nom: "Vase Chimú", image: "public/image/1.png" },
+  { id: 1, nom: "Vase Chimú", image: "/images/1.png" },
   { id: 2, nom: "Vase Canope", image: "/image/2.png" },
   { id: 3, nom: "Cratère", image: "/image/3.png" },
   { id: 4, nom: "Statuette Ibis", image: "/image/4.png" },
