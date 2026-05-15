@@ -27,11 +27,12 @@ export function ScanPage({
 
   // Gère la transition quand le scanner a fini
   const handleScanSuccess = (data, className) => {
-    // Si tu as tes propres photos dans le dossier public, tu peux changer les URL ici
-    let img = "/images/vase1.jpg"; // Ou l'URL wikimedia en attendant
-    if (className.toLowerCase().includes("canope")) {
-        img = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Canopic_jars_of_Neskhons.jpg/300px-Canopic_jars_of_Neskhons.jpg";
-    }
+    
+    // ✅ ON MET TON IMAGE LOCALE ICI
+    // Note : on enlève "public/" car Vite le fait automatiquement
+    let img = "/image/1.png"; 
+
+    // (J'ai enlevé la condition if "canope" pour forcer ton image)
 
     setScannedData({
        nom: data?.titre || className,
@@ -92,7 +93,7 @@ export function ScanPage({
         </div>
       )}
 
-      {/* ÉTAT 3 : LA PAGE DE VALIDATION (Ta maquette) */}
+      {/* ÉTAT 3 : LA PAGE DE VALIDATION */}
       {step === "validation" && scannedData && (
          <div className="flex flex-1 flex-col items-center justify-center w-full max-w-sm pb-6">
 
@@ -128,8 +129,8 @@ export function ScanPage({
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
                onClick={() => {
-                  onScan(); // Ajoute +1 à la collection du Header !
-                  onGoToCollection(); // Et t'envoie direct voir la Collection
+                  onScan(); 
+                  onGoToCollection(); 
                }}
                className="w-full mt-10 rounded-[30px] py-4 shadow-xl"
                style={{
