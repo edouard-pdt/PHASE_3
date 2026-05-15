@@ -61,7 +61,12 @@ export default function MapPage({ scanCount = 1, onGoToMap, onGoToHome }) {
              minHeight: "70vh" // 👈 LA SOLUTION EST ICI : On force la hauteur !
            }}>
         
-        <MapContainer center={[20, 0]} zoom={2} style={{ height: "100%", width: "100%" }} zoomControl={false}>
+       <MapContainer 
+  center={[20, 0]} 
+  zoom={2} 
+  style={{ height: "70vh", width: "100%", minHeight: "500px" }} // 👈 On met la hauteur ici !
+  zoomControl={false}
+>
           
           {/* FOND CLAIR TYPE GLOBE */}
           <TileLayer
