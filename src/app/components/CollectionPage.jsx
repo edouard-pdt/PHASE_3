@@ -1,11 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "motion/react";
-import { MapContainer, TileLayer, Marker, Polyline, Tooltip } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import Header from './Header'; 
+import Header from "./Header";
 
-// --- CONFIGURATION DU STYLE DES POINTS (DA) ---
 const colors = {
   yellow: "#F6C453",
   pink: "#EBA7BE",
@@ -14,61 +10,27 @@ const colors = {
   purple: "#6559A1",
   blue: "#4595D0",
   orange: "#DE5C44",
-  green: "#63A375"
 };
 
-// Création d'une fonction pour générer les icônes circulaires avec taille variable
-const createCustomIcon = (color, isScanned) => {
-  const size = isScanned ? 30 : 20; 
-  const anchor = size / 2; 
-  
-  return L.divIcon({
-    className: "custom-network-point",
-    html: `<div style="
-      width: ${size}px; 
-      height: ${size}px; 
-      background-color: ${colors[color]}; 
-      border: 3px solid ${colors.black}; 
-      border-radius: 50%;
-    "></div>`,
-    iconSize: [size, size],
-    iconAnchor: [anchor, anchor],
-  });
-};
-
-// --- DONNÉES AVEC VRAIES COORDONNÉES ET TES IMAGES LOCALES ---
-const dataNetwork = [
-  { id: "chimú", lat: -8.11, lng: -79.03, color: "yellow", nom: "Vase Chimú", pays: "Pérou", description: "Vase rituel précolombien.", image: "./image/1.png" },
-  { id: "canope", lat: 29.97, lng: 31.13, color: "purple", nom: "Vase Canope", pays: "Égypte", description: "Vase funéraire égyptien.", image: "./image/2.png" },
-  { id: "cratère", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère", pays: "Grèce", description: "Vase pour mélanger le vin.", image: "./image/3.png" },
-  { id: "urne", lat: -12.04, lng: -77.03, color: "yellow", nom: "Urne Moche", pays: "Pérou", description: "Céramique funéraire.", image: "./image/6.png" },
-  { id: "hydrie", lat: 38.11, lng: 13.36, color: "blue", nom: "Hydrie", pays: "Grèce", description: "Vase à eau.", image: "./image/5.png" },
-  { id: "masque", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "./image/7.png" },
+// Liste des 10 objets avec tes images locales (CORRIGÉ AVEC LES POINTS)
+const collectionData = [
+  { id: 1, nom: "Vase Chimú", image: "./image/1.png" },
+  { id: 2, nom: "Vase Canope", image: "./image/2.png" },
+  { id: 3, nom: "Cratère", image: "./image/3.png" },
+  { id: 4, nom: "Statuette Ibis", image: "./image/4.png" },
+  { id: 5, nom: "Hydrie", image: "./image/5.png" },
+  { id: 6, nom: "Urne Moche", image: "./image/6.png" },
+  { id: 7, nom: "Masque", image: "./image/7.png" },
+  { id: 8, nom: "Fibule", image: "./image/8.png" },
+  { id: 9, nom: "Coupe Satyre", image: "./image/9.png" },
+  { id: 10, nom: "Idole", image: "./image/10.png" },
 ];
 
-export default function MapPage({ 
-  scanCount = 1, 
-  onGoToMap, 
-  onGoToHome, 
-  onGoToCollection 
-}) {
-  const [selectedObj, setSelectedObj] = useState(null);
-  const scannedObjectId = "chimú";
-
-  const scannedObj = dataNetwork.find(obj => obj.id === scannedObjectId);
-  const starLinks = [];
-  
-  if (scannedObj) {
-    dataNetwork.forEach(obj => {
-      if (obj.id !== scannedObjectId) {
-        starLinks.push([[scannedObj.lat, scannedObj.lng], [obj.lat, obj.lng]]);
-      }
-    });
-  }
-
+export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection }) {
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.cream }}>
       
+      {/* Header avec les bonnes fonctions de navigation */}
       <Header 
         scanCount={scanCount} 
         onGoToMap={onGoToMap} 
@@ -76,72 +38,89 @@ export default function MapPage({
         onGoToCollection={onGoToCollection} 
       />
 
-      <div className="w-full relative z-0" 
-           style={{ 
-             borderRadius: 30, 
-             overflow: "hidden", 
-             border: `4px solid ${colors.black}`,
-             boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-             height: "65vh", 
-             minHeight: "450px"
-           }}>
-        
-        <MapContainer 
-          center={[15, -20]} 
-          zoom={2.5}         
-          style={{ height: "100%", width: "100%" }} 
-          zoomControl={false}
-        >
-          <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            attribution='&copy; OpenStreetMap'
-          />
-
-          {starLinks.map((positions, index) => (
-            <Polyline 
-              key={`link-${index}`}
-              positions={positions}
-              pathOptions={{ color: colors.black, weight: 2, opacity: 0.6 }} 
-            />
-          ))}
-
-          {dataNetwork.map(obj => {
-            const isScanned = obj.id === scannedObjectId;
-            
-            return (
-              <Marker 
-                key={obj.id} 
-                position={[obj.lat, obj.lng]} 
-                icon={createCustomIcon(obj.color, isScanned)}
-                eventHandlers={{ click: () => setSelectedObj(obj) }}
-                zIndexOffset={isScanned ? 1000 : 0}
-              >
-                <Tooltip direction="right" offset={[15, 0]} opacity={1} permanent>
-                  <div style={{ fontFamily: 'Poppins', fontSize: '11px', lineHeight: '1.2' }}>
-                    <span style={{ fontWeight: 'bold' }}>{obj.nom}</span><br/>
-                    <span style={{ color: '#666' }}>{obj.pays}</span>
-                  </div>
-                </Tooltip>
-              </Marker>
-            );
-          })}
-        </MapContainer>
+      <div className="w-full flex justify-between items-end px-2 mt-2">
+        <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '28px', color: colors.black, margin: 0 }}>
+          Ma Collection
+        </h2>
+        <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: colors.orange }}>
+          {scanCount}/10
+        </span>
       </div>
 
-      {selectedObj && (
-        <motion.div 
-          initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-          className="absolute bottom-10 left-4 right-4 z-[1000] flex p-4"
-          style={{ backgroundColor: colors.cream, borderRadius: 24, border: `3px solid ${colors.black}`, boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}
-        >
-          <img src={selectedObj.image} style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 12, border: `2px solid ${colors.black}` }} alt="" />
-          <div className="ml-4 flex-1">
-            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>{selectedObj.nom}</h3>
-            <p style={{ margin: 0, fontSize: 12, color: "#555" }}>{selectedObj.description}</p>
-          </div>
-          <button onClick={() => setSelectedObj(null)} style={{ background: 'none', border: 'none', fontWeight: 'bold', fontSize: 18 }}>✕</button>
-        </motion.div>
-      )}
+      {/* Grille des 10 objets */}
+      <div className="grid grid-cols-2 gap-5 w-full pb-10">
+        {collectionData.map((item, index) => {
+          // L'objet est débloqué si son index est inférieur au nombre de scans effectués
+          const isUnlocked = index < scanCount;
+
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05 }}
+              style={{
+                position: 'relative',
+                aspectRatio: '1/1',
+                backgroundColor: isUnlocked ? 'white' : '#D1D1D1',
+                borderRadius: 30,
+                border: `4px solid ${colors.black}`,
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: isUnlocked ? "0 8px 0 rgba(0,0,0,0.1)" : "none"
+              }}
+            >
+              {/* Image de l'objet */}
+              <img
+                src={item.image}
+                alt={item.nom}
+                style={{
+                  width: '85%',
+                  height: '85%',
+                  objectFit: 'contain',
+                  opacity: isUnlocked ? 1 : 0.15, // Très faible opacité si bloqué
+                  filter: isUnlocked ? 'none' : 'grayscale(100%)',
+                  transition: 'all 0.5s ease'
+                }}
+              />
+
+              {/* Cadenas si bloqué */}
+              {!isUnlocked && (
+                <div style={{ position: 'absolute', opacity: 0.6 }}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill={colors.black}>
+                     <path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2ZM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6Z"/>
+                  </svg>
+                </div>
+              )}
+
+              {/* Étiquette nom (uniquement si débloqué) */}
+              {isUnlocked && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  backgroundColor: colors.yellow,
+                  padding: '4px 0',
+                  textAlign: 'center',
+                  borderTop: `3px solid ${colors.black}`
+                }}>
+                  <span style={{ 
+                    fontFamily: 'Poppins', 
+                    fontSize: '11px', 
+                    fontWeight: 800, 
+                    color: colors.black,
+                    textTransform: 'uppercase'
+                  }}>
+                    {item.nom}
+                  </span>
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }
