@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import * as tmImage from '@teachablemachine/image';
 
-const Scanner = forwardRef(({ onScanSuccess }, ref) => {
+const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
   const [cameraError, setCameraError] = useState(null);
 
-  // 🔌 TON VRAI LIEN TEACHABLE MACHINE
+  // 🔌 TES LIENS (Tu peux changer /webhook/ par /webhook-test/ si tu veux faire clignoter n8n)
   const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/AwpIVAUJl/";
+  const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook/recherche_objet";
 
   const videoRef = useRef(null);
   const modelRef = useRef(null);
@@ -38,6 +39,9 @@ const Scanner = forwardRef(({ onScanSuccess }, ref) => {
   const lancerLeScan = async () => {
     if (!modelRef.current || !videoRef.current || isScanningRef.current) return;
     isScanningRef.current = true;
+    
+    // On dit à la ScanPage d'activer l'écran de chargement pendant qu'on cherche
+    if (onScanLoading) onScanLoading(true);
 
     try {
       const predictions = await modelRef.current.predict(videoRef.current);
@@ -45,17 +49,34 @@ const Scanner = forwardRef(({ onScanSuccess }, ref) => {
         (prev.probability > current.probability) ? prev : current
       );
       
-      isScanningRef.current = false;
-      
-      // On a trouvé l'objet ! On passe simplement le nom (className) à ScanPage
-      // C'est ScanPage qui va se charger d'appeler n8n avec ce nom.
-      if (onScanSuccess) {
-        onScanSuccess(null, bestPrediction.className);
-      }
-      
+      // On envoie le résultat direct à n8n !
+      await envoyerAN8n(bestPrediction.className);
     } catch (error) {
-      console.error("Erreur de scan :", error);
       isScanningRef.current = false;
+      if (onScanLoading) onScanLoading(false);
+    }
+  };
+
+  const envoyerAN8n = async (objetDetecte) => {
+    try {
+      const reponse = await fetch(URL_WEBHOOK_N8N, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom_objet: objetDetecte })
+      });
+      
+      const data = await reponse.json();
+      isScanningRef.current = false;
+      
+      // Succès ! On envoie les vraies données de n8n à la ScanPage
+      if (onScanSuccess) onScanSuccess(data, objetDetecte);
+    } catch (error) {
+      console.error("Erreur n8n interceptée :", error);
+      isScanningRef.current = false;
+      
+      // 🛡️ LE PARCOURS DE SÉCURITÉ : Si CORS ou n8n bloque, on ne plante pas !
+      // On envoie "null" pour les données mais on transmet quand même l'objet trouvé par l'IA
+      if (onScanSuccess) onScanSuccess(null, objetDetecte);
     }
   };
 
