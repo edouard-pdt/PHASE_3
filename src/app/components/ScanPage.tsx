@@ -19,53 +19,65 @@ export function ScanPage({
   onGoToHome,
   onGoToCollection,
   onGoToCousins,
-  onGoToInfo 
+  onGoToInfo,
+  onSaveN8NData // 👈 1. AJOUT DE LA PROP DE SAUVEGARDE
 }) {
   const scannerRef = useRef(null);
-
-  // 3 étapes possibles : "camera" -> "loading" -> "validation"
   const [step, setStep] = useState("camera");
   const [scannedData, setScannedData] = useState(null);
 
-  // ✅ MODIFICATION ICI : Devient ASYNC pour attendre n8n
   const handleScanSuccess = async (data, className) => {
-    // 1. On passe immédiatement en écran de chargement pendant l'appel API
     setStep("loading"); 
 
     try {
-      // 2. Requête HTTP POST vers ton n8n
-      // ⚠️ REMPLACE "https://TON_WEBHOOK_N8N_ICI" PAR TON VRAI LIEN WEBHOOK DE PRODUCTION N8N
-      const response = await fetch("https://douar.app.n8n.cloud/webhook/recherche_objet", {
+      // ⚠️ Pense à mettre ton vrai lien de Webhook de Production n8n ici
+      const response = await fetch("https://TON_WEBHOOK_N8N_ICI", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          objet_detecte: className, // Envoie le nom brut reconnu par Teachable Machine
+          objet_detecte: className, 
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Le serveur n8n a renvoyé une erreur");
+      if (!response.ok) throw new Error("Erreur serveur n8n");
+
+      const n8nResponse = await response.json(); 
+
+      // 🔌 2. TRANSMISSION DES COUSINS À APP.TSX
+      // n8nResponse peut être directement le tableau [{}, {}...] ou un objet { cousins: [ ... ] }
+      if (n8nResponse && n8nResponse.cousins) {
+        onSaveN8NData(n8nResponse.cousins);
+      } else if (Array.isArray(n8nResponse)) {
+        onSaveN8NData(n8nResponse);
       }
 
-      // 3. On extrait le JSON renvoyé par ton nœud "Respond to Webhook"
-      const n8nData = await response.json(); 
+      // 3. Extraction de l'objet principal pour l'écran de validation
+      // Si n8n renvoie un tableau, l'objet principal est souvent le premier (index 0)
+      const mainObject = Array.isArray(n8nResponse) ? n8nResponse[0] : n8nResponse;
 
-      // 4. On injecte les réponses dynamiques dans l'état de la page
       setScannedData({
-        nom: n8nData.nom || className, // Utilise le nom propre renvoyé par n8n (ex: "Vase Chimú")
-        image: n8nData.image || "./image/1.png", // Utilise le chemin d'image configuré par n8n
-        description: n8nData.description || "" // Tu pourras utiliser cette description plus tard !
+        nom: mainObject.nom || className, 
+        image: mainObject.image || "./image/1.png", 
+        description: mainObject.description || ""
       });
 
-      // 5. Tout est prêt, on affiche la carte de validation
       setStep("validation"); 
 
     } catch (error) {
       console.error("Erreur n8n :", error);
-      alert("Impossible de récupérer les détails de l'objet. Retour à la caméra.");
-      setStep("camera"); // Sécurité : on recharge la caméra en cas de coupure réseau
+      alert("Erreur de communication avec le serveur. Utilisation du parcours de sécurité.");
+      
+      // En cas de panne réseau, on vide l'état n8n pour forcer l'application à utiliser le fallback
+      onSaveN8NData([]); 
+      
+      setScannedData({
+        nom: className,
+        image: "./image/1.png",
+        description: ""
+      });
+      setStep("validation");
     }
   };
 
@@ -91,8 +103,8 @@ export function ScanPage({
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => {
-              setStep("loading"); // 1. On lance la roue de chargement
-              scannerRef.current?.lancerLeScan(); // 2. On déclenche l'IA
+              setStep("loading"); 
+              scannerRef.current?.lancerLeScan(); 
             }}
             className="shrink-0 rounded-full px-14 py-4 focus:outline-none focus-visible:ring-4"
             style={{
@@ -132,35 +144,30 @@ export function ScanPage({
                className="relative w-full rounded-[40px] pt-16 pb-8 px-6 flex justify-center items-center shadow-2xl"
                style={{ backgroundColor: colors.cream }}
             >
-               {/* Le macaron orange "Est ce le bon objet ?" */}
                <motion.div
                   initial={{ scale: 0, rotate: -40 }}
                   animate={{ scale: 1, rotate: -12 }}
                   transition={{ delay: 0.3, type: "spring" }}
                   className="absolute -top-6 -left-4 w-[110px] h-[110px] rounded-full flex items-center justify-center z-10 shadow-lg"
                   style={{ backgroundColor: colors.orange }}
-               >
+                >
                   <span className="text-center font-bold leading-tight" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif", fontSize: "15px" }}>
                      Est ce<br/>le bon objet ?
                   </span>
                </motion.div>
 
                <div className="flex flex-col items-center gap-4 w-full">
-                   {/* L'image de l'objet scanné */}
                    <img
                       src={scannedData.image}
                       alt="Objet scanné"
                       className="w-4/5 h-auto object-contain drop-shadow-xl"
                    />
-                   
-                   {/* Ajout du nom de l'objet */}
                    <p className="text-xl font-bold text-center" style={{ color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
                       {scannedData.nom}
                    </p>
                </div>
             </motion.div>
 
-            {/* Le gros bouton de confirmation Jaune */}
             <motion.button
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
