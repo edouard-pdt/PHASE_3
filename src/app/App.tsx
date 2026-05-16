@@ -15,7 +15,7 @@ import { ScanPage } from "./components/ScanPage";
 import MapPage from "./components/MapPage"; 
 import CollectionPage from "./components/CollectionPage";
 import CousinsPage from "./components/CousinsPage"; 
-import InfoPage from "./components/InfoPage"; // 👈 L'import de la page Info
+import InfoPage from "./components/InfoPage"; // L'import de la page Info
 
 const colors = {
   yellow: "#F6C453",
@@ -181,10 +181,12 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  // 👇 On ajoute "info" dans la liste des pages autorisées
   const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "info">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
+
+  // 📦 AJOUT DE L'ÉTAT GLOBAL POUR CONSERVER LES DONNÉES N8N
+  const [n8nCousins, setN8nCousins] = useState<any[]>([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -201,7 +203,6 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      {/* 👇 On cache le Logo global sur Scan, Map, Collection, Cousins ET Info */}
       {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "info" && (
         <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
           <Logo />
@@ -290,7 +291,9 @@ export default function App() {
               onGoToHome={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToCousins={() => setPage("cousins")}
-              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
+              onGoToInfo={() => setPage("info")}
+              // 🔌 Branchement : Sauvegarde les données reçues de n8n à la réussite du scan
+              onSaveN8NData={(data) => setN8nCousins(data)}
             />
           </motion.div>
         )}
@@ -310,7 +313,7 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")} 
-              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
+              onGoToInfo={() => setPage("info")}
             />
           </motion.div>
         )}
@@ -330,7 +333,7 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
-              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
+              onGoToInfo={() => setPage("info")}
             />
           </motion.div>
         )}
@@ -350,12 +353,13 @@ export default function App() {
               onGoToMap={() => setPage("map")}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
-              onGoToInfo={() => setPage("info")} // 👈 Branchement Info
+              onGoToInfo={() => setPage("info")}
+              // 🔌 Distribution : Injecte les données n8n interceptées dans CousinsPage
+              n8nCousinsData={n8nCousins}
             />
           </motion.div>
         )}
 
-        {/* 👇 LA NOUVELLE PAGE INFO */}
         {page === "info" && (
           <motion.div
             key="info"
