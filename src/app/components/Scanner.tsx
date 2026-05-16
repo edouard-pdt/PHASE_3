@@ -4,9 +4,8 @@ import * as tmImage from '@teachablemachine/image';
 const Scanner = forwardRef(({ onScanSuccess }, ref) => {
   const [cameraError, setCameraError] = useState(null);
 
-  // TES LIENS
+  // 🔌 TON VRAI LIEN TEACHABLE MACHINE
   const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/AwpIVAUJl/";
-  const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook-test/recherche_objet";
 
   const videoRef = useRef(null);
   const modelRef = useRef(null);
@@ -45,34 +44,25 @@ const Scanner = forwardRef(({ onScanSuccess }, ref) => {
       const bestPrediction = predictions.reduce((prev, current) =>
         (prev.probability > current.probability) ? prev : current
       );
-      await envoyerAN8n(bestPrediction.className);
+      
+      isScanningRef.current = false;
+      
+      // On a trouvé l'objet ! On passe simplement le nom (className) à ScanPage
+      // C'est ScanPage qui va se charger d'appeler n8n avec ce nom.
+      if (onScanSuccess) {
+        onScanSuccess(null, bestPrediction.className);
+      }
+      
     } catch (error) {
+      console.error("Erreur de scan :", error);
       isScanningRef.current = false;
-    }
-  };
-
-  const envoyerAN8n = async (objetDetecte) => {
-    try {
-      const reponse = await fetch(URL_WEBHOOK_N8N, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nom_objet: objetDetecte })
-      });
-      const data = await reponse.json();
-      isScanningRef.current = false;
-      // On prévient la ScanPage que c'est fini !
-      if (onScanSuccess) onScanSuccess(data, objetDetecte);
-    } catch (error) {
-      isScanningRef.current = false;
-      // Si N8N bloque, on valide quand même l'objet trouvé par l'IA
-      if (onScanSuccess) onScanSuccess({ titre: objetDetecte }, objetDetecte);
     }
   };
 
   return (
     <div className="w-full aspect-square bg-black rounded-[30px] overflow-hidden relative shadow-inner border-[4px]" style={{ borderColor: "#131313" }}>
         {cameraError ? (
-          <div className="absolute inset-0 flex items-center justify-center text-red-500 text-xs p-4">{cameraError}</div>
+          <div className="absolute inset-0 flex items-center justify-center text-red-500 text-xs p-4 text-center">{cameraError}</div>
         ) : (
           <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
         )}
