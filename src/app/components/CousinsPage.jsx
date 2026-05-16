@@ -12,8 +12,8 @@ const colors = {
   orange: "#DE5C44",
 };
 
-// Nos 6 objets : L'objet scanné (index 0) + ses 5 cousins
-const cousinsData = [
+// 🛡️ Chemin de sécurité : Données par défaut si n8n ne renvoie rien
+const fallbackCousinsData = [
   {
     id: "main",
     nom: "Vase Chimú",
@@ -51,7 +51,7 @@ const cousinsData = [
     image: "./image/4.png",
     pays: "Égypte",
     tag: "Invoquer la sagesse",
-    description: "Représentant le dieu Thot, cette statuette servait d'offrande pour s'attirer les faveurs du dieu de l'écriture et du savoir.",
+    description: "Représentant le dieu Thot, cette statuette servait d'offrande pour s'attirer les favors du dieu de l'écriture et du savoir.",
     bullets: ["Vénérer le dieu Thot", "Demander la sagesse", "Accompagner les scribes"]
   },
   {
@@ -76,23 +76,32 @@ const cousinsData = [
   }
 ];
 
-export default function CousinsPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
+export default function CousinsPage({ 
+  scanCount, 
+  onGoToMap, 
+  onGoToHome, 
+  onGoToCollection, 
+  onGoToInfo,
+  n8nCousinsData // 👈 NOUVEAU : On reçoit les données fraîches de ton n8n ici !
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = droite, -1 = gauche
+  const [direction, setDirection] = useState(1); 
+
+  // Selection de la source : n8n en priorité, sinon le fallback de secours
+  const activeData = n8nCousinsData && n8nCousinsData.length > 0 ? n8nCousinsData : fallbackCousinsData;
 
   const nextObj = () => {
     setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % cousinsData.length);
+    setCurrentIndex((prev) => (prev + 1) % activeData.length);
   };
 
   const prevObj = () => {
     setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + cousinsData.length) % cousinsData.length);
+    setCurrentIndex((prev) => (prev - 1 + activeData.length) % activeData.length);
   };
 
-  const currentObj = cousinsData[currentIndex];
+  const currentObj = activeData[currentIndex];
 
-  // Animation variants pour faire glisser par la gauche ou la droite
   const variants = {
     enter: (dir) => ({ x: dir > 0 ? 100 : -100, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -108,16 +117,15 @@ export default function CousinsPage({ scanCount, onGoToMap, onGoToHome, onGoToCo
         onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
-        />
+      />
 
       {/* CARRÉ CENTRAL CRÈME */}
       <div className="relative w-full aspect-square rounded-[40px] flex items-center justify-center overflow-hidden" style={{ backgroundColor: colors.cream }}>
         
-        {/* Les images qui glissent */}
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.img
-            key={currentObj.id}
-            src={currentObj.image}
+            key={currentObj.id || currentIndex}
+            src={currentObj.image || "./image/1.png"}
             alt={currentObj.nom}
             custom={direction}
             variants={variants}
@@ -129,68 +137,68 @@ export default function CousinsPage({ scanCount, onGoToMap, onGoToHome, onGoToCo
           />
         </AnimatePresence>
 
-        {/* Flèche Gauche */}
+        {/* Flèches */}
         <button onClick={prevObj} className="absolute left-4 w-10 h-10 rounded-full flex items-center justify-center z-10" style={{ backgroundColor: colors.yellow, color: colors.black }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
 
-        {/* Flèche Droite */}
         <button onClick={nextObj} className="absolute right-4 w-10 h-10 rounded-full flex items-center justify-center z-10" style={{ backgroundColor: colors.yellow, color: colors.black }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </button>
 
-        {/* Tags en bas du carré */}
+        {/* Tags */}
         <div className="absolute bottom-4 flex gap-2 w-full px-4 justify-center">
           <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: colors.black, color: colors.cream, fontSize: "12px", fontFamily: "'Poppins', sans-serif" }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            {currentObj.pays}
+            {currentObj.pays || "Inconnu"}
           </div>
           <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: colors.yellow, color: colors.black, fontSize: "12px", fontWeight: "bold", fontFamily: "'Poppins', sans-serif" }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            {currentObj.tag}
+            {currentObj.tag || "Parallèle"}
           </div>
         </div>
       </div>
 
       {/* BOUTONS SOUS LE CARRÉ */}
       <div className="flex gap-4 w-full justify-center mt-[-10px]">
-        <div className="px-6 py-2 rounded-full font-bold" style={{ backgroundColor: colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
+        <div className="px-6 py-2 rounded-full font-bold text-center" style={{ backgroundColor: colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "14px" }}>
           {currentObj.nom}
         </div>
-        <div className="px-6 py-2 rounded-full font-bold" style={{ backgroundColor: colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
-          {currentObj.relation}
+        <div className="px-6 py-2 rounded-full font-bold text-center" style={{ backgroundColor: colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "14px" }}>
+          {currentObj.relation || (currentIndex === 0 ? "Objet scanné" : `Cousin ${currentIndex}/5`)}
         </div>
       </div>
 
-      {/* ZONE DE TEXTE (Avec animation quand on change) */}
+      {/* ZONE DE TEXTE DYNAMIQUE */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={currentObj.id}
+          key={currentObj.id || currentIndex}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           className="relative w-full px-2 mt-4 flex flex-col gap-4 pb-10"
         >
-          {/* La barre jaune décorative à droite */}
           <div className="absolute right-0 top-0 bottom-0 w-1 rounded-full" style={{ backgroundColor: colors.yellow }}></div>
 
           <div>
             <h3 className="text-lg font-bold mb-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>À quoi sert cet objet ?</h3>
             <p className="text-sm pr-6 leading-relaxed" style={{ color: colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
-              {currentObj.description}
+              {currentObj.description || "Aucune description disponible."}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-lg font-bold mb-2 mt-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>Ce que cet objet permet de faire</h3>
-            <div className="flex flex-col gap-3 pr-6">
-              {currentObj.bullets.map((bullet, i) => (
-                <span key={i} className="text-sm" style={{ color: colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
-                  {bullet}
-                </span>
-              ))}
+          {currentObj.bullets && currentObj.bullets.length > 0 && (
+            <div>
+              <h3 className="text-lg font-bold mb-2 mt-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>Ce que cet objet permet de faire</h3>
+              <div className="flex flex-col gap-3 pr-6">
+                {currentObj.bullets.map((bullet, i) => (
+                  <span key={i} className="text-sm" style={{ color: colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
+                    • {bullet}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
