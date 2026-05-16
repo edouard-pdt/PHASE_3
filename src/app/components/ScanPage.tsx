@@ -31,7 +31,7 @@ export function ScanPage({
 
     try {
       // 🔌 Ton vrai lien Webhook n8n est ici
-      const response = await fetch("https://douar.app.n8n.cloud/webhook/recherche_objet", {
+      const response = await fetch("https://douar.app.n8n.cloud/webhook-test/recherche_objet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
