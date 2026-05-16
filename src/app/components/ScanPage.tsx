@@ -20,7 +20,7 @@ export function ScanPage({
   onGoToCollection,
   onGoToCousins,
   onGoToInfo,
-  onSaveN8NData // 👈 1. AJOUT DE LA PROP DE SAUVEGARDE
+  onSaveN8NData 
 }) {
   const scannerRef = useRef(null);
   const [step, setStep] = useState("camera");
@@ -30,8 +30,8 @@ export function ScanPage({
     setStep("loading"); 
 
     try {
-      // ⚠️ Pense à mettre ton vrai lien de Webhook de Production n8n ici
-      const response = await fetch("https://TON_WEBHOOK_N8N_ICI", {
+      // 🔌 Ton vrai lien Webhook n8n est ici
+      const response = await fetch("https://douar.app.n8n.cloud/webhook/recherche_objet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,16 +45,14 @@ export function ScanPage({
 
       const n8nResponse = await response.json(); 
 
-      // 🔌 2. TRANSMISSION DES COUSINS À APP.TSX
-      // n8nResponse peut être directement le tableau [{}, {}...] ou un objet { cousins: [ ... ] }
+      // TRANSMISSION DES COUSINS À APP.TSX
       if (n8nResponse && n8nResponse.cousins) {
         onSaveN8NData(n8nResponse.cousins);
       } else if (Array.isArray(n8nResponse)) {
         onSaveN8NData(n8nResponse);
       }
 
-      // 3. Extraction de l'objet principal pour l'écran de validation
-      // Si n8n renvoie un tableau, l'objet principal est souvent le premier (index 0)
+      // Extraction de l'objet principal pour l'écran de validation
       const mainObject = Array.isArray(n8nResponse) ? n8nResponse[0] : n8nResponse;
 
       setScannedData({
