@@ -4,7 +4,7 @@ import * as tmImage from '@teachablemachine/image';
 const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
   const [cameraError, setCameraError] = useState(null);
 
-  // 🔌 TES LIENS (Tu peux changer /webhook/ par /webhook-test/ si tu veux faire clignoter n8n)
+  // 🔌 LIEN DE PRODUCTION N8N
   const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/AwpIVAUJl/";
   const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook-test/recherche_objet";
 
@@ -40,7 +40,6 @@ const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
     if (!modelRef.current || !videoRef.current || isScanningRef.current) return;
     isScanningRef.current = true;
     
-    // On dit à la ScanPage d'activer l'écran de chargement pendant qu'on cherche
     if (onScanLoading) onScanLoading(true);
 
     try {
@@ -49,7 +48,6 @@ const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
         (prev.probability > current.probability) ? prev : current
       );
       
-      // On envoie le résultat direct à n8n !
       await envoyerAN8n(bestPrediction.className);
     } catch (error) {
       isScanningRef.current = false;
@@ -59,23 +57,29 @@ const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
 
   const envoyerAN8n = async (objetDetecte) => {
     try {
+      // 🛠️ L'ASTUCE : On utilise URLSearchParams pour envoyer les données comme un formulaire.
+      // Cela court-circuite le mécanisme de Preflight du navigateur !
+      const params = new URLSearchParams();
+      params.append('objet_detecte', objetDetecte);
+      params.append('nom_objet', objetDetecte); // Double sécurité selon ce qu'attend ton n8n
+
       const reponse = await fetch(URL_WEBHOOK_N8N, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nom_objet: objetDetecte })
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded' 
+        },
+        body: params.toString()
       });
       
       const data = await reponse.json();
       isScanningRef.current = false;
       
-      // Succès ! On envoie les vraies données de n8n à la ScanPage
       if (onScanSuccess) onScanSuccess(data, objetDetecte);
     } catch (error) {
       console.error("Erreur n8n interceptée :", error);
       isScanningRef.current = false;
       
-      // 🛡️ LE PARCOURS DE SÉCURITÉ : Si CORS ou n8n bloque, on ne plante pas !
-      // On envoie "null" pour les données mais on transmet quand même l'objet trouvé par l'IA
+      // Si l'affichage final bloque encore, le parcours de sécurité prend le relais
       if (onScanSuccess) onScanSuccess(null, objetDetecte);
     }
   };
