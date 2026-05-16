@@ -19,7 +19,7 @@ export function ScanPage({
   onGoToHome,
   onGoToCollection,
   onGoToCousins,
-  onGoToInfo // 
+  onGoToInfo 
 }) {
   const scannerRef = useRef(null);
 
@@ -27,17 +27,46 @@ export function ScanPage({
   const [step, setStep] = useState("camera");
   const [scannedData, setScannedData] = useState(null);
 
-  // Gère la transition quand le scanner a fini
-  const handleScanSuccess = (data, className) => {
-    
-    // ✅ CORRECTION ICI : "./image/1.png" 
-    let img = "./image/1.png"; 
+  // ✅ MODIFICATION ICI : Devient ASYNC pour attendre n8n
+  const handleScanSuccess = async (data, className) => {
+    // 1. On passe immédiatement en écran de chargement pendant l'appel API
+    setStep("loading"); 
 
-    setScannedData({
-       nom: className, // Le nom détecté par Teachable Machine
-       image: img
-    });
-    setStep("validation"); // On affiche la carte de validation
+    try {
+      // 2. Requête HTTP POST vers ton n8n
+      // ⚠️ REMPLACE "https://TON_WEBHOOK_N8N_ICI" PAR TON VRAI LIEN WEBHOOK DE PRODUCTION N8N
+      const response = await fetch("https://douar.app.n8n.cloud/webhook/recherche_objet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          objet_detecte: className, // Envoie le nom brut reconnu par Teachable Machine
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Le serveur n8n a renvoyé une erreur");
+      }
+
+      // 3. On extrait le JSON renvoyé par ton nœud "Respond to Webhook"
+      const n8nData = await response.json(); 
+
+      // 4. On injecte les réponses dynamiques dans l'état de la page
+      setScannedData({
+        nom: n8nData.nom || className, // Utilise le nom propre renvoyé par n8n (ex: "Vase Chimú")
+        image: n8nData.image || "./image/1.png", // Utilise le chemin d'image configuré par n8n
+        description: n8nData.description || "" // Tu pourras utiliser cette description plus tard !
+      });
+
+      // 5. Tout est prêt, on affiche la carte de validation
+      setStep("validation"); 
+
+    } catch (error) {
+      console.error("Erreur n8n :", error);
+      alert("Impossible de récupérer les détails de l'objet. Retour à la caméra.");
+      setStep("camera"); // Sécurité : on recharge la caméra en cas de coupure réseau
+    }
   };
 
   return (
@@ -137,7 +166,7 @@ export function ScanPage({
                whileTap={{ scale: 0.95 }}
                onClick={() => {
                   onScan(); 
-                  onGoToCousins(); // 👈 MODIFICATION ICI : On va vers les cousins
+                  onGoToCousins(); 
                }}
                className="w-full mt-10 rounded-[30px] py-4 shadow-xl"
                style={{
