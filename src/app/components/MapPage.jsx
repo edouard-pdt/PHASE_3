@@ -17,7 +17,7 @@ const colors = {
   green: "#63A375"
 };
 
-// Création d'une fonction pour générer les icônes (avec animation CSS intégrée !)
+// Création d'une fonction pour générer les icônes (avec animation CSS intégrée)
 const createCustomIcon = (color, isScanned) => {
   const size = isScanned ? 32 : 22; 
   const anchor = size / 2; 
@@ -39,14 +39,18 @@ const createCustomIcon = (color, isScanned) => {
   });
 };
 
-// --- DONNÉES DU RÉSEAU ---
+// --- BASE DE DONNÉES COMPLÈTE (Les 10 objets) ---
 const dataNetwork = [
-  { id: "chimú", lat: -8.11, lng: -79.03, color: "yellow", nom: "Vase Chimú", pays: "Pérou", description: "Vase rituel précolombien.", image: "./image/1.png" },
-  { id: "canope", lat: 29.97, lng: 31.13, color: "purple", nom: "Vase Canope", pays: "Égypte", description: "Vase funéraire égyptien.", image: "./image/2.png" },
-  { id: "cratère", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère", pays: "Grèce", description: "Vase pour mélanger le vin.", image: "./image/3.png" },
-  { id: "urne", lat: -12.04, lng: -77.03, color: "yellow", nom: "Urne Moche", pays: "Pérou", description: "Céramique funéraire.", image: "./image/6.png" },
-  { id: "hydrie", lat: 38.11, lng: 13.36, color: "blue", nom: "Hydrie", pays: "Grèce", description: "Vase à eau.", image: "./image/5.png" },
-  { id: "masque", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "./image/7.png" },
+  { id: "1", lat: -8.11, lng: -79.03, color: "yellow", nom: "Vase Chimú", pays: "Pérou", description: "Vase rituel précolombien.", image: "./image/1.png" },
+  { id: "2", lat: 29.97, lng: 31.13, color: "purple", nom: "Vase Canope", pays: "Égypte", description: "Vase funéraire égyptien.", image: "./image/2.png" },
+  { id: "3", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère", pays: "Grèce", description: "Vase pour mélanger le vin.", image: "./image/3.png" },
+  { id: "4", lat: 26.82, lng: 30.80, color: "purple", nom: "Statuette Ibis", pays: "Égypte", description: "Offrande au dieu Thot.", image: "./image/4.png" },
+  { id: "5", lat: 38.11, lng: 13.36, color: "blue", nom: "Hydrie", pays: "Grèce", description: "Vase à eau.", image: "./image/5.png" },
+  { id: "6", lat: -12.04, lng: -77.03, color: "yellow", nom: "Urne Moche", pays: "Pérou", description: "Céramique funéraire.", image: "./image/6.png" },
+  { id: "7", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "./image/7.png" },
+  { id: "8", lat: 41.90, lng: 12.49, color: "pink", nom: "Fibule", pays: "Italie", description: "Broche antique.", image: "./image/8.png" },
+  { id: "9", lat: 38.00, lng: 24.00, color: "blue", nom: "Coupe Satyre", pays: "Grèce", description: "Coupe à boire.", image: "./image/9.png" },
+  { id: "10", lat: 37.10, lng: 25.37, color: "green", nom: "Idole", pays: "Grèce", description: "Figure cycladique.", image: "./image/10.png" },
 ];
 
 export default function MapPage({ 
@@ -56,45 +60,47 @@ export default function MapPage({
   onGoToCollection,
   onGoToInfo 
 }) {
-  const [selectedObj, setSelectedObj] = useState(null);
+  const [selectedObj, setSelectedObj] = useState(null); // La popup d'info
   
-  // GESTION DU TOGGLE ET DE L'ANIMATION
-  const [isRevealed, setIsRevealed] = useState(false);
-  const [animationStep, setAnimationStep] = useState(0);
+  // NOUVEAU : On stocke l'ID du bloc actuellement cliqué/animé
+  const [activeBlockId, setActiveBlockId] = useState(null);
+  const [animationStep, setAnimationStep] = useState(0); // 0=Rien, 1=Point A, 2=Lignes, 3=Cousins
   
-  const scannedObjectId = "chimú";
-  const scannedObj = dataNetwork.find(obj => obj.id === scannedObjectId);
-  const cousins = dataNetwork.filter(obj => obj.id !== scannedObjectId);
+  // On filtre pour n'afficher que les objets débloqués dans les blocs du bas
+  const unlockedObjects = dataNetwork.slice(0, Math.max(1, scanCount));
+  
+  // L'objet central (celui qui a été cliqué) et ses cousins
+  const activeObj = dataNetwork.find(obj => obj.id === activeBlockId);
+  const cousins = activeObj ? dataNetwork.filter(obj => obj.id !== activeBlockId) : [];
 
-  // Fonction pour allumer / éteindre la carte
-  const toggleMapAnimation = () => {
-    if (isRevealed) {
-      // On éteint tout
-      setIsRevealed(false);
+  // Fonction pour déclencher ou éteindre un réseau
+  const toggleNetwork = (id) => {
+    // Si on clique sur un bloc déjà actif, on éteint tout (la carte redevient vierge)
+    if (activeBlockId === id) {
+      setActiveBlockId(null);
       setAnimationStep(0);
       setSelectedObj(null);
     } else {
-      // On allume avec une séquence fluide
-      setIsRevealed(true);
-      setAnimationStep(1); // Le point principal apparaît
+      // Si on clique sur un NOUVEAU bloc, on lance la séquence magique
+      setActiveBlockId(id);
+      setAnimationStep(1); // 1. Le point A pop
       
       setTimeout(() => {
-        setAnimationStep(2); // Les lignes démarrent
+        setAnimationStep(2); // 2. Les lignes se dessinent
         
         setTimeout(() => {
-          setAnimationStep(3); // Les cousins apparaissent à la fin des lignes
-        }, 1200); // 1.2s c'est le temps parfait pour le dessin de la ligne
+          setAnimationStep(3); // 3. Les cousins pop
+        }, 1200); 
         
-      }, 500); // On attend 0.5s après l'apparition du premier point
+      }, 500);
     }
   };
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.cream, overflow: 'hidden' }}>
+    // ✅ FOND TRANSPARENT (plus de backgroundColor) pour voir les formes de App.tsx !
+    <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ overflow: 'hidden' }}>
       
-      {/* MAGIE CSS POUR L'ANIMATION FLUIDE */}
       <style>{`
-        /* Animation pour dessiner les lignes */
         .growing-line path {
           stroke-dasharray: 2000;
           stroke-dashoffset: 2000;
@@ -103,8 +109,6 @@ export default function MapPage({
         @keyframes drawLine {
           to { stroke-dashoffset: 0; }
         }
-
-        /* Animation "Ressort" pour les points */
         @keyframes popIn {
           0% { transform: scale(0); opacity: 0; }
           100% { transform: scale(1); opacity: 1; }
@@ -119,7 +123,7 @@ export default function MapPage({
         onGoToInfo={onGoToInfo}
       />
 
-      {/* LA ZONE CARTE (Relative pour bien emprisonner la popup) */}
+      {/* LA ZONE CARTE */}
       <div className="w-full relative flex flex-col" 
            style={{ 
              borderRadius: 30, 
@@ -127,7 +131,7 @@ export default function MapPage({
              boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
              height: "55vh", 
              minHeight: "380px",
-             backgroundColor: "#AADAFF" // Une belle couleur eau pour le chargement
+             backgroundColor: "#AADAFF" // Couleur de l'océan
            }}>
         
         <div className="flex-1 rounded-[26px] overflow-hidden relative z-0">
@@ -143,40 +147,40 @@ export default function MapPage({
             />
 
             {/* ÉTAPE 2 : Les Lignes */}
-            {animationStep >= 2 && cousins.map((obj, index) => (
+            {activeObj && animationStep >= 2 && cousins.map((obj) => (
               <Polyline 
-                key={`link-${index}`}
-                positions={[[scannedObj.lat, scannedObj.lng], [obj.lat, obj.lng]]}
+                key={`line-${activeBlockId}-${obj.id}`} // La clé force le replay de l'animation
+                positions={[[activeObj.lat, activeObj.lng], [obj.lat, obj.lng]]}
                 pathOptions={{ color: colors.black, weight: 2, opacity: 0.5, className: 'growing-line' }} 
               />
             ))}
 
-            {/* ÉTAPE 1 : L'Objet Scanné (Lui a toujours son étiquette visible) */}
-            {animationStep >= 1 && (
+            {/* ÉTAPE 1 : Le Point Principal */}
+            {activeObj && animationStep >= 1 && (
               <Marker 
-                position={[scannedObj.lat, scannedObj.lng]} 
-                icon={createCustomIcon(scannedObj.color, true)}
-                eventHandlers={{ click: () => setSelectedObj(scannedObj) }}
+                key={`main-${activeBlockId}`}
+                position={[activeObj.lat, activeObj.lng]} 
+                icon={createCustomIcon(activeObj.color, true)}
+                eventHandlers={{ click: () => setSelectedObj(activeObj) }}
                 zIndexOffset={1000}
               >
                 <Tooltip direction="right" offset={[15, 0]} opacity={1} permanent>
                   <div style={{ fontFamily: 'Poppins', fontSize: '11px', lineHeight: '1.2' }}>
-                    <span style={{ fontWeight: 'bold' }}>{scannedObj.nom}</span><br/>
-                    <span style={{ color: '#666' }}>{scannedObj.pays}</span>
+                    <span style={{ fontWeight: 'bold' }}>{activeObj.nom}</span><br/>
+                    <span style={{ color: '#666' }}>{activeObj.pays}</span>
                   </div>
                 </Tooltip>
               </Marker>
             )}
 
-            {/* ÉTAPE 3 : Les Cousins (Étiquette visible SEULEMENT si sélectionné) */}
-            {animationStep >= 3 && cousins.map(obj => (
+            {/* ÉTAPE 3 : Les Cousins */}
+            {activeObj && animationStep >= 3 && cousins.map(obj => (
               <Marker 
-                key={obj.id} 
+                key={`cousin-${activeBlockId}-${obj.id}`}
                 position={[obj.lat, obj.lng]} 
                 icon={createCustomIcon(obj.color, false)}
                 eventHandlers={{ click: () => setSelectedObj(obj) }}
               >
-                {/* Condition : On n'affiche le Tooltip que si l'objet est cliqué ! */}
                 {selectedObj?.id === obj.id && (
                   <Tooltip direction="right" offset={[15, 0]} opacity={1} permanent>
                     <div style={{ fontFamily: 'Poppins', fontSize: '11px', lineHeight: '1.2' }}>
@@ -190,7 +194,7 @@ export default function MapPage({
           </MapContainer>
         </div>
 
-        {/* 🚨 LA FICHE INFO (Maintenant à l'intérieur de la carte pour régler la superposition) 🚨 */}
+        {/* FICHE INFO INTERNE */}
         <AnimatePresence>
           {selectedObj && (
             <motion.div 
@@ -211,33 +215,40 @@ export default function MapPage({
         </AnimatePresence>
       </div>
 
-      {/* LA LISTE DE BLOCS (Le bouton de contrôle) */}
+      {/* ✅ LISTE DYNAMIQUE DES OBJETS SCANNÉS EN BAS */}
       <div className="w-full flex gap-4 overflow-x-auto pb-4 px-2" style={{ scrollbarWidth: 'none' }}>
         
-        <motion.div 
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={toggleMapAnimation} // 👈 Appelle la fonction on/off
-          className="flex-shrink-0 flex items-center p-3 rounded-[20px] cursor-pointer"
-          style={{
-             backgroundColor: isRevealed ? colors.yellow : colors.black, 
-             border: `3px solid ${colors.black}`,
-             boxShadow: isRevealed ? "none" : "0 6px 0 rgba(0,0,0,1)",
-             transform: isRevealed ? "translateY(6px)" : "none", // Effet d'enfoncement physique du bouton
-             width: "220px",
-             transition: "all 0.2s ease"
-          }}
-        >
-          <img src={scannedObj.image} alt={scannedObj.nom} className="w-14 h-14 object-cover rounded-full border-2 border-black bg-white" />
-          <div className="ml-3">
-            <p style={{ margin: 0, fontSize: '14px', fontWeight: 800, fontFamily: "'Poppins', sans-serif", color: isRevealed ? colors.black : colors.cream }}>
-              {scannedObj.nom}
-            </p>
-            <p style={{ margin: 0, fontSize: '10px', fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: isRevealed ? '#555' : '#AAA', textTransform: 'uppercase' }}>
-              {isRevealed ? "Masquer le réseau" : "Révéler le réseau"}
-            </p>
-          </div>
-        </motion.div>
+        {unlockedObjects.map((obj) => {
+          const isActive = activeBlockId === obj.id;
+
+          return (
+            <motion.div 
+              key={obj.id}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => toggleNetwork(obj.id)}
+              className="flex-shrink-0 flex items-center p-3 rounded-[20px] cursor-pointer"
+              style={{
+                 backgroundColor: isActive ? colors.yellow : colors.black, 
+                 border: `3px solid ${colors.black}`,
+                 boxShadow: isActive ? "none" : "0 6px 0 rgba(0,0,0,1)",
+                 transform: isActive ? "translateY(6px)" : "none", 
+                 width: "220px",
+                 transition: "all 0.2s ease"
+              }}
+            >
+              <img src={obj.image} alt={obj.nom} className="w-14 h-14 object-cover rounded-full border-2 border-black bg-white" />
+              <div className="ml-3">
+                <p style={{ margin: 0, fontSize: '14px', fontWeight: 800, fontFamily: "'Poppins', sans-serif", color: isActive ? colors.black : colors.cream }}>
+                  {obj.nom}
+                </p>
+                <p style={{ margin: 0, fontSize: '10px', fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: isActive ? '#555' : '#AAA', textTransform: 'uppercase' }}>
+                  {isActive ? "Réseau actif" : "Voir le réseau"}
+                </p>
+              </div>
+            </motion.div>
+          )
+        })}
 
       </div>
     </div>
