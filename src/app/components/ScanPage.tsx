@@ -18,7 +18,8 @@ export function ScanPage({
   onGoToMap,
   onGoToHome,
   onGoToCollection,
-  onGoToCousins // 👈 AJOUT DE LA PROP ICI
+  onGoToCousins,
+  onGoToInfo // 
 }) {
   const scannerRef = useRef(null);
 
@@ -29,7 +30,7 @@ export function ScanPage({
   // Gère la transition quand le scanner a fini
   const handleScanSuccess = (data, className) => {
     
-    // ✅ CORRECTION ICI : "./image/1.png" (le point et pas de "s")
+    // ✅ CORRECTION ICI : "./image/1.png" 
     let img = "./image/1.png"; 
 
     setScannedData({
@@ -48,6 +49,7 @@ export function ScanPage({
         onGoToMap={onGoToMap} 
         onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection} 
+        onGoToInfo={onGoToInfo}
       />
 
       {/* ÉTAT 1 : LA CAMÉRA */}
