@@ -26,27 +26,13 @@ export function ScanPage({
   const [step, setStep] = useState("camera");
   const [scannedData, setScannedData] = useState(null);
 
-  const handleScanSuccess = async (data, className) => {
-    setStep("loading"); 
-
-    try {
-      // 🔌 Ton vrai lien Webhook n8n est ici
-      const response = await fetch("https://douar.app.n8n.cloud/webhook-test/recherche_objet", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          objet_detecte: className, 
-        }),
-      });
-
-      if (!response.ok) throw new Error("Erreur serveur n8n");
-
-      const n8nResponse = await response.json(); 
-
+  // 🔌 Cette fonction réceptionne ce que le Scanner a trouvé ET récupéré sur n8n
+  const handleScanSuccess = (n8nResponse, className) => {
+    
+    // CAS 1 : N8N a répondu avec succès !
+    if (n8nResponse) {
       // TRANSMISSION DES COUSINS À APP.TSX
-      if (n8nResponse && n8nResponse.cousins) {
+      if (n8nResponse.cousins) {
         onSaveN8NData(n8nResponse.cousins);
       } else if (Array.isArray(n8nResponse)) {
         onSaveN8NData(n8nResponse);
@@ -63,11 +49,11 @@ export function ScanPage({
 
       setStep("validation"); 
 
-    } catch (error) {
-      console.error("Erreur n8n :", error);
-      alert("Erreur de communication avec le serveur. Utilisation du parcours de sécurité.");
+    } else {
+      // CAS 2 : PARCOURS DE SÉCURITÉ (Si le Scanner a détecté une erreur réseau/CORS)
+      console.warn("Utilisation du parcours de sécurité pour :", className);
       
-      // En cas de panne réseau, on vide l'état n8n pour forcer l'application à utiliser le fallback
+      // On vide l'état n8n pour forcer l'application à utiliser le fallback local
       onSaveN8NData([]); 
       
       setScannedData({
@@ -93,7 +79,11 @@ export function ScanPage({
 
       {/* ÉTAT 1 : LA CAMÉRA */}
       <div className={`flex-1 items-center justify-center w-full ${step === "camera" ? "flex" : "hidden"}`}>
-        <Scanner ref={scannerRef} onScanSuccess={handleScanSuccess} />
+        <Scanner 
+          ref={scannerRef} 
+          onScanSuccess={handleScanSuccess} 
+          onScanLoading={(isLoading) => setStep(isLoading ? "loading" : "camera")}
+        />
       </div>
 
       {step === "camera" && (
@@ -101,7 +91,7 @@ export function ScanPage({
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => {
-              setStep("loading"); 
+              // Le déclenchement du chargement est maintenant géré par le scanner lui-même au clic
               scannerRef.current?.lancerLeScan(); 
             }}
             className="shrink-0 rounded-full px-14 py-4 focus:outline-none focus-visible:ring-4"
@@ -127,7 +117,7 @@ export function ScanPage({
              }}
            />
            <p className="mt-6 text-lg font-bold tracking-wide" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>
-              Analyse en cours...
+             Analyse en cours...
            </p>
         </div>
       )}
@@ -170,8 +160,8 @@ export function ScanPage({
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
                onClick={() => {
-                  onScan(); 
-                  onGoToCousins(); 
+                 onScan(); 
+                 onGoToCousins(); 
                }}
                className="w-full mt-10 rounded-[30px] py-4 shadow-xl"
                style={{
