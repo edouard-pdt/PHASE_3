@@ -76,7 +76,7 @@ const cousinsData = [
   }
 ];
 
-export default function CousinsPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection }) {
+export default function CousinsPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 = droite, -1 = gauche
 
@@ -102,7 +102,13 @@ export default function CousinsPage({ scanCount, onGoToMap, onGoToHome, onGoToCo
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.black }}>
       
-      <Header scanCount={scanCount} onGoToMap={onGoToMap} onGoToHome={onGoToHome} onGoToCollection={onGoToCollection} />
+      <Header 
+        scanCount={scanCount} 
+        onGoToMap={onGoToMap} 
+        onGoToHome={onGoToHome} 
+        onGoToCollection={onGoToCollection} 
+        onGoToInfo={onGoToInfo}
+        />
 
       {/* CARRÉ CENTRAL CRÈME */}
       <div className="relative w-full aspect-square rounded-[40px] flex items-center justify-center overflow-hidden" style={{ backgroundColor: colors.cream }}>
