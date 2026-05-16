@@ -26,7 +26,7 @@ const collectionData = [
   { id: 10, nom: "Idole", image: "./image/10.png" },
 ];
 
-export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection }) {
+export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection,onGoToInfo }) {
   return (
     // ✅ 1. Le "backgroundColor" a été retiré ici pour laisser voir les formes !
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6">
@@ -37,6 +37,7 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
         onGoToMap={onGoToMap} 
         onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection} 
+        onGoToInfo={onGoToInfo}
       />
 
       {/* ✅ 2. Compteur supprimé et Titre passé en Crème */}
