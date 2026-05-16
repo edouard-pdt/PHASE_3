@@ -15,7 +15,7 @@ import { ScanPage } from "./components/ScanPage";
 import MapPage from "./components/MapPage"; 
 import CollectionPage from "./components/CollectionPage";
 import CousinsPage from "./components/CousinsPage"; 
-import InfoPage from "./components/InfoPage"; // L'import de la page Info
+import InfoPage from "./components/InfoPage"; 
 
 const colors = {
   yellow: "#F6C453",
@@ -314,6 +314,8 @@ export default function App() {
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")} 
               onGoToInfo={() => setPage("info")}
+              // 🔌 AJOUT : MapPage reçoit maintenant les données de n8n !
+              n8nCousinsData={n8nCousins}
             />
           </motion.div>
         )}
@@ -334,6 +336,8 @@ export default function App() {
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
+              // 🔌 AJOUT : Câblage pour le bouton "Voir le réseau"
+              onGoToCousins={() => setPage("cousins")}
             />
           </motion.div>
         )}
