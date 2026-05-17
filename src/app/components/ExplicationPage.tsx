@@ -29,7 +29,7 @@ const blocks = [
   {
     number: "03",
     title: "Tisse des liens entre les cultures",
-    text: "Découvre les cousins de cette oeuvre et regarde leurs formes, leurs matériaux ou leurs fonction…",
+    text: "Découvre les cousins de cette oeuvre et regarde leurs formes, leurs matériaux ou leurs fonctions…",
     bg: colors.blue,
     textColor: colors.cream,
   },
