@@ -1,4 +1,4 @@
-import svgPaths from "./svg-cf8msoxdol";
+import svgPaths from "imports/LOGO.svg";
 
 function Paralleles() {
   return (
