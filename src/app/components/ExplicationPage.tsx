@@ -49,32 +49,36 @@ const blocks = [
   },
 ];
 
-// Each block fades in exactly when the previous starts fading out → crossfade
+// ⏳ NOUVEAUX TIMINGS : Transitions plus longues (10% de scroll par transition)
 const TIMINGS = [
-  { inStart: 0.00, inEnd: 0.10, outStart: 0.16, outEnd: 0.22 },
-  { inStart: 0.16, inEnd: 0.24, outStart: 0.30, outEnd: 0.36 },
-  { inStart: 0.30, inEnd: 0.38, outStart: 0.44, outEnd: 0.50 },
-  { inStart: 0.44, inEnd: 0.52, outStart: 0.58, outEnd: 0.64 },
-  { inStart: 0.58, inEnd: 0.66, outStart: 0.73, outEnd: 0.79 },
+  { inStart: 0.00, inEnd: 0.00, outStart: 0.15, outEnd: 0.25 }, // Bloc 1
+  { inStart: 0.15, inEnd: 0.25, outStart: 0.35, outEnd: 0.45 }, // Bloc 2
+  { inStart: 0.35, inEnd: 0.45, outStart: 0.55, outEnd: 0.65 }, // Bloc 3
+  { inStart: 0.55, inEnd: 0.65, outStart: 0.75, outEnd: 0.85 }, // Bloc 4
+  { inStart: 0.75, inEnd: 0.85, outStart: 0.92, outEnd: 0.98 }, // Bloc 5
 ];
-const CTA_TIMING = { inStart: 0.73, inEnd: 0.84 };
+
+// Le CTA apparaît doucement à la toute fin
+const CTA_TIMING = { inStart: 0.92, inEnd: 0.98 };
 
 function AnimatedBlock({
   block,
   progress,
   timing,
-  isLast,
+  isFirst, // 👈 Ajout de isFirst pour gérer le bloc initial
 }: {
   block: (typeof blocks)[0];
   progress: MotionValue<number>;
   timing: (typeof TIMINGS)[0];
-  isLast?: boolean;
+  isFirst?: boolean;
 }) {
-  const inputRange = isLast
-    ? [timing.inStart, timing.inEnd]
+  // 🎯 Si c'est le premier bloc, il commence déjà visible (1) et à sa place (0)
+  const inputRange = isFirst
+    ? [0, timing.outStart, timing.outEnd]
     : [timing.inStart, timing.inEnd, timing.outStart, timing.outEnd];
-  const opacityRange = isLast ? [0, 1] : [0, 1, 1, 0];
-  const yRange = isLast ? [60, 0] : [60, 0, 0, -60];
+    
+  const opacityRange = isFirst ? [1, 1, 0] : [0, 1, 1, 0];
+  const yRange = isFirst ? [0, 0, -60] : [60, 0, 0, -60];
 
   const opacity = useTransform(progress, inputRange, opacityRange);
   const y = useTransform(progress, inputRange, yRange);
@@ -196,15 +200,15 @@ export function ExplicationPage({
 }) {
   const { scrollYProgress } = useScroll();
 
-  // Bloquer le scroll vers le bas une fois le CTA pleinement visible (progress >= 0.84)
+  // 🔒 Mise à jour du verrou de scroll pour correspondre aux nouveaux timings (0.98 au lieu de 0.84)
   useEffect(() => {
     let touchStartY = 0;
     const handleWheel = (e: WheelEvent) => {
-      if (scrollYProgress.get() >= 0.84 && e.deltaY > 0) e.preventDefault();
+      if (scrollYProgress.get() >= 0.98 && e.deltaY > 0) e.preventDefault();
     };
     const handleTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
     const handleTouchMove = (e: TouchEvent) => {
-      if (scrollYProgress.get() >= 0.84 && e.touches[0].clientY < touchStartY) e.preventDefault();
+      if (scrollYProgress.get() >= 0.98 && e.touches[0].clientY < touchStartY) e.preventDefault();
     };
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -226,7 +230,7 @@ export function ExplicationPage({
               block={block}
               progress={scrollYProgress}
               timing={TIMINGS[i]}
-              isLast={false}
+              isFirst={i === 0} // 👈 On indique que le bloc index 0 est le premier
             />
           ))}
           <AnimatedCTA
