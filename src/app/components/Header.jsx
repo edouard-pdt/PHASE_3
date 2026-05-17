@@ -69,7 +69,7 @@ function HoverCircleBtn({ children, hoverBg, title, onClick }) {
   );
 }
 
-// 👇 NOUVEAU BOUTON SCAN 👇
+// Bouton Scan
 function ScanBtn({ onClick }) {
   return (
     <HoverCircleBtn hoverBg={colors.yellow} title="Scan" onClick={onClick}>
@@ -127,33 +127,20 @@ function CollectionBtn({ count, onClick }) {
   );
 }
 
-function MenuBtn() {
-  return (
-    <HoverCircleBtn hoverBg={colors.blue} title="Menu">
-      <div className="flex flex-col gap-[4px]">
-        <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
-        <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
-        <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
-      </div>
-    </HoverCircleBtn>
-  );
-}
-
-// 👑 LE COMPOSANT FINAL EXPORTÉ (avec la nouvelle prop onGoToScan) 👑
+// 👑 LE COMPOSANT FINAL EXPORTÉ 👑
 export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo, onGoToScan }) {
   return (
     <div className="flex items-center justify-between w-full shrink-0 z-10" style={{ backgroundColor: colors.cream, padding: 3, borderRadius: 30 }}>
-      {/* Clic sur le logo -> Retour à l'accueil / Scan (comme avant) */}
+      {/* Clic sur le logo -> Retour à l'accueil / Scan */}
       <button onClick={onGoToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
         <LogoSvg />
       </button>
       
       <div className="flex items-center" style={{ gap: 4 }}>
-        <ScanBtn onClick={onGoToScan || onGoToHome} /> {/* 👈 Ajouté en premier ! */}
+        <ScanBtn onClick={onGoToScan || onGoToHome} />
         <WorldBtn onClick={onGoToMap} />
         <InfoBtn onClick={onGoToInfo} /> 
         <CollectionBtn count={scanCount} onClick={onGoToCollection} /> 
-        <MenuBtn />
       </div>
     </div>
   );
