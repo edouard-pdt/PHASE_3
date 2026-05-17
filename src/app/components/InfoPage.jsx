@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import Header from "./Header";
+import { Header } from './Header';
 
 const colors = {
   yellow: "#F6C453",
