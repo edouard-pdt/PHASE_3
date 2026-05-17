@@ -47,11 +47,11 @@ export function ValidationPage({
             textShadow: "0 4px 24px rgba(0,0,0,0.5)",
           }}
         >
-          Pour le bon fonctionnement de la visite{" "}
+          Bienvenue{" "}
           <span style={{ color: colors.yellow, fontWeight: 700 }}>
             {prenom}
           </span>{" "}
-          tu dois accepter l'accès à la caméra de ton téléphone !
+          ! Pour le bon fonctionnement de la visite, tu dois autoriser l'accès à la caméra de ton téléphone !
         </motion.p>
 
         <motion.button
