@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-// ⚠️ Vérifie que ce chemin est toujours bon depuis ce nouveau fichier :
 import svgPaths from "../../imports/PageDepart-1/svg-cf8msoxdol";
 
 const colors = {
