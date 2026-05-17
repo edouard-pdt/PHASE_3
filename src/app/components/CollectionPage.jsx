@@ -12,14 +12,13 @@ const colors = {
   orange: "#DE5C44",
 };
 
-// Nouvelle liste avec tes 5 objets réels et les 5 autres "à venir"
 const collectionData = [
   { id: 1, nom: "Vase Zoomorphe CHIMU", image: "./image/1.png" },
-  { id: 2, nom: "Massue de chef wahaika", image: "./image/2.png" },
-  { id: 3, nom: "lampe à huile grecque", image: "./image/3.png" },
-  { id: 4, nom: "flacon à parfum ottoman", image: "./image/4.png" },
-  { id: 5, nom: "Manilles", image: "./image/5.png" },
-  { id: 6, nom: "À venir", image: "./image/6.png" },
+  { id: 2, nom: "Massue de chef wahaika", image: "./image/7.png" },
+  { id: 3, nom: "lampe à huile grecque", image: "./image/9.png" },
+  { id: 4, nom: "flacon à parfum ottoman", image: "./image/8.png" },
+  { id: 5, nom: "Manilles", image: "./image/6.png" },
+  { id: 6, nom: "cache sexe tanga", image: "./image/10.png" },
   { id: 7, nom: "À venir", image: "./image/7.png" },
   { id: 8, nom: "À venir", image: "./image/8.png" },
   { id: 9, nom: "À venir", image: "./image/9.png" },
