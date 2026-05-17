@@ -12,6 +12,14 @@ const colors = {
   orange: "#DE5C44",
 };
 
+// Tableau de tes plans avec les chemins d'accès vers ton dossier "public/image/plan"
+const museumPlans = [
+  { id: 1, img: "./image/plan/th-930x620-plan--0--en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 0" },
+  { id: 2, img: "./image/plan/th-930x620-plan--1-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 1" },
+  { id: 3, img: "./image/plan/th-930x620-plan--1-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 1 (Suite)" }, // Remplace par le nom exact du fichier s'il est différent
+  { id: 4, img: "./image/plan/th-930x620-plan--2-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 2" }
+];
+
 export default function InfoPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6 pb-12">
@@ -32,7 +40,7 @@ export default function InfoPage({ scanCount, onGoToMap, onGoToHome, onGoToColle
         </h2>
       </div>
 
-      {/* CARTE 1 : Le Musée & Le Plan */}
+      {/* CARTE 1 : Le Musée & Le Carrousel de Plans */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -45,18 +53,39 @@ export default function InfoPage({ scanCount, onGoToMap, onGoToHome, onGoToColle
              {/* Icône Musée */}
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={colors.cream} strokeWidth="2.5"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11m16-11v11M8 14v3m4-3v3m4-3v3"/></svg>
           </div>
-          <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '20px', color: colors.black, margin: 0 }}>Le Musée</h3>
+          <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '20px', color: colors.black, margin: 0 }}>Les plans du Musée</h3>
         </div>
         
         <p style={{ fontFamily: 'Poppins', fontSize: '13px', color: '#555', margin: 0 }}>
-          Retrouvez les objets de votre collection dans nos différentes galeries.
+          Glissez vers la gauche pour explorer les différents niveaux et retrouver les objets de votre collection.
         </p>
 
-        {/* Ton image de plan */}
-        <div className="w-full rounded-[20px] overflow-hidden border-2" style={{ borderColor: colors.black }}>
-          {/* ⚠️ Vérifie que ton fichier s'appelle bien plan.png ou plan.jpg */}
-          <img src="./image/plan.png" alt="Plan du musée" className="w-full h-auto object-cover" />
+        {/* 🎠 CARROUSEL HORIZONTAL DES PLANS */}
+        <div className="w-full overflow-x-auto pb-4 pt-2 -mx-2 px-2 flex gap-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
+          {museumPlans.map((plan) => (
+            <div 
+              key={plan.id} 
+              className="flex-shrink-0 w-[90%] snap-center flex flex-col items-center gap-2"
+            >
+              <div 
+                className="w-full rounded-[20px] overflow-hidden border-2 shadow-sm" 
+                style={{ borderColor: colors.black, backgroundColor: "white" }}
+              >
+                <img 
+                  src={plan.img} 
+                  alt={plan.title} 
+                  className="w-full h-auto object-cover" 
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-xs font-bold font-['Poppins'] text-center" style={{ color: colors.black }}>
+                {plan.title}
+              </span>
+            </div>
+          ))}
         </div>
+        {/* Fin du carrousel */}
+
       </motion.div>
 
 
