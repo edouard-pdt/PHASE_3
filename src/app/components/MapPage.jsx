@@ -90,18 +90,10 @@ export default function MapPage({
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
     if (targetedObject) {
       const matchedNode = dataNetwork.find(
         obj => obj.nom?.toLowerCase() === targetedObject?.nom?.toLowerCase() || obj.id === String(targetedObject?.id)
-      );
-
-      if (matchedNode) {
-        launchNetworkSequence(matchedNode.id);
-        setSelectedObj(matchedNode);
-      }
-    }
-  }, [targetedObject]);
       );
 
       if (matchedNode) {
