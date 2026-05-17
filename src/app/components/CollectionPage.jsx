@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion"; // Correction du nom du package si nécessaire
 import Header from "./Header";
 
 const colors = {
@@ -34,8 +34,8 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
   const selectedItem = collectionData.find(item => item.id === selectedId);
 
   return (
-    // Ajout d'un padding-bottom (pb-32) pour éviter que le bouton flottant ne cache la dernière ligne
-    <div className="relative flex flex-col items-center min-h-screen p-5 gap-6 pb-32">
+    // Ajout d'un padding-bottom (pb-40) pour éviter que le double bouton flottant ne cache la dernière ligne
+    <div className="relative flex flex-col items-center min-h-screen p-5 gap-6 pb-40">
       
       {/* Header avec les bonnes fonctions de navigation */}
       <Header 
@@ -141,32 +141,57 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
         })}
       </div>
 
-      {/* BOUTON D'OUVERTURE DU RÉSEAU COUSIN */}
+      {/* BANDEAU ACTION SUR L'OBJET SELECTIONNÉ */}
       <AnimatePresence>
         {selectedId && selectedItem && (
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-8 left-0 right-0 px-6 z-50 flex justify-center pointer-events-none"
+            className="fixed bottom-6 left-0 right-0 px-5 z-50 flex justify-center pointer-events-none"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onGoToCousins}
-              className="w-full max-w-sm rounded-[30px] py-4 shadow-2xl flex items-center justify-center gap-3 pointer-events-auto"
-              style={{
-                backgroundColor: colors.yellow,
-                color: colors.black,
-                border: `4px solid ${colors.black}`,
-                fontFamily: "'Poppins', sans-serif",
-                fontSize: "1.1rem",
-                fontWeight: 800
-              }}
-            >
-              Voir le réseau 
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </motion.button>
+            {/* Conteneur horizontal pour les deux boutons tactiles côte à côte */}
+            <div className="w-full max-w-md flex gap-3 pointer-events-auto">
+              
+              {/* BOUTON 1 : Voir la carte (Focalisé sur l'objet) */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onGoToMap(selectedItem)} // Transmet l'objet entier en argument pour la carte
+                className="flex-1 rounded-[25px] py-3 flex items-center justify-center gap-2"
+                style={{
+                  backgroundColor: colors.pink,
+                  color: colors.black,
+                  border: `3px solid ${colors.black}`,
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "0.95rem",
+                  fontWeight: 800
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Sur la carte
+              </motion.button>
+
+              {/* BOUTON 2 : Voir le réseau de cousins */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={onGoToCousins}
+                className="flex-1 rounded-[25px] py-3 flex items-center justify-center gap-2"
+                style={{
+                  backgroundColor: colors.yellow,
+                  color: colors.black,
+                  border: `3px solid ${colors.black}`,
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "0.95rem",
+                  fontWeight: 800
+                }}
+              >
+                Le réseau
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </motion.button>
+
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
