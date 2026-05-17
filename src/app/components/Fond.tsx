@@ -1,4 +1,4 @@
-import svgPaths from "../../imports/PageDepart/svg-20wrg994x5";
+import svgPaths from "../../imports/LOGO.svg";
 
 export function Fond() {
   return (
