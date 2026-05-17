@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Correction de l'import motion
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "./Header";
 
 const colors = {
@@ -12,73 +12,73 @@ const colors = {
   orange: "#DE5C44",
 };
 
-// 🛡️ Chemin de sécurité : Données par défaut avec les couleurs assignées
+// 🛡️ Golden Path : Un cousin par continent avec un tag strictement identique
 const fallbackCousinsData = [
   {
     id: "main",
     nom: "Vase zoomorphe Chimu",
     relation: "Objet scanné",
-    image: "./image/1.png",
-    pays: "Pérou",
-    tag: "Rituel",
-    themeColor: colors.cream, // Couleur pour l'objet principal
-    description: "Ce vase en forme de tête de canard a été fabriqué au Pérou il y a plus de 500 ans par le peuple Chimu. Ces poteries n'étaient pas utilisées au quotidien, mais servaient d'objets précieux lors de cérémonies importantes.",
+    image: "./image/vase_chimu.png",
+    pays: "Pérou (Amériques)",
+    tag: "Récipient rituel", // 👈 Le tag commun !
+    themeColor: colors.cream,
+    description: "Ce vase en forme de tête de canard a été fabriqué au Pérou il y a plus de 500 ans par le peuple Chimu. Ces poteries servaient d'objets précieux lors de cérémonies importantes.",
     bullets: ["Servir lors de cérémonies", "Représenter la faune locale", "Témoigner du savoir-faire Chimu"]
   },
   {
     id: "c1",
-    nom: "Vase anthropomorphe Mochica",
+    nom: "Vase Canope",
     relation: "Cousin 1/5",
-    image: "./image/2.png",
-    pays: "Pérou",
-    tag: "Céramique",
+    image: "./image/cousin_afrique.png",
+    pays: "Égypte (Afrique)",
+    tag: "Récipient rituel",
     themeColor: colors.pink, 
-    description: "Ce vase en terre cuite représente un homme portant une tunique traditionnelle. Il a été fabriqué au Pérou il y a près de 1500 ans par les Mochicas, une civilisation plus ancienne que les Chimus.",
-    bullets: ["Représenter des figures humaines", "Utilisation rituelle", "Art précolombien"]
+    description: "Utilisé lors de la momification, ce vase protégeait les organes vitaux du défunt pour l'accompagner dans son voyage vers l'au-delà.",
+    bullets: ["Protéger le corps", "Assurer la vie éternelle", "Honorer les dieux"]
   },
   {
     id: "c2",
-    nom: "Vase Nazca à double goulot",
+    nom: "Cratère à figures rouges",
     relation: "Cousin 2/5",
-    image: "./image/3.png",
-    pays: "Pérou",
-    tag: "Céramique",
+    image: "./image/cousin_europe.png",
+    pays: "Grèce (Europe)",
+    tag: "Récipient rituel",
     themeColor: colors.blue,
-    description: "Ce vase possède deux becs reliés par une poignée en forme d'étrier. Il provient de la culture Nazca, reconnue pour ses poteries colorées et ses formes particulières.",
-    bullets: ["Goulot en étrier", "Poterie polychrome", "Usage cérémoniel"]
+    description: "Ce grand vase servait à mélanger l'eau et le vin lors des banquets (symposions), des moments de célébration clés de la vie sociale antique.",
+    bullets: ["Mélanger les boissons", "Rassembler la communauté", "Exposer des scènes mythologiques"]
   },
   {
     id: "c3",
-    nom: "Guerrier Mochica",
+    nom: "Vase Zun en bronze",
     relation: "Cousin 3/5",
-    image: "./image/4.png",
-    pays: "Pérou",
-    tag: "Statuette",
+    image: "./image/cousin_asie.png",
+    pays: "Chine (Asie)",
+    tag: "Récipient rituel",
     themeColor: colors.orange,
-    description: "Cette statuette représente un guerrier d'Amérique du Sud, équipé de ses armes traditionnelles. Les artisans de l'époque représentaient aussi bien la faune locale que des figures humaines.",
-    bullets: ["Représentation militaire", "Travail de la terre cuite", "Témoignage historique"]
+    description: "Ce lourd récipient en bronze était utilisé sous la dynastie Shang pour offrir du vin aux ancêtres lors de cérémonies sacrées.",
+    bullets: ["Honorer les ancêtres", "Faire des offrandes", "Démontrer la maîtrise du bronze"]
   },
   {
     id: "c4",
-    nom: "Coupe Maya avec glyphes",
+    nom: "Coupe Tanoa",
     relation: "Cousin 4/5",
-    image: "./image/5.png",
-    pays: "Amérique centrale",
-    tag: "Écriture",
+    image: "./image/cousin_oceanie.png",
+    pays: "Fidji (Océanie)",
+    tag: "Récipient rituel",
     themeColor: colors.purple,
-    description: "Cette coupe est décorée avec des glyphes, qui constituent le système d'écriture de la civilisation Maya.",
-    bullets: ["Support d'écriture", "Récipient rituel", "Culture Maya"]
+    description: "Grande coupe sculptée dans un bois précieux, utilisée pour préparer et partager le kava, une boisson qui renforce les liens de la communauté.",
+    bullets: ["Préparer une boisson sacrée", "Renforcer les liens sociaux", "Sculpter le bois local"]
   },
   {
     id: "c5",
-    nom: "Statuette Chimu",
+    nom: "Rhyton Perse",
     relation: "Cousin 5/5",
-    image: "./image/6.png",
-    pays: "Pérou",
-    tag: "Divinité",
+    image: "./image/cousin_moyen_orient.png",
+    pays: "Iran (Moyen-Orient)",
+    tag: "Récipient rituel",
     themeColor: colors.yellow,
-    description: "Cette sculpture en bois ou en pierre représente une divinité ou un esprit. C'est ce type d'objet qui a inspiré l'album de Tintin 'L'Oreille cassée'.",
-    bullets: ["Représentation spirituelle", "Culture Chimu", "Inspiration contemporaine"]
+    description: "Ce vase à boire en forme de corne ou d'animal était utilisé lors des grands banquets royaux dans l'empire perse pour célébrer les victoires.",
+    bullets: ["Célébrer le pouvoir", "Boire lors des banquets", "Travailler les métaux précieux"]
   }
 ];
 
@@ -92,12 +92,11 @@ export default function CousinsPage({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); 
-  const [showSynthesis, setShowSynthesis] = useState(false);
+  const [showSynthesis, setShowSynthesis] = useState(false); // 👈 Gère l'affichage de la page de fin
   
   const activeData = n8nCousinsData && n8nCousinsData.length > 0 ? n8nCousinsData : fallbackCousinsData;
   const currentObj = activeData[currentIndex];
 
-  // Vérifier si l'utilisateur a vu le dernier cousin
   const hasSeenAll = currentIndex === activeData.length - 1;
 
   const nextObj = () => {
@@ -116,36 +115,44 @@ export default function CousinsPage({
     exit: (dir) => ({ x: dir > 0 ? -100 : 100, opacity: 0 }),
   };
 
-  // --- VUE 2 : LA SYNTHÈSE ---
+  // --------------------------------------------------------
+  // 📚 VUE 2 : LA PAGE DE SYNTHÈSE (Le lien entre les cultures)
+  // --------------------------------------------------------
   if (showSynthesis) {
     return (
-      <div className="min-h-screen p-6 flex flex-col items-center justify-center text-center gap-8" style={{ backgroundColor: colors.black, color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>
-        <h1 className="text-3xl font-bold mb-4" style={{ color: colors.yellow }}>Des besoins communs, des réponses multiples</h1>
+      <div className="min-h-screen p-8 flex flex-col items-center justify-center text-left gap-8" style={{ backgroundColor: colors.black, color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>
         
-        <div className="text-left space-y-4 text-sm leading-relaxed max-w-md">
+        <h1 className="text-3xl font-bold mb-4 text-center" style={{ color: colors.yellow }}>
+          Des besoins communs, des réponses uniques
+        </h1>
+        
+        <div className="space-y-6 text-base leading-relaxed max-w-md">
           <p>
-            Bien qu'elles soient issues d'époques ou de régions différentes, ces cultures partageaient des nécessités universelles : honorer leurs divinités, accompagner les défunts ou structurer leur société.
+            En parcourant ces continents, on remarque une chose fascinante : <strong>toutes ces cultures partageaient un besoin similaire.</strong> Que ce soit pour honorer leurs ancêtres, protéger leurs défunts ou rassembler leur communauté, ils avaient tous besoin d'un <span style={{ color: colors.yellow }}>récipient rituel</span>.
+          </p>
+          <div className="h-px w-full opacity-30" style={{ backgroundColor: colors.cream }}></div>
+          <p>
+            Cependant, face à ce même besoin, <strong>chaque civilisation a répondu de manière totalement différente</strong>. 
           </p>
           <p>
-            Cependant, face à un même besoin (comme conserver une offrande ou représenter une figure tutélaire), chaque civilisation a apporté sa propre réponse esthétique et technique. 
-          </p>
-          <p>
-            Cette diversité dépendait des matériaux à disposition (terre, bois, pierre), des croyances locales et des traditions artisanales propres à chaque peuple d'Amérique précolombienne.
+            Cette diversité s'explique par les <strong>matériaux</strong> qu'ils avaient sous la main (la terre cuite au Pérou, le bronze en Chine, le bois précieux en Océanie) et par leurs propres traditions artistiques.
           </p>
         </div>
 
         <button 
           onClick={onGoToCollection}
-          className="mt-8 px-8 py-4 rounded-full font-bold text-lg transition-transform hover:scale-105"
+          className="mt-8 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform"
           style={{ backgroundColor: colors.yellow, color: colors.black }}
         >
-          Découvrir la collection
+          Voir ma collection
         </button>
       </div>
     );
   }
 
-  // --- VUE 1 : LE CARROUSEL ---
+  // --------------------------------------------------------
+  // 🔄 VUE 1 : LE CARROUSEL DES COUSINS
+  // --------------------------------------------------------
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.black }}>
       
@@ -157,7 +164,7 @@ export default function CousinsPage({
         onGoToInfo={onGoToInfo}
       />
 
-      {/* CARRÉ CENTRAL AVEC COULEUR DYNAMIQUE */}
+      {/* CARRÉ CENTRAL */}
       <div 
         className="relative w-full aspect-square rounded-[40px] flex items-center justify-center overflow-hidden transition-colors duration-500" 
         style={{ backgroundColor: currentObj.themeColor || colors.cream }}
@@ -166,7 +173,7 @@ export default function CousinsPage({
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.img
             key={currentObj.id || currentIndex}
-            src={currentObj.image || "./image/1.png"}
+            src={currentObj.image}
             alt={currentObj.nom}
             custom={direction}
             variants={variants}
@@ -178,7 +185,7 @@ export default function CousinsPage({
           />
         </AnimatePresence>
 
-        {/* Flèches (désactivée pour prev si c'est le 1er, désactivée pour next si c'est le dernier) */}
+        {/* Flèches */}
         {currentIndex > 0 && (
           <button onClick={prevObj} className="absolute left-4 w-10 h-10 rounded-full flex items-center justify-center z-10 bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm transition-all">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -191,15 +198,17 @@ export default function CousinsPage({
           </button>
         )}
 
-        {/* Tags */}
-        <div className="absolute bottom-4 flex gap-2 w-full px-4 justify-center">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: colors.black, color: colors.cream, fontSize: "12px", fontFamily: "'Poppins', sans-serif" }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            {currentObj.pays || "Inconnu"}
+        {/* Tags EXACTEMENT comme sur ta capture d'écran */}
+        <div className="absolute bottom-4 flex gap-2 w-full px-4 justify-center font-['Poppins']">
+          {/* Tag Noir : Pays/Continent */}
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: colors.black, color: "white", fontSize: "14px", fontWeight: "500" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            {currentObj.pays}
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 text-black text-xs font-bold font-['Poppins']">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            {currentObj.tag || "Parallèle"}
+          {/* Tag Blanc : Étiquette commune */}
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF5F0] text-black text-[14px] font-bold">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            {currentObj.tag}
           </div>
         </div>
       </div>
@@ -210,29 +219,29 @@ export default function CousinsPage({
           {currentObj.nom}
         </div>
         <div className="px-6 py-2 rounded-full font-bold text-center" style={{ backgroundColor: currentObj.themeColor || colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "14px", transition: "background-color 0.5s" }}>
-          {currentObj.relation || (currentIndex === 0 ? "Objet scanné" : `Cousin ${currentIndex}/5`)}
+          {currentObj.relation}
         </div>
       </div>
 
-      {/* ZONE DE TEXTE DYNAMIQUE */}
+      {/* ZONE DE TEXTE */}
       <AnimatePresence mode="wait">
         <motion.div 
           key={currentObj.id || currentIndex}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="relative w-full px-2 mt-4 flex flex-col gap-4 pb-10"
+          className="relative w-full px-2 mt-4 flex flex-col gap-4 pb-4"
         >
           <div className="absolute right-0 top-0 bottom-0 w-1 rounded-full transition-colors duration-500" style={{ backgroundColor: currentObj.themeColor || colors.yellow }}></div>
 
           <div>
             <h3 className="text-lg font-bold mb-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>À quoi sert cet objet ?</h3>
             <p className="text-sm pr-6 leading-relaxed transition-colors duration-500" style={{ color: currentObj.themeColor || colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
-              {currentObj.description || "Aucune description disponible."}
+              {currentObj.description}
             </p>
           </div>
 
-          {currentObj.bullets && currentObj.bullets.length > 0 && (
+          {currentObj.bullets && (
             <div>
               <h3 className="text-lg font-bold mb-2 mt-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>Ce que cet objet permet de faire</h3>
               <div className="flex flex-col gap-3 pr-6">
