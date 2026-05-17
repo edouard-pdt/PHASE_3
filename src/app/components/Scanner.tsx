@@ -57,29 +57,43 @@ const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
 
   const envoyerAN8n = async (objetDetecte) => {
     try {
-      // 🛠️ L'ASTUCE : On utilise URLSearchParams pour envoyer les données comme un formulaire.
-      // Cela court-circuite le mécanisme de Preflight du navigateur !
       const params = new URLSearchParams();
       params.append('objet_detecte', objetDetecte);
-      params.append('nom_objet', objetDetecte); // Double sécurité selon ce qu'attend ton n8n
+      params.append('nom_objet', objetDetecte);
+
+      // ⏱️ L'ASTUCE DU GOLDEN PATH : Le chronomètre de 5 secondes
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort(); // Coupe la connexion de force au bout de 5000 ms
+      }, 5000);
 
       const reponse = await fetch(URL_WEBHOOK_N8N, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/x-www-form-urlencoded' 
         },
-        body: params.toString()
+        body: params.toString(),
+        signal: controller.signal // 🔌 On branche l'interrupteur à notre requête
       });
       
+      // ✅ Si n8n répond avant 5 secondes, on annule le chronomètre !
+      clearTimeout(timeoutId); 
+
       const data = await reponse.json();
       isScanningRef.current = false;
       
       if (onScanSuccess) onScanSuccess(data, objetDetecte);
     } catch (error) {
-      console.error("Erreur n8n interceptée :", error);
       isScanningRef.current = false;
       
-      // Si l'affichage final bloque encore, le parcours de sécurité prend le relais
+      // 🛡️ DÉCLENCHEMENT DU PARCOURS DE SÉCURITÉ
+      if (error.name === 'AbortError') {
+         console.warn("⏱️ Le réseau est trop lent (> 5s). Bascule sur le Golden Path !");
+      } else {
+         console.error("❌ Erreur n8n interceptée :", error);
+      }
+      
+      // On envoie 'null' pour que ton composant parent charge les données en dur
       if (onScanSuccess) onScanSuccess(null, objetDetecte);
     }
   };
