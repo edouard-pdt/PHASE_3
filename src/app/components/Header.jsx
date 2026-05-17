@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import svgPaths from "../../imports/PageDepart-1/svg-cf8msoxdol";
+import { Logo } from "./Logo"; // 👈 On importe le nouveau logo 100% propre qu'on a créé
 
 const colors = {
   yellow: "#F6C453",
@@ -12,41 +12,9 @@ const colors = {
   orange: "#DE5C44",
 };
 
-const BTN = 38;
-const LOGO_H = BTN;
-const LOGO_W = Math.round((200 / 83) * LOGO_H);
+const BTN = 42; // Un peu plus grand que ton ancien 38, mais plus petit que 49 pour que tout rentre !
 
-function LogoSvg() {
-  return (
-    <svg
-      width={LOGO_W}
-      height={LOGO_H}
-      viewBox="0 0 200 83"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ display: "block", flexShrink: 0 }}
-    >
-      <rect width="200" height="83" rx="41.5" fill="#131313" />
-      <path d="M65.3366 19.7532L91.1666 19.7532L91.1666 45.5833L65.3366 19.7532Z" fill="#6559A1" />
-      <path d="M116.997 19.7532L142.827 19.7532L142.827 45.5833L116.997 19.7532Z" fill="#DE5C44" />
-      <circle cx="52.4216" cy="32.6683" r="12.915" fill="#F6C453" />
-      <rect x="91.1666" y="19.7533" width="25.83" height="25.83" fill="#EBA7BE" />
-      <circle cx="155.742" cy="32.6683" r="12.915" fill="#4595D0" />
-      <path d="M51.3701 66.0899L56.208 50.5216H59.5783L64.3727 66.0899H60.5024L58.4041 57.1099L57.8605 54.6311H57.7844L57.3061 57.1099L55.1643 66.0899H51.3701ZM53.6206 63.4263L54.5338 60.5345H60.9916L61.9809 63.4263H53.6206Z" fill="#FFEFEC" />
-      <path d="M39.5066 66.0899V50.5216H44.5946C45.8122 50.5216 46.8523 50.7354 47.7147 51.163C48.5845 51.5907 49.2477 52.2031 49.7043 53.0004C50.1681 53.7904 50.4001 54.7435 50.4001 55.8596V56.0771C50.4001 57.186 50.1681 58.1391 49.7043 58.9363C49.2477 59.7336 48.5845 60.346 47.7147 60.7736C46.8523 61.2013 45.8122 61.4151 44.5946 61.4151H41.6918V58.0014H44.5728C45.2106 58.0014 45.7143 57.8347 46.084 57.5013C46.4536 57.1606 46.6384 56.704 46.6384 56.1314V55.8053C46.6384 55.2254 46.4536 54.7688 46.084 54.4354C45.7143 54.102 45.2106 53.9353 44.5728 53.9353H43.2465V66.0899H39.5066Z" fill="#FFEFEC" />
-      <path d="M77.3081 66.0899L82.146 50.5216H85.5163L90.3107 66.0899H86.4404L84.3421 57.1099L83.7985 54.6311H83.7224L83.2441 57.1099L81.1023 66.0899H77.3081ZM79.5586 63.4263L80.4718 60.5345H86.9296L87.9189 63.4263H79.5586Z" fill="#FFEFEC" />
-      <path d="M65.3365 66.0899V50.5216H70.468C71.6856 50.5216 72.7148 50.7318 73.5556 51.1522C74.4036 51.5653 75.045 52.1524 75.4799 52.9134C75.922 53.6672 76.143 54.555 76.143 55.577V55.7074C76.143 56.7294 75.922 57.6208 75.4799 58.3819C75.045 59.1356 74.4036 59.7227 73.5556 60.1431C72.7148 60.5562 71.6856 60.7628 70.468 60.7628H67.5218V57.61H70.4463C71.0623 57.61 71.5371 57.4505 71.8705 57.1316C72.2111 56.8127 72.3814 56.3996 72.3814 55.8922V55.6531C72.3814 55.1385 72.2111 54.7253 71.8705 54.4137C71.5371 54.0948 71.0623 53.9353 70.4463 53.9353H69.0547V66.0899H65.3365ZM72.7728 66.0899L69.1308 59.3712H73.2512L77.0128 66.0899H72.7728Z" fill="#FFEFEC" />
-      <path d="M104.205 66.0899V50.5216H107.988V62.524H114.772V66.0899H104.205Z" fill="#FFEFEC" />
-      <path d="M91.1666 66.0899V50.5216H94.95V62.524H101.734V66.0899H91.1666Z" fill="#FFEFEC" />
-      <path d="M130.23 66.0899V50.5216H134.013V62.524H140.797V66.0899H130.23Z" fill="#FFEFEC" />
-      <path d="M116.997 66.0899V50.5216H126.955V54.0223H120.736V62.5892H127.129V66.0899H116.997ZM119.345 59.893V56.4358H126.085V59.893H119.345Z" fill="#FFEFEC" />
-      <path d="M161.366 66.8509C160.271 66.8509 159.278 66.648 158.387 66.2421C157.495 65.8362 156.749 65.2637 156.147 64.5244C155.553 63.7851 155.147 62.9118 154.929 61.9043L158.398 61.0454C158.55 61.8065 158.887 62.3972 159.409 62.8175C159.93 63.2307 160.586 63.4372 161.376 63.4372C161.942 63.4372 162.373 63.3249 162.67 63.1002C162.975 62.8755 163.127 62.5602 163.127 62.1544V62.1109C163.127 61.7485 162.985 61.4404 162.703 61.1868C162.427 60.9331 161.942 60.6722 161.246 60.404L159.137 59.5886C156.933 58.7406 155.832 57.3092 155.832 55.2943V55.2508C155.832 54.3158 156.06 53.4932 156.517 52.7829C156.973 52.0726 157.604 51.5182 158.408 51.1196C159.22 50.7209 160.159 50.5216 161.224 50.5216C162.674 50.5216 163.877 50.8659 164.834 51.5544C165.798 52.2357 166.468 53.2359 166.845 54.555L163.388 55.4791C163.112 54.4499 162.398 53.9353 161.246 53.9353C160.739 53.9353 160.336 54.0404 160.039 54.2506C159.742 54.4608 159.593 54.7471 159.593 55.1095V55.153C159.593 55.4574 159.709 55.7183 159.941 55.9357C160.173 56.1459 160.565 56.3597 161.115 56.5772L163.225 57.3925C164.478 57.8781 165.403 58.5051 165.997 59.2733C166.591 60.0344 166.888 60.9838 166.888 62.1217V62.2087C166.888 63.1364 166.656 63.9482 166.193 64.644C165.736 65.3398 165.095 65.8834 164.268 66.2747C163.442 66.6589 162.474 66.8509 161.366 66.8509Z" fill="#FFEFEC" />
-      <path d="M142.827 66.4699V50.9016H152.785V54.4023H146.567V62.9692H152.959V66.4699H142.827ZM145.175 60.273V56.8158H151.915V60.273H145.175Z" fill="#FFEFEC" />
-    </svg>
-  );
-}
-
-// Le composant de base qui gère les clics
+// Le composant de base qui gère les clics et le hover coloré
 function HoverCircleBtn({ children, hoverBg, title, onClick }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -56,7 +24,7 @@ function HoverCircleBtn({ children, hoverBg, title, onClick }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}
-      className="relative shrink-0 flex items-center justify-center rounded-full focus:outline-none"
+      className="relative shrink-0 flex items-center justify-center rounded-full focus:outline-none border-none cursor-pointer"
       style={{
         width: BTN,
         height: BTN,
@@ -69,28 +37,48 @@ function HoverCircleBtn({ children, hoverBg, title, onClick }) {
   );
 }
 
-// Le bouton World branché avec onClick
+// 📸 BOUTON SCAN (NOUVEAU)
+function ScanBtn({ onClick }) {
+  return (
+    <HoverCircleBtn hoverBg={colors.yellow} title="Scan" onClick={onClick}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={colors.cream} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+    </HoverCircleBtn>
+  );
+}
+
+// 🗺️ BOUTON MONDE / CARTE (Corrigé avec SVG natif)
 function WorldBtn({ onClick }) {
   return (
     <HoverCircleBtn hoverBg={colors.purple} title="World" onClick={onClick}>
-      <svg width="22" height="22" viewBox="0 0 25 25" fill="none">
-        <path d={svgPaths?.p39fc4580 || ""} fill={colors.cream} />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={colors.cream} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+        <line x1="8" y1="2" x2="8" y2="18"></line>
+        <line x1="16" y1="6" x2="16" y2="22"></line>
       </svg>
     </HoverCircleBtn>
   );
 }
 
-// 👇 BOUTON INFO MIS À JOUR AVEC ONCLICK 👇
+// ℹ️ BOUTON INFO (Corrigé avec SVG natif)
 function InfoBtn({ onClick }) {
   return (
     <HoverCircleBtn hoverBg={colors.pink} title="Info" onClick={onClick}>
-      <svg width={BTN} height={BTN} viewBox="0 0 49 49" fill="none">
-        <path d={svgPaths?.p24a25200 || ""} fill={colors.cream} />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={colors.cream} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
     </HoverCircleBtn>
   );
 }
 
+// 🎒 BOUTON COLLECTION (Ton design original)
 function CollectionBtn({ count, onClick }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -100,9 +88,12 @@ function CollectionBtn({ count, onClick }) {
       whileTap={{ scale: 0.93 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="relative shrink-0 flex items-center justify-center rounded-[30px] focus:outline-none"
+      className="relative shrink-0 flex items-center justify-center rounded-[30px] focus:outline-none border-none cursor-pointer"
       style={{
-        width: 62, height: BTN, backgroundColor: hovered ? colors.orange : colors.black, transition: "background-color 0.2s",
+        width: 62, 
+        height: BTN, 
+        backgroundColor: hovered ? colors.orange : colors.black, 
+        transition: "background-color 0.2s",
       }}
     >
       <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: 17, color: colors.cream, letterSpacing: "-0.05em", lineHeight: 1 }}>
@@ -112,9 +103,10 @@ function CollectionBtn({ count, onClick }) {
   );
 }
 
-function MenuBtn() {
+// ☰ BOUTON MENU (Ton design original)
+function MenuBtn({ onClick }) {
   return (
-    <HoverCircleBtn hoverBg={colors.blue} title="Menu">
+    <HoverCircleBtn hoverBg={colors.blue} title="Menu" onClick={onClick}>
       <div className="flex flex-col gap-[4px]">
         <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
         <div style={{ width: 17, height: 2, backgroundColor: colors.cream, borderRadius: 2 }} />
@@ -124,19 +116,34 @@ function MenuBtn() {
   );
 }
 
-// 👑 LE COMPOSANT FINAL EXPORTÉ (avec onGoToInfo) 👑
+// 👑 LE COMPOSANT FINAL EXPORTÉ 👑
 export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
   return (
-    <div className="flex items-center justify-between w-full shrink-0 z-10" style={{ backgroundColor: colors.cream, padding: 3, borderRadius: 30 }}>
-      <button onClick={onGoToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-        <LogoSvg />
+    <div 
+      className="flex items-center justify-between shrink-0 z-10 w-fit max-w-[95vw] overflow-x-auto shadow-md select-none" 
+      style={{ 
+        backgroundColor: colors.cream, 
+        padding: "4px 6px", 
+        borderRadius: 30,
+        border: `2px solid ${colors.black}`,
+        scrollbarWidth: "none", 
+        msOverflowStyle: "none"
+      }}
+    >
+      <style>{`::-webkit-scrollbar { display: none; }`}</style>
+      
+      {/* 1️⃣ LOGO */}
+      <button onClick={onGoToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} className="shrink-0 scale-75 origin-left">
+        <Logo />
       </button>
       
-      <div className="flex items-center" style={{ gap: 4 }}>
+      {/* 2️⃣ LES BOUTONS */}
+      <div className="flex items-center ml-[-15px]" style={{ gap: 5 }}>
+        <ScanBtn onClick={onGoToHome} />     {/* 👈 Nouveau bouton ! */}
         <WorldBtn onClick={onGoToMap} />
-        <InfoBtn onClick={onGoToInfo} /> {/* 👈 Connecté ! */}
+        <InfoBtn onClick={onGoToInfo} />
         <CollectionBtn count={scanCount} onClick={onGoToCollection} /> 
-        <MenuBtn />
+        <MenuBtn onClick={onGoToCollection} /> {/* Par défaut, renvoie à la collection si on clique */}
       </div>
     </div>
   );
