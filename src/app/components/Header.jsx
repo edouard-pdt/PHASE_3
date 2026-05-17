@@ -69,6 +69,21 @@ function HoverCircleBtn({ children, hoverBg, title, onClick }) {
   );
 }
 
+// 👇 NOUVEAU BOUTON SCAN 👇
+function ScanBtn({ onClick }) {
+  return (
+    <HoverCircleBtn hoverBg={colors.yellow} title="Scan" onClick={onClick}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={colors.cream} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+    </HoverCircleBtn>
+  );
+}
+
 // Le bouton World branché avec onClick
 function WorldBtn({ onClick }) {
   return (
@@ -80,7 +95,7 @@ function WorldBtn({ onClick }) {
   );
 }
 
-// 👇 BOUTON INFO MIS À JOUR AVEC ONCLICK 👇
+// Le bouton Info avec onClick
 function InfoBtn({ onClick }) {
   return (
     <HoverCircleBtn hoverBg={colors.pink} title="Info" onClick={onClick}>
@@ -124,17 +139,19 @@ function MenuBtn() {
   );
 }
 
-// 👑 LE COMPOSANT FINAL EXPORTÉ (avec onGoToInfo) 👑
-export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
+// 👑 LE COMPOSANT FINAL EXPORTÉ (avec la nouvelle prop onGoToScan) 👑
+export default function Header({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo, onGoToScan }) {
   return (
     <div className="flex items-center justify-between w-full shrink-0 z-10" style={{ backgroundColor: colors.cream, padding: 3, borderRadius: 30 }}>
+      {/* Clic sur le logo -> Retour à l'accueil / Scan (comme avant) */}
       <button onClick={onGoToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
         <LogoSvg />
       </button>
       
       <div className="flex items-center" style={{ gap: 4 }}>
+        <ScanBtn onClick={onGoToScan || onGoToHome} /> {/* 👈 Ajouté en premier ! */}
         <WorldBtn onClick={onGoToMap} />
-        <InfoBtn onClick={onGoToInfo} /> {/* 👈 Connecté ! */}
+        <InfoBtn onClick={onGoToInfo} /> 
         <CollectionBtn count={scanCount} onClick={onGoToCollection} /> 
         <MenuBtn />
       </div>
