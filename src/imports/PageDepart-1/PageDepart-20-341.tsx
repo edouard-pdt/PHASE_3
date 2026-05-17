@@ -1,4 +1,4 @@
-import svgPaths from "imports/LOGO.svg";
+import svgPaths from "imports/LOGO.svg"; // Assurez-vous que ce chemin est correct dans votre projet
 
 function Paralleles() {
   return (
@@ -89,74 +89,57 @@ function Group5() {
   );
 }
 
-export default function PageDepart() {
+// ⚠️ J'ai renommé le composant exporté "Logo" car c'est ce que tu appelles dans ton App.jsx
+export function Logo() {
   return (
-    <div className="bg-white relative size-full" data-name="PAGE_DEPART">
-      <div className="absolute bg-[#ffefec] content-stretch flex gap-[8px] h-[55px] items-start left-[9px] p-[3px] rounded-[30px] top-0 w-[385px]" data-name="HEADER">
-        <div className="bg-[#131313] gap-y-[111.97277069091797px] grid grid-cols-[repeat(5,fit-content(100%))] grid-rows-[repeat(2,fit-content(100%))] h-[50px] px-[23.534px] py-[11.767px] relative rounded-[80px] shrink-0 w-[120px]" data-name="LOGO">
-          <div className="col-2 flex items-center justify-center relative row-1 shrink-0">
-            <div className="flex-none rotate-180">
-              <div className="relative size-[15.387px]">
-                <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15.3866 15.3866">
-                  <path d={svgPaths.p38c32300} fill="var(--fill-0, #6559A1)" id="Vector 14" />
-                </svg>
-              </div>
+    // 🛠️ CORRECTION : Le conteneur principal bloque désormais toute déformation !
+    <div className="flex justify-center items-center h-[50px] w-[120px]">
+      
+      {/* Ton logo avec sa grille exacte, mais protégé des étirements extérieurs */}
+      <div className="bg-[#131313] gap-y-[10px] grid grid-cols-[repeat(5,fit-content(100%))] grid-rows-[repeat(2,fit-content(100%))] h-[50px] px-[20px] py-[10px] relative rounded-[80px] shrink-0 w-[120px] items-center justify-items-center" data-name="LOGO">
+        
+        {/* Les formes géométriques du haut */}
+        <div className="col-1 relative row-1 shrink-0 size-[12px]">
+          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+            <circle cx="7.5" cy="7.5" fill="var(--fill-0, #F6C453)" id="Ellipse 20" r="7.5" />
+          </svg>
+        </div>
+        
+        <div className="bg-[#eba7be] col-2 relative row-1 shrink-0 size-[12px]" />
+        
+        <div className="col-3 flex items-center justify-center relative row-1 shrink-0">
+          <div className="flex-none rotate-180">
+            <div className="relative size-[12px]">
+              <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+                <path d={svgPaths.p38c32300} fill="var(--fill-0, #DE5C44)" id="Vector 13" />
+              </svg>
             </div>
           </div>
-          <div className="col-4 flex items-center justify-center relative row-1 shrink-0">
-            <div className="flex-none rotate-180">
-              <div className="relative size-[15.387px]">
-                <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15.3866 15.3866">
-                  <path d={svgPaths.p38c32300} fill="var(--fill-0, #DE5C44)" id="Vector 13" />
-                </svg>
-              </div>
+        </div>
+        
+        <div className="col-4 relative row-1 shrink-0 size-[12px]">
+          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+            <circle cx="7.5" cy="7.5" fill="var(--fill-0, #4595D0)" id="Ellipse 19" r="7.5" />
+          </svg>
+        </div>
+        
+        <div className="col-5 flex items-center justify-center relative row-1 shrink-0">
+          <div className="flex-none rotate-180">
+            <div className="relative size-[12px]">
+              <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15 15">
+                <path d={svgPaths.p38c32300} fill="var(--fill-0, #6559A1)" id="Vector 14" />
+              </svg>
             </div>
           </div>
-          <div className="col-1 relative row-1 shrink-0 size-[15.387px]">
-            <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15.3866 15.3866">
-              <circle cx="7.69329" cy="7.69329" fill="var(--fill-0, #F6C453)" id="Ellipse 20" r="7.69329" />
-            </svg>
-          </div>
-          <div className="bg-[#eba7be] col-3 relative row-1 shrink-0 size-[15.387px]" />
-          <div className="col-5 relative row-1 shrink-0 size-[15.387px]">
-            <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15.3866 15.3866">
-              <circle cx="7.69329" cy="7.69329" fill="var(--fill-0, #4595D0)" id="Ellipse 19" r="7.69329" />
-            </svg>
-          </div>
-          <Paralleles />
-          <Group />
-          <Group1 />
-          <Group2 />
-          <Group3 />
         </div>
-        <div className="relative shrink-0 size-[49px]" data-name="MAPS">
-          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 49 49">
-            <g id="Group 12">
-              <circle cx="24.5" cy="24.5" fill="var(--fill-0, #131313)" id="Ellipse 40" r="24.5" />
-            </g>
-          </svg>
-          <Group4 />
-        </div>
-        <div className="relative shrink-0 size-[49px]" data-name="INFO">
-          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 49 49">
-            <g id="Group 12">
-              <circle cx="24.5" cy="24.5" fill="var(--fill-0, #131313)" id="Ellipse 40" r="24.5" />
-              <path d={svgPaths.p24a25200} fill="var(--fill-0, #FFEFEC)" id="i" />
-            </g>
-          </svg>
-        </div>
-        <div className="h-[49px] relative shrink-0 w-[80px]" data-name="Component 2">
-          <div className="absolute bg-[#131313] inset-0 rounded-[30px]" />
-          <p className="absolute font-['Poppins:ExtraBold',sans-serif] inset-[30.61%_7.5%_28.57%_8.75%] leading-[20px] not-italic text-[#ffefec] text-[24px] text-center tracking-[-0.1504px]">0/10</p>
-        </div>
-        <div className="relative shrink-0 size-[49px]">
-          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 49 49">
-            <g id="Group 12">
-              <circle cx="24.5" cy="24.5" fill="var(--fill-0, #131313)" id="Ellipse 40" r="24.5" />
-            </g>
-          </svg>
-          <Group5 />
-        </div>
+
+        {/* Le texte "PARALLELES" du bas */}
+        <Paralleles />
+        <Group />
+        <Group1 />
+        <Group2 />
+        <Group3 />
+        
       </div>
     </div>
   );
