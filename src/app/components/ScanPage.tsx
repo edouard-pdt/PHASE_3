@@ -157,11 +157,11 @@ export function ScanPage({
                   initial={{ scale: 0, rotate: -40 }}
                   animate={{ scale: 1, rotate: -12 }}
                   transition={{ delay: 0.3, type: "spring" }}
-                  className="absolute -top-6 -left-4 w-[110px] h-[110px] rounded-full flex items-center justify-center z-10 shadow-lg"
+                  className="absolute -top-6 -left-6 w-[110px] h-[110px] rounded-full flex items-center justify-center z-10 shadow-lg"
                   style={{ backgroundColor: colors.orange }}
                 >
                   <span className="text-center font-bold leading-tight" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif", fontSize: "15px" }}>
-                     Est ce<br/>le bon objet ?
+                     Est ce<br/>le bon <br/>objet ?
                   </span>
                </motion.div>
 
