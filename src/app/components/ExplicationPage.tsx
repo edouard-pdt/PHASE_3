@@ -51,7 +51,7 @@ const blocks = [
 
 // Each block fades in exactly when the previous starts fading out → crossfade
 const TIMINGS = [
-  { inStart: 0.02, inEnd: 0.10, outStart: 0.16, outEnd: 0.22 },
+  { inStart: 0.00, inEnd: 0.10, outStart: 0.16, outEnd: 0.22 },
   { inStart: 0.16, inEnd: 0.24, outStart: 0.30, outEnd: 0.36 },
   { inStart: 0.30, inEnd: 0.38, outStart: 0.44, outEnd: 0.50 },
   { inStart: 0.44, inEnd: 0.52, outStart: 0.58, outEnd: 0.64 },
