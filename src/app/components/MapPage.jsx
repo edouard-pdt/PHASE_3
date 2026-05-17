@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // Correction de l'import obsolète
+import { useLocation } from "react-router-dom"; // 🔌 Récupérer l'état de navigation
 import { MapContainer, TileLayer, Marker, Polyline, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -17,7 +18,6 @@ const colors = {
   green: "#63A375"
 };
 
-// Création d'une fonction pour générer les icônes (avec animation CSS intégrée)
 const createCustomIcon = (color, isScanned) => {
   const size = isScanned ? 32 : 22; 
   const anchor = size / 2; 
@@ -39,18 +39,14 @@ const createCustomIcon = (color, isScanned) => {
   });
 };
 
-// --- BASE DE DONNÉES COMPLÈTE (Les 10 objets) ---
+// --- BASE DE DONNÉES GÉOGRAPHIQUE CORRIGÉE AVEC LES 5 NOUVEAUX COUSINS ---
 const dataNetwork = [
-  { id: "1", lat: -8.11, lng: -79.03, color: "yellow", nom: "Vase Chimú", pays: "Pérou", description: "Vase rituel précolombien.", image: "./image/1.png" },
-  { id: "2", lat: 29.97, lng: 31.13, color: "purple", nom: "Vase Canope", pays: "Égypte", description: "Vase funéraire égyptien.", image: "./image/2.png" },
-  { id: "3", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère", pays: "Grèce", description: "Vase pour mélanger le vin.", image: "./image/3.png" },
-  { id: "4", lat: 26.82, lng: 30.80, color: "purple", nom: "Statuette Ibis", pays: "Égypte", description: "Offrande au dieu Thot.", image: "./image/4.png" },
-  { id: "5", lat: 38.11, lng: 13.36, color: "blue", nom: "Hydrie", pays: "Grèce", description: "Vase à eau.", image: "./image/5.png" },
-  { id: "6", lat: -12.04, lng: -77.03, color: "yellow", nom: "Urne Moche", pays: "Pérou", description: "Céramique funéraire.", image: "./image/6.png" },
-  { id: "7", lat: 25.72, lng: 32.61, color: "purple", nom: "Masque", pays: "Égypte", description: "Masque funéraire.", image: "./image/7.png" },
-  { id: "8", lat: 41.90, lng: 12.49, color: "pink", nom: "Fibule", pays: "Italie", description: "Broche antique.", image: "./image/8.png" },
-  { id: "9", lat: 38.00, lng: 24.00, color: "blue", nom: "Coupe Satyre", pays: "Grèce", description: "Coupe à boire.", image: "./image/9.png" },
-  { id: "10", lat: 37.10, lng: 25.37, color: "green", nom: "Idole", pays: "Grèce", description: "Figure cycladique.", image: "./image/10.png" },
+  { id: "1", lat: -8.11, lng: -79.03, color: "cream", nom: "Vase Zoomorphe CHIMU", pays: "Pérou (Amériques)", description: "Récipient rituel en terre cuite de la culture Chimu.", image: "./image/1.png" },
+  { id: "2", lat: 29.97, lng: 31.13, color: "pink", nom: "Vase Canope", pays: "Égypte (Afrique)", description: "Récipient funéraire protégeant les organes vitaux de l'au-delà.", image: "./image/2.png" },
+  { id: "3", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère à figures rouges", pays: "Grèce (Europe)", description: "Vase antique pour le mélange de l'eau et du vin lors des banquets.", image: "./image/3.png" },
+  { id: "4", lat: 34.26, lng: 108.94, color: "orange", nom: "Vase Zun en bronze", pays: "Chine (Asie)", description: "Lourd vase rituel de bronze destiné aux offrandes ancestrales.", image: "./image/4.png" },
+  { id: "5", lat: -17.71, lng: 178.06, color: "purple", nom: "Coupe Tanoa", pays: "Fidji (Océanie)", description: "Grande coupe de bois sculptée pour la boisson partagée du kava.", image: "./image/5.png" },
+  { id: "6", lat: 32.42, lng: 53.68, color: "yellow", nom: "Rhyton Perse", pays: "Iran (Moyen-Orient)", description: "Vase cérémoniel d'apparat en métal précieux sculpté.", image: "./image/6.png" }
 ];
 
 export default function MapPage({ 
@@ -60,44 +56,57 @@ export default function MapPage({
   onGoToCollection,
   onGoToInfo 
 }) {
-  const [selectedObj, setSelectedObj] = useState(null); // La popup d'info
-  
-  // NOUVEAU : On stocke l'ID du bloc actuellement cliqué/animé
+  const location = useLocation(); // 📦 Intercepteur de redirection
+  const [selectedObj, setSelectedObj] = useState(null); 
   const [activeBlockId, setActiveBlockId] = useState(null);
-  const [animationStep, setAnimationStep] = useState(0); // 0=Rien, 1=Point A, 2=Lignes, 3=Cousins
-  
-  // On filtre pour n'afficher que les objets débloqués dans les blocs du bas
+  const [animationStep, setAnimationStep] = useState(0); 
+
   const unlockedObjects = dataNetwork.slice(0, Math.max(1, scanCount));
-  
-  // L'objet central (celui qui a été cliqué) et ses cousins
   const activeObj = dataNetwork.find(obj => obj.id === activeBlockId);
   const cousins = activeObj ? dataNetwork.filter(obj => obj.id !== activeBlockId) : [];
 
-  // Fonction pour déclencher ou éteindre un réseau
+  // Déclencheur de l'animation de réseau de l'objet
+  const launchNetworkSequence = (id) => {
+    setActiveBlockId(id);
+    setAnimationStep(1); // 1. Le point central apparaît
+    
+    setTimeout(() => {
+      setAnimationStep(2); // 2. Les lignes se tracent vers les autres continents
+      
+      setTimeout(() => {
+        setAnimationStep(3); // 3. Les cousins apparaissent aux extrémités
+      }, 1200); 
+    }, 500);
+  };
+
   const toggleNetwork = (id) => {
-    // Si on clique sur un bloc déjà actif, on éteint tout (la carte redevient vierge)
     if (activeBlockId === id) {
       setActiveBlockId(null);
       setAnimationStep(0);
       setSelectedObj(null);
     } else {
-      // Si on clique sur un NOUVEAU bloc, on lance la séquence magique
-      setActiveBlockId(id);
-      setAnimationStep(1); // 1. Le point A pop
-      
-      setTimeout(() => {
-        setAnimationStep(2); // 2. Les lignes se dessinent
-        
-        setTimeout(() => {
-          setAnimationStep(3); // 3. Les cousins pop
-        }, 1200); 
-        
-      }, 500);
+      launchNetworkSequence(id);
     }
   };
 
+  // 🎯 EFFET DE LIEN DEPUIS LA COLLECTION
+  useEffect(() => {
+    if (location.state && location.state.targetedObject) {
+      const target = location.state.targetedObject;
+      // Recherche de l'élément correspondant dans la base géographique
+      const matchedNode = dataNetwork.find(
+        obj => obj.nom.toLowerCase() === target.nom.toLowerCase() || obj.id === String(target.id)
+      );
+
+      if (matchedNode) {
+        // Déclenchement automatique de la séquence
+        launchNetworkSequence(matchedNode.id);
+        setSelectedObj(matchedNode);
+      }
+    }
+  }, [location]);
+
   return (
-    // ✅ FOND TRANSPARENT (plus de backgroundColor) pour voir les formes de App.tsx !
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ overflow: 'hidden' }}>
       
       <style>{`
@@ -131,13 +140,13 @@ export default function MapPage({
              boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
              height: "55vh", 
              minHeight: "380px",
-             backgroundColor: "#AADAFF" // Couleur de l'océan
+             backgroundColor: "#AADAFF" 
            }}>
         
         <div className="flex-1 rounded-[26px] overflow-hidden relative z-0">
           <MapContainer 
-            center={[15, -20]} 
-            zoom={2.5}         
+            center={[15, -10]} 
+            zoom={2}          
             style={{ height: "100%", width: "100%" }} 
             zoomControl={false}
           >
@@ -149,7 +158,7 @@ export default function MapPage({
             {/* ÉTAPE 2 : Les Lignes */}
             {activeObj && animationStep >= 2 && cousins.map((obj) => (
               <Polyline 
-                key={`line-${activeBlockId}-${obj.id}`} // La clé force le replay de l'animation
+                key={`line-${activeBlockId}-${obj.id}`} 
                 positions={[[activeObj.lat, activeObj.lng], [obj.lat, obj.lng]]}
                 pathOptions={{ color: colors.black, weight: 2, opacity: 0.5, className: 'growing-line' }} 
               />
@@ -181,7 +190,7 @@ export default function MapPage({
                 icon={createCustomIcon(obj.color, false)}
                 eventHandlers={{ click: () => setSelectedObj(obj) }}
               >
-                {selectedObj?.id === obj.id && (
+                {(selectedObj?.id === obj.id || animationStep === 3) && (
                   <Tooltip direction="right" offset={[15, 0]} opacity={1} permanent>
                     <div style={{ fontFamily: 'Poppins', fontSize: '11px', lineHeight: '1.2' }}>
                       <span style={{ fontWeight: 'bold' }}>{obj.nom}</span><br/>
@@ -215,9 +224,8 @@ export default function MapPage({
         </AnimatePresence>
       </div>
 
-      {/* ✅ LISTE DYNAMIQUE DES OBJETS SCANNÉS EN BAS */}
+      {/* LISTE DES OBJETS SCANNÉS EN BAS */}
       <div className="w-full flex gap-4 overflow-x-auto pb-4 px-2" style={{ scrollbarWidth: 'none' }}>
-        
         {unlockedObjects.map((obj) => {
           const isActive = activeBlockId === obj.id;
 
@@ -239,7 +247,7 @@ export default function MapPage({
             >
               <img src={obj.image} alt={obj.nom} className="w-14 h-14 object-cover rounded-full border-2 border-black bg-white" />
               <div className="ml-3">
-                <p style={{ margin: 0, fontSize: '14px', fontWeight: 800, fontFamily: "'Poppins', sans-serif", color: isActive ? colors.black : colors.cream }}>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: 800, fontFamily: "'Poppins', sans-serif", color: isActive ? colors.black : colors.cream }}>
                   {obj.nom}
                 </p>
                 <p style={{ margin: 0, fontSize: '10px', fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: isActive ? '#555' : '#AAA', textTransform: 'uppercase' }}>
@@ -249,8 +257,8 @@ export default function MapPage({
             </motion.div>
           )
         })}
-
       </div>
+
     </div>
   );
 }
