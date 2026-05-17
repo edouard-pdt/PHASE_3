@@ -38,7 +38,6 @@ const createCustomIcon = (color, isScanned) => {
   });
 };
 
-// --- BASE DE DONNÉES : CHAQUE COUSIN EST RELIÉ À SON OBJET VIA "parentId" ---
 const dataNetwork = [
   // 🏺 OBJET 1 : LE VASE CHIMU (Thème : Récipients Rituels)
   { id: "1", lat: -8.11, lng: -79.03, color: "cream", nom: "Vase Zoomorphe CHIMU", pays: "Pérou (Amériques)", description: "Récipient rituel en terre cuite de la culture Chimu.", image: "./image/1.png", isMain: true },
@@ -69,13 +68,11 @@ export default function MapPage({
   const [activeBlockId, setActiveBlockId] = useState(null);
   const [animationStep, setAnimationStep] = useState(0); 
 
-  // On isole les objets principaux scannés pour la barre du bas
   const mainObjects = dataNetwork.filter(obj => obj.isMain);
   const unlockedObjects = mainObjects.slice(0, Math.max(1, scanCount));
   
   const activeObj = dataNetwork.find(obj => obj.id === activeBlockId);
   
-  // 👥 MAGIE ICI : On filtre les cousins pour ne garder QUE ceux qui appartiennent à l'objet actif !
   const cousins = activeObj ? dataNetwork.filter(obj => obj.parentId === activeBlockId) : [];
 
   const launchNetworkSequence = (id) => {
@@ -96,7 +93,15 @@ export default function MapPage({
   useEffect(() => {
     if (targetedObject) {
       const matchedNode = dataNetwork.find(
-        obj => obj.nom.toLowerCase() === targetedObject.nom.toLowerCase() || obj.id === String(targetedObject.id)
+        obj => obj.nom?.toLowerCase() === targetedObject?.nom?.toLowerCase() || obj.id === String(targetedObject?.id)
+      );
+
+      if (matchedNode) {
+        launchNetworkSequence(matchedNode.id);
+        setSelectedObj(matchedNode);
+      }
+    }
+  }, [targetedObject]);
       );
 
       if (matchedNode) {
