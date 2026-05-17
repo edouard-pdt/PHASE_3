@@ -72,17 +72,20 @@ function AnimatedBlock({
   timing: (typeof TIMINGS)[0];
   isFirst?: boolean;
 }) {
-  // 🎯 Correction : On utilise toujours 4 valeurs pour correspondre aux 4 étapes [inStart, inEnd, outStart, outEnd]
-  // Pour le premier bloc, on triche en mettant inStart et inEnd à 0, pour qu'il apparaisse tout de suite.
+  // 🎯 CORRECTION : On s'assure que les nombres augmentent toujours strictement pour ne pas faire planter l'animation.
+  // Le 1er bloc a 3 étapes (0 -> outStart -> outEnd), les autres en ont 4.
   
-  const inputRange = [timing.inStart, timing.inEnd, timing.outStart, timing.outEnd];
+  const inputRange = isFirst 
+    ? [0, timing.outStart, timing.outEnd] 
+    : [timing.inStart, timing.inEnd, timing.outStart, timing.outEnd];
   
-  // Si c'est le premier, l'opacité est déjà à 1 au début du scroll (0). 
-  // Ensuite il reste à 1 jusqu'à outStart, puis passe à 0.
-  const opacityRange = isFirst ? [1, 1, 1, 0] : [0, 1, 1, 0];
+  const opacityRange = isFirst 
+    ? [1, 1, 0] 
+    : [0, 1, 1, 0];
   
-  // Même logique pour la position Y
-  const yRange = isFirst ? [0, 0, 0, -60] : [60, 0, 0, -60];
+  const yRange = isFirst 
+    ? [0, 0, -60] 
+    : [60, 0, 0, -60];
 
   const opacity = useTransform(progress, inputRange, opacityRange);
   const y = useTransform(progress, inputRange, yRange);
@@ -141,7 +144,6 @@ function AnimatedBlock({
     </motion.div>
   );
 }
-
 function AnimatedCTA({
   userName,
   onNext,
