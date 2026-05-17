@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Correction de l'import obsolète
-import { useLocation } from "react-router-dom"; // 🔌 Récupérer l'état de navigation
+import { motion, AnimatePresence } from "framer-motion"; 
 import { MapContainer, TileLayer, Marker, Polyline, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -54,9 +53,9 @@ export default function MapPage({
   onGoToMap, 
   onGoToHome, 
   onGoToCollection,
-  onGoToInfo 
+  onGoToInfo,
+  targetedObject // 🔌 Reçoit directement l'objet sélectionné depuis le parent
 }) {
-  const location = useLocation(); // 📦 Intercepteur de redirection
   const [selectedObj, setSelectedObj] = useState(null); 
   const [activeBlockId, setActiveBlockId] = useState(null);
   const [animationStep, setAnimationStep] = useState(0); 
@@ -89,13 +88,11 @@ export default function MapPage({
     }
   };
 
-  // 🎯 EFFET DE LIEN DEPUIS LA COLLECTION
+  // 🎯 EFFET DE LIEN DEPUIS LA PROP DIRECTE (Plus de dépendance à react-router-dom)
   useEffect(() => {
-    if (location.state && location.state.targetedObject) {
-      const target = location.state.targetedObject;
-      // Recherche de l'élément correspondant dans la base géographique
+    if (targetedObject) {
       const matchedNode = dataNetwork.find(
-        obj => obj.nom.toLowerCase() === target.nom.toLowerCase() || obj.id === String(target.id)
+        obj => obj.nom.toLowerCase() === targetedObject.nom.toLowerCase() || obj.id === String(targetedObject.id)
       );
 
       if (matchedNode) {
@@ -104,7 +101,7 @@ export default function MapPage({
         setSelectedObj(matchedNode);
       }
     }
-  }, [location]);
+  }, [targetedObject]);
 
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ overflow: 'hidden' }}>
