@@ -65,20 +65,24 @@ function AnimatedBlock({
   block,
   progress,
   timing,
-  isFirst, // 👈 Ajout de isFirst pour gérer le bloc initial
+  isFirst, 
 }: {
   block: (typeof blocks)[0];
   progress: MotionValue<number>;
   timing: (typeof TIMINGS)[0];
   isFirst?: boolean;
 }) {
-  // 🎯 Si c'est le premier bloc, il commence déjà visible (1) et à sa place (0)
-  const inputRange = isFirst
-    ? [0, timing.outStart, timing.outEnd]
-    : [timing.inStart, timing.inEnd, timing.outStart, timing.outEnd];
-    
-  const opacityRange = isFirst ? [1, 1, 0] : [0, 1, 1, 0];
-  const yRange = isFirst ? [0, 0, -60] : [60, 0, 0, -60];
+  // 🎯 Correction : On utilise toujours 4 valeurs pour correspondre aux 4 étapes [inStart, inEnd, outStart, outEnd]
+  // Pour le premier bloc, on triche en mettant inStart et inEnd à 0, pour qu'il apparaisse tout de suite.
+  
+  const inputRange = [timing.inStart, timing.inEnd, timing.outStart, timing.outEnd];
+  
+  // Si c'est le premier, l'opacité est déjà à 1 au début du scroll (0). 
+  // Ensuite il reste à 1 jusqu'à outStart, puis passe à 0.
+  const opacityRange = isFirst ? [1, 1, 1, 0] : [0, 1, 1, 0];
+  
+  // Même logique pour la position Y
+  const yRange = isFirst ? [0, 0, 0, -60] : [60, 0, 0, -60];
 
   const opacity = useTransform(progress, inputRange, opacityRange);
   const y = useTransform(progress, inputRange, yRange);
