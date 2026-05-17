@@ -61,11 +61,11 @@ const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
       params.append('objet_detecte', objetDetecte);
       params.append('nom_objet', objetDetecte);
 
-      // ⏱️ L'ASTUCE DU GOLDEN PATH : Le chronomètre de 5 secondes
+      // ⏱️ L'ASTUCE DU GOLDEN PATH : Le chronomètre de 2 secondes
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
-        controller.abort(); // Coupe la connexion de force au bout de 5000 ms
-      }, 5000);
+        controller.abort(); // Coupe la connexion de force au bout de 2000 ms
+      }, 2000);
 
       const reponse = await fetch(URL_WEBHOOK_N8N, {
         method: 'POST',
