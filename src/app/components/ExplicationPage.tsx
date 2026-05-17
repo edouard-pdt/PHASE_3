@@ -36,7 +36,7 @@ const blocks = [
   {
     number: "04",
     title: "Visualise",
-    text: "Grâce à l'atlas, les objets que tu as scanné et leurs cousins apparaissent — regarde les parallèles dans les cultures.",
+    text: "Grâce à l'atlas, les objets que tu as scanné et leurs cousins apparaissent. Regarde les parallèles entre les cultures.",
     bg: colors.purple,
     textColor: colors.cream,
   },
