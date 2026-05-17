@@ -19,10 +19,10 @@ const collectionData = [
   { id: 4, nom: "flacon à parfum ottoman", image: "./image/8.png" },
   { id: 5, nom: "Manilles", image: "./image/6.png" },
   { id: 6, nom: "cache sexe tanga", image: "./image/10.png" },
-  { id: 7, nom: "À venir", image: "./image/7.png" },
-  { id: 8, nom: "À venir", image: "./image/8.png" },
-  { id: 9, nom: "À venir", image: "./image/9.png" },
-  { id: 10, nom: "À venir", image: "./image/10.png" },
+  { id: 7, nom: "À venir", image: "./image/Plan de travail 1.png" },
+  { id: 8, nom: "À venir", image: "./image/Plan de travail 1.png" },
+  { id: 9, nom: "À venir", image: "./image/Plan de travail 1.png" },
+  { id: 10, nom: "À venir", image: "./image/Plan de travail 1.png" },
 ];
 
 export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo, onGoToCousins }) {
