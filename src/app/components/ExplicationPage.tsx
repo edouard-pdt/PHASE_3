@@ -14,7 +14,7 @@ const colors = {
 const blocks = [
   {
     number: "01",
-    title: "Scanne pour révéler l'invisible",
+    title: "Scan pour révéler l'invisible",
     text: "Approche ton appareil de l'objet qui éveille ta curiosité. En un instant, l'application le reconnaît et t'ouvre les portes de son histoire.",
     bg: colors.yellow,
     textColor: colors.black,
@@ -51,7 +51,7 @@ const blocks = [
 
 // ⏳ NOUVEAUX TIMINGS : Transitions plus longues (10% de scroll par transition)
 const TIMINGS = [
-  { inStart: 0.00, inEnd: 0.00, outStart: 0.15, outEnd: 0.25 }, // Bloc 1
+  { inStart: 0.00, inEnd: 0.15, outStart: 0.15, outEnd: 0.25 }, // Bloc 1
   { inStart: 0.15, inEnd: 0.25, outStart: 0.35, outEnd: 0.45 }, // Bloc 2
   { inStart: 0.35, inEnd: 0.45, outStart: 0.55, outEnd: 0.65 }, // Bloc 3
   { inStart: 0.55, inEnd: 0.65, outStart: 0.75, outEnd: 0.85 }, // Bloc 4
