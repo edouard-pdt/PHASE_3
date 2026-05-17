@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Correction du nom du package si nécessaire
+import { motion, AnimatePresence } from "motion/react"; 
 import Header from "./Header";
 
 const colors = {
