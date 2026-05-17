@@ -1,5 +1,6 @@
 import React from "react";
-import { motion } from "framer-motion";
+// 🚨 CORRECTION ICI : On utilise bien le même import que le reste de ton app !
+import { motion } from "motion/react"; 
 
 const colors = {
   yellow: "#F6C453",
@@ -9,7 +10,8 @@ const colors = {
 
 export default function SynthesisPage({ onGoToCollection }) {
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center justify-center text-left gap-8" style={{ backgroundColor: colors.black, fontFamily: "'Poppins', sans-serif" }}>
+    // 🚨 CORRECTION 2 : J'ai enlevé backgroundColor: colors.black pour laisser voir ton fond animé !
+    <div className="min-h-screen p-8 flex flex-col items-center justify-center text-left gap-8" style={{ fontFamily: "'Poppins', sans-serif", zIndex: 10, position: "relative" }}>
       
       <motion.h1 
         initial={{ opacity: 0, y: -20 }}
