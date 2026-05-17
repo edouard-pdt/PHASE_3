@@ -41,11 +41,11 @@ const createCustomIcon = (color, isScanned) => {
 const dataNetwork = [
   // 🏺 OBJET 1 : LE VASE CHIMU (Thème : Récipients Rituels)
   { id: "1", lat: -8.11, lng: -79.03, color: "cream", nom: "Vase Zoomorphe CHIMU", pays: "Pérou (Amériques)", description: "Récipient rituel en terre cuite de la culture Chimu.", image: "./image/1.png", isMain: true },
-  { id: "1-c1", parentId: "1", lat: 29.97, lng: 31.13, color: "pink", nom: "Vase Canope", pays: "Égypte (Afrique)", description: "Récipient funéraire protégeant les organes vitaux de l'au-delà.", image: "./image/2.png", isMain: false },
-  { id: "1-c2", parentId: "1", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère à figures rouges", pays: "Grèce (Europe)", description: "Vase antique pour le mélange de l'eau et du vin lors des banquets.", image: "./image/3.png", isMain: false },
-  { id: "1-c3", parentId: "1", lat: 34.26, lng: 108.94, color: "orange", nom: "Vase Zun en bronze", pays: "Chine (Asie)", description: "Lourd vase rituel de bronze destiné aux offrandes ancestrales.", image: "./image/4.png", isMain: false },
-  { id: "1-c4", parentId: "1", lat: -17.71, lng: 178.06, color: "purple", nom: "Coupe Tanoa", pays: "Fidji (Océanie)", description: "Grande coupe de bois sculptée pour la boisson partagée du kava.", image: "./image/5.png", isMain: false },
-  { id: "1-c5", parentId: "1", lat: 32.42, lng: 53.68, color: "yellow", nom: "Rhyton Perse", pays: "Iran (Moyen-Orient)", description: "Vase cérémoniel d'apparat en métal précieux sculpté.", image: "./image/6.png", isMain: false },
+  { id: "1-c1", parentId: "1", lat: 29.97, lng: 31.13, color: "pink", nom: "Vase Canope", pays: "Égypte (Afrique)", description: "Récipient funéraire protégeant les organes vitaux de l'au-delà.", image: "./image/11.png", isMain: false },
+  { id: "1-c2", parentId: "1", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère à figures rouges", pays: "Grèce (Europe)", description: "Vase antique pour le mélange de l'eau et du vin lors des banquets.", image: "./image/12.png", isMain: false },
+  { id: "1-c3", parentId: "1", lat: 34.26, lng: 108.94, color: "orange", nom: "Vase Zun en bronze", pays: "Chine (Asie)", description: "Lourd vase rituel de bronze destiné aux offrandes ancestrales.", image: "./image/13.png", isMain: false },
+  { id: "1-c4", parentId: "1", lat: -17.71, lng: 178.06, color: "purple", nom: "Coupe Tanoa", pays: "Fidji (Océanie)", description: "Grande coupe de bois sculptée pour la boisson partagée du kava.", image: "./image/14.png", isMain: false },
+  { id: "1-c5", parentId: "1", lat: 32.42, lng: 53.68, color: "yellow", nom: "Rhyton Perse", pays: "Iran (Moyen-Orient)", description: "Vase cérémoniel d'apparat en métal précieux sculpté.", image: "./image/15.png", isMain: false },
 
   // ✨ OBJET 4 : LE FLACON OTTOMAN (Thème : Parfums et Cosmétiques)
   { id: "4", lat: 36.80, lng: 10.18, color: "pink", nom: "Flacon à parfum ottoman", pays: "Tunisie (Afrique)", description: "Hexagonal et en argent, surmonté d'oiseaux et de perles.", image: "./image/4.png", isMain: true },
