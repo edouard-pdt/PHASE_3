@@ -94,32 +94,37 @@ export function ScanPage({
         onGoToInfo={onGoToInfo}
       />
 
-      {/* ÉTAT 1 : LA CAMÉRA */}
-      <div className={`flex-1 items-center justify-center w-full ${step === "camera" ? "flex" : "hidden"}`}>
-        <Scanner 
-          ref={scannerRef} 
-          onScanSuccess={handleScanSuccess} 
-          onScanLoading={(isLoading) => setStep(isLoading ? "loading" : "camera")}
-        />
-      </div>
-
+      {/* 📦 ÉTAT 1 : LA CAMÉRA ET LE BOUTON GROUPÉS */}
       {step === "camera" && (
-          <motion.button
-            whileHover={{ scale: 1.04, y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => {
-              // Le déclenchement du chargement est maintenant géré par le scanner lui-même au clic
-              scannerRef.current?.lancerLeScan(); 
-            }}
-            className="shrink-0 rounded-full px-14 py-4 focus:outline-none focus-visible:ring-4 z-10"
-            style={{
-              backgroundColor: colors.blue, color: colors.cream,
-              fontFamily: "'Poppins', sans-serif", fontSize: "1.125rem", fontWeight: 600,
-              boxShadow: "0 10px 30px rgba(69, 149, 208, 0.35), 0 4px 12px rgba(0,0,0,0.25)",
-            }}
-          >
-            Scanner
-          </motion.button>
+        <div className="flex-1 flex flex-col items-center justify-center w-full">
+          <div className="relative flex flex-col items-center w-full max-w-md">
+            
+            <Scanner 
+              ref={scannerRef} 
+              onScanSuccess={handleScanSuccess} 
+              onScanLoading={(isLoading) => setStep(isLoading ? "loading" : "camera")}
+            />
+
+            <motion.button
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => {
+                // Le déclenchement du chargement est maintenant géré par le scanner lui-même au clic
+                scannerRef.current?.lancerLeScan(); 
+              }}
+              // 🛠️ z-10 et -mt-8 pour faire remonter le bouton par-dessus le bord du scanner
+              className="relative z-10 -mt-8 shrink-0 rounded-full px-14 py-4 focus:outline-none focus-visible:ring-4"
+              style={{
+                backgroundColor: colors.blue, color: colors.cream,
+                fontFamily: "'Poppins', sans-serif", fontSize: "1.125rem", fontWeight: 600,
+                boxShadow: "0 10px 30px rgba(69, 149, 208, 0.35), 0 4px 12px rgba(0,0,0,0.25)",
+              }}
+            >
+              Scanner
+            </motion.button>
+            
+          </div>
+        </div>
       )}
 
       {/* ÉTAT 2 : LE CHARGEMENT */}
