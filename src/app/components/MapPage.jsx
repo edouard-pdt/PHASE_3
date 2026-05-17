@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MapContainer, TileLayer, Marker, Polyline, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import Header from './Header'; 
+import { Header } from './Header';
 
 // --- CONFIGURATION DES COULEURS ---
 const colors = {
