@@ -164,7 +164,7 @@ export default function MapPage({
               >
                 <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent>
                   <div style={{ fontFamily: 'Poppins', fontSize: '11px', lineHeight: '1.2', textTransform: 'uppercase', fontWeight: '900' }}>
-                    🌟 {activeObj.nom}
+                     {activeObj.nom}
                   </div>
                 </Tooltip>
               </Marker>
