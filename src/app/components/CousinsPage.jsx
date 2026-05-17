@@ -88,11 +88,11 @@ export default function CousinsPage({
   onGoToHome, 
   onGoToCollection, 
   onGoToInfo,
+  onGoToSynthesis, // 🔌 NOUVELLE PROP
   n8nCousinsData 
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); 
-  const [showSynthesis, setShowSynthesis] = useState(false); // 👈 Gère l'affichage de la page de fin
   
   const activeData = n8nCousinsData && n8nCousinsData.length > 0 ? n8nCousinsData : fallbackCousinsData;
   const currentObj = activeData[currentIndex];
@@ -115,58 +115,6 @@ export default function CousinsPage({
     exit: (dir) => ({ x: dir > 0 ? -100 : 100, opacity: 0 }),
   };
 
-  // --------------------------------------------------------
-  // 📚 VUE 2 : LA PAGE DE SYNTHÈSE (Le lien entre les cultures)
-  // --------------------------------------------------------
- if (showSynthesis) {
-    return (
-      <div className="min-h-screen p-8 flex flex-col items-center justify-center text-left gap-8" style={{ backgroundColor: colors.black, fontFamily: "'Poppins', sans-serif" }}>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-bold mb-4 text-center" 
-          style={{ color: colors.yellow }}
-        >
-          Des besoins communs, des réponses uniques
-        </motion.h1>
-        
-        {/* 👈 CORRIGÉ : On force la couleur crème pour que le texte soit lisible sur le fond noir */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-6 text-base leading-relaxed max-w-md"
-          style={{ color: colors.cream }}
-        >
-          <p>
-            En parcourant ces continents, on remarque une chose fascinante : <strong>toutes ces cultures partageaient un besoin similaire.</strong> Que ce soit pour honorer leurs ancêtres, protéger leurs défunts ou rassembler leur communauté, ils avaient tous besoin d'un <span style={{ color: colors.yellow, fontWeight: 'bold' }}>récipient rituel</span>.
-          </p>
-          <div className="h-px w-full opacity-30" style={{ backgroundColor: colors.cream }}></div>
-          <p>
-            Cependant, face à ce même besoin, <strong>chaque civilisation a répondu de manière totalement différente</strong>. 
-          </p>
-          <p>
-            Cette diversité s'explique par les <strong>matériaux</strong> qu'ils avaient sous la main (la terre cuite au Pérou, le bronze en Chine, le bois précieux en Océanie) et par leurs propres traditions artistiques.
-          </p>
-        </motion.div>
-
-        {/* 👈 CORRIGÉ : Remplacé par un vrai composant motion.button bien visible */}
-        <motion.button 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onGoToCollection}
-          className="mt-8 px-8 py-4 rounded-full font-bold text-lg shadow-lg"
-          style={{ backgroundColor: colors.yellow, color: colors.black, border: `3px solid ${colors.black}` }}
-        >
-          Voir ma collection
-        </motion.button>
-      </div>
-    );
-  }
   // --------------------------------------------------------
   // 🔄 VUE 1 : LE CARROUSEL DES COUSINS
   // --------------------------------------------------------
@@ -278,7 +226,7 @@ export default function CousinsPage({
         <motion.button 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          onClick={() => setShowSynthesis(true)}
+          onClick={onGoToSynthesis}
           className="w-[90%] py-4 rounded-full font-bold text-lg mb-8 shadow-lg"
           style={{ backgroundColor: colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif" }}
         >
