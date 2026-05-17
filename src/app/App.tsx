@@ -5,7 +5,7 @@ import {
   useScroll,
   useTransform,
   MotionValue,
-} from "motion/react";
+} from "framer-motion"; // Attention à l'import framer-motion selon ta version
 import { Logo } from "./components/Logo";
 import { Fond } from "./components/Fond";
 import { NamePage } from "./components/NamePage";
@@ -16,6 +16,7 @@ import MapPage from "./components/MapPage";
 import CollectionPage from "./components/CollectionPage";
 import CousinsPage from "./components/CousinsPage"; 
 import InfoPage from "./components/InfoPage"; 
+import SynthesisPage from "./components/SynthesisPage"; // 🔌 Import de la nouvelle page
 
 const colors = {
   yellow: "#F6C453",
@@ -181,7 +182,7 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "info">("intro");
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "synthesis" | "info">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
   const [n8nCousins, setN8nCousins] = useState<any[]>([]);
@@ -204,7 +205,8 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "info" && (
+      {/* Cacher le header aussi sur synthesis */}
+      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "synthesis" && page !== "info" && (
         <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
           <Logo />
         </header>
@@ -358,7 +360,25 @@ export default function App() {
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
+              onGoToSynthesis={() => setPage("synthesis")} // 🔌 LIAISON VERS SYNTHÈSE
               n8nCousinsData={n8nCousins}
+            />
+          </motion.div>
+        )}
+
+        {/* 🌟 NOUVELLE PAGE DE SYNTHÈSE */}
+        {page === "synthesis" && (
+          <motion.div
+            key="synthesis"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative", minHeight: "100vh" }}
+          >
+            <StaticFondBackground />
+            <SynthesisPage 
+              onGoToCollection={() => setPage("collection")} 
             />
           </motion.div>
         )}
