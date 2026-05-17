@@ -184,9 +184,10 @@ export default function App() {
   const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "info">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
-
-  // 📦 AJOUT DE L'ÉTAT GLOBAL POUR CONSERVER LES DONNÉES N8N
   const [n8nCousins, setN8nCousins] = useState<any[]>([]);
+
+  // 🆕 NOUVEAU : État global pour mémoriser l'objet sélectionné destiné à la carte
+  const [mapTarget, setMapTarget] = useState<any>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -287,12 +288,11 @@ export default function App() {
             <ScanPage
               scanCount={scanCount}
               onScan={() => setScanCount((c) => Math.min(c + 1, 10))}
-              onGoToMap={() => setPage("map")}
+              onGoToMap={() => { setMapTarget(null); setPage("map"); }} // Nettoie le focus si navigation classique
               onGoToHome={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToCousins={() => setPage("cousins")}
               onGoToInfo={() => setPage("info")}
-              // 🔌 Branchement : Sauvegarde les données reçues de n8n à la réussite du scan
               onSaveN8NData={(data) => setN8nCousins(data)}
             />
           </motion.div>
@@ -310,12 +310,12 @@ export default function App() {
             <StaticFondBackground />
             <MapPage
               scanCount={scanCount}
-              onGoToMap={() => setPage("map")}
+              onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")} 
               onGoToInfo={() => setPage("info")}
-              // 🔌 AJOUT : MapPage reçoit maintenant les données de n8n !
               n8nCousinsData={n8nCousins}
+              targetedObject={mapTarget} // 🔌 Liaison : Fournit l'objet mémorisé à la carte
             />
           </motion.div>
         )}
@@ -332,11 +332,11 @@ export default function App() {
             <StaticFondBackground />
             <CollectionPage
               scanCount={scanCount}
-              onGoToMap={() => setPage("map")}
+              // 🔌 Liaison : Récupère l'objet cliqué dans la collection, le stocke, puis ouvre la carte
+              onGoToMap={(item) => { setMapTarget(item); setPage("map"); }} 
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
-              // 🔌 AJOUT : Câblage pour le bouton "Voir le réseau"
               onGoToCousins={() => setPage("cousins")}
             />
           </motion.div>
@@ -354,11 +354,10 @@ export default function App() {
             <StaticFondBackground />
             <CousinsPage
               scanCount={scanCount}
-              onGoToMap={() => setPage("map")}
+              onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
-              // 🔌 Distribution : Injecte les données n8n interceptées dans CousinsPage
               n8nCousinsData={n8nCousins}
             />
           </motion.div>
@@ -376,7 +375,7 @@ export default function App() {
             <StaticFondBackground />
             <InfoPage
               scanCount={scanCount}
-              onGoToMap={() => setPage("map")}
+              onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")}
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
