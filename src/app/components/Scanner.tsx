@@ -6,7 +6,7 @@ const Scanner = forwardRef(({ onScanSuccess, onScanLoading }, ref) => {
 
   // 🔌 LIEN DE PRODUCTION N8N
   const URL_MODELE_TM = "https://teachablemachine.withgoogle.com/models/AwpIVAUJl/";
-  const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook-test/recherche_objet";
+  const URL_WEBHOOK_N8N = "https://douar.app.n8n.cloud/webhook/recherche_objet";
 
   const videoRef = useRef(null);
   const modelRef = useRef(null);
