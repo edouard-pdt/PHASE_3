@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { motion } from "motion/react";
 import Scanner from './Scanner';
-import Header from './Header'; 
+import { Header } from './Header';
 
 const colors = {
   blue: "#4595D0",
