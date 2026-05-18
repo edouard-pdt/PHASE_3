@@ -12,14 +12,17 @@ const colors = {
   black: "#131313"
 };
 
-// 🧠 Petite fonction d'aide pour lier le nom de l'objet à sa photo
-const getFallbackImage = (nom) => {
+// 🧠 Fonction infaillible pour forcer la bonne image selon le nom
+const getCorrectImage = (nom) => {
   if (!nom) return "./image/1.png";
   const nameLower = nom.toLowerCase();
-  if (nameLower.includes("wahaika") || nameLower.includes("massue")) return "./image/2.png";
-  // Tu pourras ajouter d'autres objets ici plus tard :
-  // if (nameLower.includes("masque")) return "./image/3.png"; 
-  return "./image/1.png"; // Vase par défaut
+  
+  // Si le nom contient "wahaika" ou "massue", on force l'image de la massue
+  // (J'ai mis 7.png car c'est celle que tu utilises dans ta CollectionPage pour la massue)
+  if (nameLower.includes("wahaika") || nameLower.includes("massue")) return "./image/7.png"; 
+  
+  // Sinon, c'est le vase par défaut
+  return "./image/1.png"; 
 };
 
 export function ScanPage({
@@ -37,6 +40,7 @@ export function ScanPage({
   const scannerRef = useRef(null);
   const [step, setStep] = useState("camera");
   const [scannedData, setScannedData] = useState(null);
+  
   const [showDuplicate, setShowDuplicate] = useState(false);
 
   const handleScanSuccess = (n8nResponse, className) => {
@@ -45,13 +49,24 @@ export function ScanPage({
       ? (Array.isArray(n8nResponse) ? n8nResponse[0] : n8nResponse) 
       : { nom: className, description: "" };
 
-    const objectName = mainObject.nom || className;
+    // 🧹 Nettoyage du nom : on remplace les "_" par des espaces pour que ça soit joli
+    const rawName = mainObject.nom || className;
+    const cleanObjectName = rawName.replace(/_/g, " ");
 
-    // 🛡️ VÉRIFICATION DES DOUBLONS (Version robuste)
-    // On met tout en minuscules et on enlève les espaces en trop pour être sûr que ça match.
-    const isDuplicate = scannedIds.some(
-      (id) => id.toLowerCase().trim() === objectName.toLowerCase().trim()
-    );
+    // 🛡️ VÉRIFICATION DES DOUBLONS (Version Ultra Robuste par mots-clés)
+    const isDuplicate = scannedIds.some((id) => {
+      const savedName = id.toLowerCase();
+      const currentName = cleanObjectName.toLowerCase();
+      
+      // Si on a déjà scanné un truc "chimu" et qu'on rescanne "chimu" -> Doublon
+      if (savedName.includes("chimu") && currentName.includes("chimu")) return true;
+      // Pareil pour "wahaika" ou "massue"
+      if ((savedName.includes("wahaika") || savedName.includes("massue")) && 
+          (currentName.includes("wahaika") || currentName.includes("massue"))) return true;
+          
+      // Sécurité classique
+      return savedName.trim() === currentName.trim();
+    });
 
     if (isDuplicate) {
       setShowDuplicate(true); 
@@ -59,6 +74,7 @@ export function ScanPage({
       return;                 
     }
 
+    // CAS 1 : N8N a répondu avec succès
     if (n8nResponse) {
       if (n8nResponse.cousins) {
         onSaveN8NData(n8nResponse.cousins);
@@ -67,22 +83,21 @@ export function ScanPage({
       }
 
       setScannedData({
-        nom: objectName, 
-        // 🖼️ On utilise l'image de n8n SI elle existe, SINON on utilise notre fonction intelligente
-        image: mainObject.image || getFallbackImage(objectName), 
+        nom: cleanObjectName, // Nom nettoyé
+        image: getCorrectImage(cleanObjectName), // 🖼️ Force la bonne image !
         description: mainObject.description || ""
       });
 
       setStep("validation"); 
 
     } else {
+      // CAS 2 : PARCOURS DE SÉCURITÉ
       console.warn("Utilisation du parcours de sécurité pour :", className);
       onSaveN8NData([]); 
       
       setScannedData({
-        nom: objectName,
-        // 🖼️ Utilisation de la fonction intelligente pour trouver la bonne image
-        image: getFallbackImage(objectName),
+        nom: cleanObjectName, // Nom nettoyé
+        image: getCorrectImage(cleanObjectName), // 🖼️ Force la bonne image !
         description: ""
       });
       setStep("validation");
@@ -171,13 +186,12 @@ export function ScanPage({
                </motion.div>
 
                <div className="flex flex-col items-center gap-4 w-full">
-                   {/* 🖼️ L'image qui s'adapte enfin ! */}
                    <img
                       src={scannedData.image}
                       alt="Objet scanné"
                       className="w-4/5 h-auto object-contain drop-shadow-xl"
                    />
-                   <p className="text-xl font-bold text-center" style={{ color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
+                   <p className="text-xl font-bold text-center capitalize" style={{ color: colors.black, fontFamily: "'Poppins', sans-serif" }}>
                       {scannedData.nom}
                    </p>
                </div>
