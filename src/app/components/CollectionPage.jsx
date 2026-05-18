@@ -25,7 +25,15 @@ const collectionData = [
   { id: 10, nom: "À venir", image: "./image/Plan de travail 1.png" },
 ];
 
-export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo, onGoToCousins }) {
+export default function CollectionPage({ 
+  scanCount, 
+  onGoToMap, 
+  onGoToHome, 
+  onGoToScan, // 👈 1. Ajout de la prop ici !
+  onGoToCollection, 
+  onGoToInfo, 
+  onGoToCousins 
+}) {
   // État pour savoir quel objet est sélectionné
   const [selectedId, setSelectedId] = useState(null);
 
@@ -42,7 +50,8 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
         onGoToMap={onGoToMap} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
-        onGoToHome={() => setPage("final")}
+        onGoToHome={onGoToHome}
+        onGoToScan={onGoToScan} // 👈 2. On passe l'instruction au Header !
       />
 
       <div className="w-full flex justify-start px-2 mt-2">
