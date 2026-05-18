@@ -14,9 +14,9 @@ const colors = {
 
 // Tableau de tes plans avec les chemins d'accès vers ton dossier "public/image/plan"
 const museumPlans = [
-  { id: 1, img: "./image/plan/th-930x620-plan--1-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 0" },
-  { id: 2, img: "./image/plan/th-930x620-plan-0--en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 1" },
-  { id: 3, img: "./image/plan/th-930x620-plan-1-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 1 (Suite)" }, 
+  { id: 1, img: "./image/plan/th-930x620-plan--1-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau -1" },
+  { id: 2, img: "./image/plan/th-930x620-plan-0--en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 0" },
+  { id: 3, img: "./image/plan/th-930x620-plan-1-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 1" }, 
   { id: 4, img: "./image/plan/th-930x620-plan--2-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 2" }
 ];
 
