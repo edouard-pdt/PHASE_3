@@ -28,9 +28,9 @@ export default function InfoPage({ scanCount, onGoToMap, onGoToHome, onGoToColle
       <Header 
         scanCount={scanCount} 
         onGoToMap={onGoToMap} 
-        onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection}
-        onGoToInfo={onGoToInfo} 
+        onGoToInfo={onGoToInfo}
+        onGoToHome={() => setPage("final")}
       />
 
       {/* Titre de la page */}
