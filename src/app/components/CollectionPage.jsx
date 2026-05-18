@@ -47,7 +47,7 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
 
       <div className="w-full flex justify-start px-2 mt-2">
         <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '28px', color: colors.cream, margin: 0 }}>
-          Ma Collection
+          Ma galerie
         </h2>
       </div>
 
