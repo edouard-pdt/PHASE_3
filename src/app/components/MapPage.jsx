@@ -47,13 +47,13 @@ const dataNetwork = [
   { id: "1-c4", parentId: "1", lat: -17.71, lng: 178.06, color: "purple", nom: "Coupe Tanoa", pays: "Fidji (Océanie)", description: "Grande coupe de bois sculptée pour la boisson partagée du kava.", image: "./image/14.png", isMain: false },
   { id: "1-c5", parentId: "1", lat: 32.42, lng: 53.68, color: "yellow", nom: "Rhyton Perse", pays: "Iran (Moyen-Orient)", description: "Vase cérémoniel d'apparat en métal précieux sculpté.", image: "./image/15.png", isMain: false },
 
-  // ✨ OBJET 4 : LE FLACON OTTOMAN
-  { id: "4", lat: 36.80, lng: 10.18, color: "pink", nom: "Flacon à parfum ottoman", pays: "Tunisie (Afrique)", description: "Hexagonal et en argent, surmonté d'oiseaux et de perles.", image: "./image/4.png", isMain: true },
-  { id: "4-c1", parentId: "4", lat: 37.9, lng: 22.9, color: "blue", nom: "Aryballe Corinthien", pays: "Grèce (Europe)", description: "Petit vase antique servant à stocker l'huile parfumée des athlètes.", image: "./image/c_aryballe.png", isMain: false },
-  { id: "4-c2", parentId: "4", lat: 35.0, lng: 105.0, color: "orange", nom: "Flacon Tabatière", pays: "Chine (Asie)", description: "Fiole miniature richement décorée pour conserver les poudres odorantes.", image: "./image/c_tabatiere.png", isMain: false },
-  { id: "4-c3", parentId: "4", lat: -13.8, lng: -171.7, color: "purple", nom: "Flacon à huile de coco", pays: "Samoa (Océanie)", description: "Récipient sculpté en noix de coco pour les huiles corporelles.", image: "./image/c_coco.png", isMain: false },
-  { id: "4-c4", parentId: "4", lat: 20.0, lng: 77.0, color: "yellow", nom: "Gulabdan", pays: "Inde (Asie du Sud)", description: "Flacon à long col utilisé pour asperger l'eau de rose sur les invités.", image: "./image/c_gulabdan.png", isMain: false },
-  { id: "4-c5", parentId: "4", lat: 19.4, lng: -99.1, color: "cream", nom: "Vase à onguent Maya", pays: "Mexique (Amériques)", description: "Petit récipient mésoaméricain contenant des baumes ou des pigments.", image: "./image/c_maya.png", isMain: false }
+  // 🪓 OBJET 2 : LA MASSUE WAHAIKA (Thème : Armes et Symboles d'autorité)
+  { id: "2", lat: -40.90, lng: 174.88, color: "pink", nom: "Massue Wahaika", pays: "Nouvelle-Zélande (Océanie)", description: "Massue courte traditionnelle maorie, servant d'arme au corps à corps et de symbole d'autorité.", image: "./image/2.png", isMain: true },
+  { id: "2-c1", parentId: "2", lat: -1.29, lng: 36.82, color: "blue", nom: "Rungu Masaï", pays: "Kenya (Afrique)", description: "Bâton de jet en bois dur, symbole de statut pour les guerriers d'Afrique de l'Est.", image: "./image/c_rungu.png", isMain: false },
+  { id: "2-c2", parentId: "2", lat: 48.85, lng: 2.35, color: "orange", nom: "Masse d'armes", pays: "France (Europe)", description: "Arme médiévale contondante en métal utilisée par les chevaliers pour briser les armures.", image: "./image/c_masse.png", isMain: false },
+  { id: "2-c3", parentId: "2", lat: 44.00, lng: -100.00, color: "purple", nom: "Massue Crosse de Fusil", pays: "Amériques (Plaines)", description: "Arme redoutable des peuples natifs américains, souvent ornée de pointes métalliques.", image: "./image/c_crosse.png", isMain: false },
+  { id: "2-c4", parentId: "2", lat: 36.20, lng: 138.25, color: "yellow", nom: "Tetsubo / Kanabo", pays: "Japon (Asie)", description: "Lourde massue japonaise cloutée de fer, associée aux samouraïs et à la force brute.", image: "./image/c_kanabo.png", isMain: false },
+  { id: "2-c5", parentId: "2", lat: -12.04, lng: -77.02, color: "cream", nom: "Macana Inca", pays: "Pérou (Amériques)", description: "Arme précolombienne dotée d'une tête étoilée en pierre ou en bronze pour percer les défenses.", image: "./image/c_macana.png", isMain: false }
 ];
 
 export default function MapPage({ 
@@ -190,7 +190,6 @@ export default function MapPage({
         </div>
 
         {/* FICHE INFO INTERNE */}
-       {/* FICHE INFO INTERNE */}
         <AnimatePresence>
           {selectedObj && (
             <motion.div 
@@ -272,7 +271,7 @@ export default function MapPage({
                  transition: "all 0.2s ease"
               }}
             >
-              {/* 🛠️ MODIFICATION ICI : Image contenue pour la liste du bas */}
+              {/* Image contenue pour la liste du bas */}
               <img 
                 src={obj.image} 
                 alt={obj.nom} 
