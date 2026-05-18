@@ -17,6 +17,7 @@ import CollectionPage from "./components/CollectionPage";
 import CousinsPage from "./components/CousinsPage"; 
 import InfoPage from "./components/InfoPage"; 
 import SynthesisPage from "./components/SynthesisPage"; 
+import FinalCollectionPage from "./components/FinalCollectionPage";
 
 const colors = {
   yellow: "#F6C453",
