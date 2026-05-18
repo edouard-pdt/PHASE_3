@@ -12,89 +12,49 @@ const colors = {
   orange: "#DE5C44",
 };
 
-// 🛡️ Golden Path : Un cousin par continent avec un tag strictement identique
-const fallbackCousinsData = [
-  {
-    id: "main",
-    nom: "Vase zoomorphe Chimu",
-    relation: "Objet scanné",
-    image: "./image/1.png",
-    pays: "Pérou (Amériques)",
-    tag: "Récipient rituel",
-    themeColor: colors.cream,
-    description: "Ce vase en forme de tête de canard a été fabriqué au Pérou il y a plus de 500 ans par le peuple Chimu. Ces poteries servaient d'objets précieux lors de cérémonies importantes.",
-    bullets: ["Servir lors de cérémonies", "Représenter la faune locale", "Témoigner du savoir-faire Chimu"]
-  },
-  {
-    id: "c1",
-    nom: "Vase Canope",
-    relation: "Cousin 1/5",
-    image: "./image/11.png",
-    pays: "Égypte (Afrique)",
-    tag: "Récipient rituel",
-    themeColor: colors.pink, 
-    description: "Utilisé lors de la momification, ce vase protégeait les organes vitaux du défunt pour l'accompagner dans son voyage vers l'au-delà.",
-    bullets: ["Protéger le corps", "Assurer la vie éternelle", "Honorer les dieux"]
-  },
-  {
-    id: "c2",
-    nom: "Cratère à figures rouges",
-    relation: "Cousin 2/5",
-    image: "./image/12.png",
-    pays: "Grèce (Europe)",
-    tag: "Récipient rituel",
-    themeColor: colors.blue,
-    description: "Ce grand vase servait à mélanger l'eau et le vin lors des banquets (symposions), des moments de célébration clés de la vie sociale antique.",
-    bullets: ["Mélanger les boissons", "Rassembler la communauté", "Exposer des scènes mythologiques"]
-  },
-  {
-    id: "c3",
-    nom: "Vase Zun en bronze",
-    relation: "Cousin 3/5",
-    image: "./image/13.png",
-    pays: "Chine (Asie)",
-    tag: "Récipient rituel",
-    themeColor: colors.orange,
-    description: "Ce lourd récipient en bronze était utilisé sous la dynastie Shang pour offrir du vin aux ancêtres lors de cérémonies sacrées.",
-    bullets: ["Honorer les ancêtres", "Faire des offrandes", "Démontrer la maîtrise du bronze"]
-  },
-  {
-    id: "c4",
-    nom: "Coupe Tanoa",
-    relation: "Cousin 4/5",
-    image: "./image/14.png",
-    pays: "Fidji (Océanie)",
-    tag: "Récipient rituel",
-    themeColor: colors.purple,
-    description: "Grande coupe sculptée dans un bois précieux, utilisée pour préparer et partager le kava, une boisson qui renforce les liens de la communauté.",
-    bullets: ["Préparer une boisson sacrée", "Renforcer les liens sociaux", "Sculpter le bois local"]
-  },
-  {
-    id: "c5",
-    nom: "Rhyton Perse",
-    relation: "Cousin 5/5",
-    image: "./image/15.png",
-    pays: "Iran (Moyen-Orient)",
-    tag: "Récipient rituel",
-    themeColor: colors.yellow,
-    description: "Ce vase à boire en forme de corne ou d'animal était utilisé lors des grands banquets royaux dans l'empire perse pour célébrer les victoires.",
-    bullets: ["Célébrer le pouvoir", "Boire lors des banquets", "Travailler les métaux précieux"]
-  }
+// 🏺 BASE DE DONNÉES 1 : LE VASE CHIMU
+const chimuCousinsData = [
+  { id: "main", nom: "Vase zoomorphe Chimu", relation: "Objet scanné", image: "./image/1.png", pays: "Pérou (Amériques)", tag: "Récipient rituel", themeColor: colors.cream, description: "Ce vase en forme de tête de canard a été fabriqué au Pérou il y a plus de 500 ans par le peuple Chimu. Ces poteries servaient d'objets précieux lors de cérémonies importantes.", bullets: ["Servir lors de cérémonies", "Représenter la faune locale", "Témoigner du savoir-faire Chimu"] },
+  { id: "c1", nom: "Vase Canope", relation: "Cousin 1/5", image: "./image/11.png", pays: "Égypte (Afrique)", tag: "Récipient rituel", themeColor: colors.pink, description: "Utilisé lors de la momification, ce vase protégeait les organes vitaux du défunt pour l'accompagner dans son voyage vers l'au-delà.", bullets: ["Protéger le corps", "Assurer la vie éternelle", "Honorer les dieux"] },
+  { id: "c2", nom: "Cratère à figures rouges", relation: "Cousin 2/5", image: "./image/12.png", pays: "Grèce (Europe)", tag: "Récipient rituel", themeColor: colors.blue, description: "Ce grand vase servait à mélanger l'eau et le vin lors des banquets (symposions), des moments de célébration clés de la vie sociale antique.", bullets: ["Mélanger les boissons", "Rassembler la communauté", "Exposer des scènes mythologiques"] },
+  { id: "c3", nom: "Vase Zun en bronze", relation: "Cousin 3/5", image: "./image/13.png", pays: "Chine (Asie)", tag: "Récipient rituel", themeColor: colors.orange, description: "Ce lourd récipient en bronze était utilisé sous la dynastie Shang pour offrir du vin aux ancêtres lors de cérémonies sacrées.", bullets: ["Honorer les ancêtres", "Faire des offrandes", "Démontrer la maîtrise du bronze"] },
+  { id: "c4", nom: "Coupe Tanoa", relation: "Cousin 4/5", image: "./image/14.png", pays: "Fidji (Océanie)", tag: "Récipient rituel", themeColor: colors.purple, description: "Grande coupe sculptée dans un bois précieux, utilisée pour préparer et partager le kava, une boisson qui renforce les liens de la communauté.", bullets: ["Préparer une boisson sacrée", "Renforcer les liens sociaux", "Sculpter le bois local"] },
+  { id: "c5", nom: "Rhyton Perse", relation: "Cousin 5/5", image: "./image/15.png", pays: "Iran (Moyen-Orient)", tag: "Récipient rituel", themeColor: colors.yellow, description: "Ce vase à boire en forme de corne ou d'animal était utilisé lors des grands banquets royaux dans l'empire perse pour célébrer les victoires.", bullets: ["Célébrer le pouvoir", "Boire lors des banquets", "Travailler les métaux précieux"] }
+];
+
+// 🪓 BASE DE DONNÉES 2 : LA MASSUE WAHAIKA
+const wahaikaCousinsData = [
+  { id: "main", nom: "Massue Wahaika", relation: "Objet scanné", image: "./image/2.png", pays: "Nouvelle-Zélande (Océanie)", tag: "Arme de statut", themeColor: colors.pink, description: "Cette massue courte traditionnelle maorie, sculptée en bois ou en os de baleine, servait autant d'arme redoutable au corps à corps que de puissant symbole d'autorité pour les chefs.", bullets: ["Combattre au corps à corps", "Affirmer l'autorité du chef", "Démontrer le rang social"] },
+  { id: "c1", nom: "Rungu Masaï", relation: "Cousin 1/5", image: "./image/c_rungu.png", pays: "Kenya (Afrique)", tag: "Arme de statut", themeColor: colors.blue, description: "Un bâton de jet en bois dur utilisé par les guerriers d'Afrique de l'Est pour la chasse ou la défense, devenu un symbole fort de statut et de pouvoir au sein de la tribu.", bullets: ["Chasser et se défendre", "Symboliser le passage à l'âge adulte", "Représenter le pouvoir du guerrier"] },
+  { id: "c2", nom: "Masse d'armes", relation: "Cousin 2/5", image: "./image/c_masse.png", pays: "France (Europe)", tag: "Arme de statut", themeColor: colors.orange, description: "Arme contondante médiévale conçue pour briser les armures des chevaliers. Elle est ensuite devenue un insigne cérémoniel de l'autorité royale ou parlementaire.", bullets: ["Briser les armures lourdes", "Servir d'insigne d'autorité", "Montrer la force militaire"] },
+  { id: "c3", nom: "Massue Crosse", relation: "Cousin 3/5", image: "./image/c_crosse.png", pays: "Amériques (Plaines)", tag: "Arme de statut", themeColor: colors.purple, description: "Adoptant la forme d'une crosse de fusil européen et souvent ornée de lames, cette arme des peuples natifs américains inspirait la crainte et imposait le respect.", bullets: ["Frapper avec puissance", "Inspirer la crainte à l'ennemi", "Intégrer les matériaux européens"] },
+  { id: "c4", nom: "Kanabo", relation: "Cousin 4/5", image: "./image/c_kanabo.png", pays: "Japon (Asie)", tag: "Arme de statut", themeColor: colors.yellow, description: "Une lourde massue japonaise recouverte de clous de fer. Utilisée par les samouraïs, elle exigeait une force herculéenne, devenant le symbole même de la force brute.", bullets: ["Fracasser l'armure ennemie", "Briser les jambes des chevaux", "Incarner la force démoniaque (Oni)"] },
+  { id: "c5", nom: "Macana Inca", relation: "Cousin 5/5", image: "./image/c_macana.png", pays: "Pérou (Amériques)", tag: "Arme de statut", themeColor: colors.cream, description: "Dotée d'une redoutable tête en forme d'étoile en pierre ou en bronze, cette arme précolombienne permettait de percer les défenses et marquait le rang du guerrier.", bullets: ["Percer les défenses adverses", "Frapper avec précision", "Marquer le rang militaire"] }
 ];
 
 export default function CousinsPage({ 
   scanCount, 
+  scannedObjectName, // 👈 On récupère le nom de l'objet scanné ici
   onGoToMap, 
   onGoToHome, 
   onGoToCollection, 
   onGoToInfo,
-  onGoToSynthesis, // 🔌 NOUVELLE PROP
+  onGoToSynthesis, 
   n8nCousinsData 
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); 
   
-  const activeData = n8nCousinsData && n8nCousinsData.length > 0 ? n8nCousinsData : fallbackCousinsData;
+  // 🧠 LOGIQUE INTELLIGENTE : Quelle base de données utiliser ?
+  let localFallbackData = chimuCousinsData; // Par défaut (Vase)
+
+  // Si le nom de l'objet contient le mot "massue" ou "wahaika" (insensible à la casse)
+  if (scannedObjectName && (scannedObjectName.toLowerCase().includes("massue") || scannedObjectName.toLowerCase().includes("wahaika"))) {
+    localFallbackData = wahaikaCousinsData;
+  }
+
+  // On priorise toujours n8n (si ça marche), sinon on prend notre base locale intelligente
+  const activeData = n8nCousinsData && n8nCousinsData.length > 0 ? n8nCousinsData : localFallbackData;
   const currentObj = activeData[currentIndex];
 
   const hasSeenAll = currentIndex === activeData.length - 1;
@@ -115,9 +75,6 @@ export default function CousinsPage({
     exit: (dir) => ({ x: dir > 0 ? -100 : 100, opacity: 0 }),
   };
 
-  // --------------------------------------------------------
-  // 🔄 VUE 1 : LE CARROUSEL DES COUSINS
-  // --------------------------------------------------------
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6" style={{ backgroundColor: colors.black }}>
       
@@ -163,14 +120,12 @@ export default function CousinsPage({
           </button>
         )}
 
-        {/* Tags EXACTEMENT comme sur ta capture d'écran */}
+        {/* Tags */}
         <div className="absolute bottom-4 flex gap-2 w-full px-4 justify-center font-['Poppins']">
-          {/* Tag Noir : Pays/Continent */}
           <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: colors.black, color: "white", fontSize: "14px", fontWeight: "500" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             {currentObj.pays}
           </div>
-          {/* Tag Blanc : Étiquette commune */}
           <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF5F0] text-black text-[14px] font-bold">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
             {currentObj.tag}
@@ -221,7 +176,7 @@ export default function CousinsPage({
         </motion.div>
       </AnimatePresence>
 
-      {/* BOUTON DÉCOUVERTE DU LIEN (S'affiche uniquement à la fin) */}
+      {/* BOUTON DÉCOUVERTE DU LIEN */}
       {hasSeenAll && (
         <motion.button 
           initial={{ opacity: 0, y: 20 }}
