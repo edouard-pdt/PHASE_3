@@ -1,5 +1,4 @@
 import React from "react";
-// 🚨 CORRECTION ICI : On utilise bien le même import que le reste de ton app !
 import { motion } from "motion/react"; 
 
 const colors = {
@@ -8,9 +7,14 @@ const colors = {
   black: "#131313",
 };
 
-export default function SynthesisPage({ onGoToCollection }) {
+export default function SynthesisPage({ onGoToCollection, scannedObjectName }) {
+  // 🧠 Détection intelligente de l'objet scanné
+  const isWahaika = scannedObjectName && (
+    scannedObjectName.toLowerCase().includes("massue") || 
+    scannedObjectName.toLowerCase().includes("wahaika")
+  );
+
   return (
-    // 🚨 CORRECTION 2 : J'ai enlevé backgroundColor: colors.black pour laisser voir ton fond animé !
     <div className="min-h-screen p-8 flex flex-col items-center justify-center text-left gap-8" style={{ fontFamily: "'Poppins', sans-serif", zIndex: 10, position: "relative" }}>
       
       <motion.h1 
@@ -29,16 +33,35 @@ export default function SynthesisPage({ onGoToCollection }) {
         className="space-y-6 text-base leading-relaxed max-w-md"
         style={{ color: colors.cream }}
       >
-        <p>
-          En parcourant ces continents, on remarque une chose fascinante : <strong>toutes ces cultures partageaient un besoin similaire.</strong> Que ce soit pour honorer leurs ancêtres, protéger leurs défunts ou rassembler leur communauté, ils avaient tous besoin d'un <span style={{ color: colors.yellow, fontWeight: 'bold' }}>récipient rituel</span>.
-        </p>
-        <div className="h-px w-full opacity-30" style={{ backgroundColor: colors.cream }}></div>
-        <p>
-          Cependant, face à ce même besoin, <strong>chaque civilisation a répondu de manière totalement différente</strong>. 
-        </p>
-        <p>
-          Cette diversité s'explique par les <strong>matériaux</strong> qu'ils avaient sous la main (la terre cuite au Pérou, le bronze en Chine, le bois précieux en Océanie) et par leurs propres traditions artistiques.
-        </p>
+        {isWahaika ? (
+          /* 🪓 TEXTE SI L'OBJET SCANNÉ EST LA MASSUE WAHAIKA */
+          <>
+            <p>
+              En parcourant ces continents, on remarque une chose fascinante : <strong>toutes ces cultures partageaient un besoin similaire.</strong> Que ce soit pour se défendre au combat, affirmer leur pouvoir ou asseoir l'autorité de leur chef, ils avaient tous besoin d'une <span style={{ color: colors.yellow, fontWeight: 'bold' }}>arme de statut</span>.
+            </p>
+            <div className="h-px w-full opacity-30" style={{ backgroundColor: colors.cream }}></div>
+            <p>
+              Cependant, face à ce même besoin, <strong>chaque civilisation a répondu de manière totalement différente</strong>. 
+            </p>
+            <p>
+              Cette diversité s'explique par les <strong>matériaux</strong> qu'ils avaient sous la main (le bois ou l'os de baleine en Nouvelle-Zélande, le fer forgé en Europe ou au Japon, le bois dur poli au Kenya) et par leurs propres traditions guerrières.
+            </p>
+          </>
+        ) : (
+          /* 🏺 TEXTE PAR DÉFAUT (SI C'EST LE VASE CHIMU) */
+          <>
+            <p>
+              En parcourant ces continents, on remarque une chose fascinante : <strong>toutes ces cultures partageaient un besoin similaire.</strong> Que ce soit pour honorer leurs ancêtres, protéger leurs défunts ou rassembler leur communauté, ils avaient tous besoin d'un <span style={{ color: colors.yellow, fontWeight: 'bold' }}>récipient rituel</span>.
+            </p>
+            <div className="h-px w-full opacity-30" style={{ backgroundColor: colors.cream }}></div>
+            <p>
+              Cependant, face à ce même besoin, <strong>chaque civilisation a répondu de manière totalement différente</strong>. 
+            </p>
+            <p>
+              Cette diversité s'explique par les <strong>matériaux</strong> qu'ils avaient sous la main (la terre cuite au Pérou, le bronze en Chine, le bois précieux en Océanie) et par leurs traditions artistiques.
+            </p>
+          </>
+        )}
       </motion.div>
 
       <motion.button 
