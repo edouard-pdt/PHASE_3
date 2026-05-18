@@ -119,14 +119,18 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
                   bottom: 0,
                   width: '100%',
                   backgroundColor: isSelected ? colors.blue : colors.yellow,
-                  padding: '4px 0',
+                  padding: '5px 6px', // 👈 Ajustement du padding pour laisser respirer le texte
                   textAlign: 'center',
                   borderTop: `3px solid ${colors.black}`,
                   transition: 'background-color 0.2s ease'
                 }}>
                   <span style={{ 
+                    display: 'block', 
+                    whiteSpace: 'nowrap', 
+                    overflow: 'hidden', 
+                    textOverflow: 'ellipsis', 
                     fontFamily: 'Poppins', 
-                    fontSize: '11px', 
+                    fontSize: '9px', // 👈 Réduction de la taille de la police (était à 11px)
                     fontWeight: 800, 
                     color: isSelected ? colors.cream : colors.black,
                     textTransform: 'uppercase'
