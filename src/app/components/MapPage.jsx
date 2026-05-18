@@ -190,6 +190,7 @@ export default function MapPage({
         </div>
 
         {/* FICHE INFO INTERNE */}
+       {/* FICHE INFO INTERNE */}
         <AnimatePresence>
           {selectedObj && (
             <motion.div 
@@ -199,25 +200,52 @@ export default function MapPage({
               className="absolute bottom-4 left-4 right-4 z-[9999] flex p-3 items-center"
               style={{ backgroundColor: colors.cream, borderRadius: 24, border: `3px solid ${colors.black}`, boxShadow: "0 10px 25px rgba(0,0,0,0.3)" }}
             >
-              {/* 🛠️ MODIFICATION ICI : Image contenue et couleur dynamique */}
+              {/* Image contenue et couleur dynamique */}
               <img 
                 src={selectedObj.image} 
                 alt={selectedObj.nom}
                 style={{ 
                   width: 60, 
                   height: 60, 
-                  objectFit: "contain", // Rentre parfaitement dans le cadre
-                  padding: "4px",       // Petite marge pour respirer
-                  backgroundColor: colors[selectedObj.color] || colors.cream, // Couleur dynamique !
+                  objectFit: "contain", 
+                  padding: "4px",       
+                  backgroundColor: colors[selectedObj.color] || colors.cream, 
                   borderRadius: 12, 
                   border: `2px solid ${colors.black}` 
                 }} 
               />
+              
+              {/* Zone de texte avec le Titre ET la Description */}
               <div className="ml-4 flex-1">
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, fontFamily: "'Poppins', sans-serif", lineHeight: 1.1 }}>{selectedObj.nom}</h3>
-                <p style={{ margin: 0, fontSize: 11, color: "#555", fontFamily: "'Poppins', sans-serif", lineHeight: 1.2, marginTop: 4 }}>{selectedObj.description}</p>
+                <h3 style={{ 
+                  margin: 0, 
+                  fontSize: "14px", 
+                  fontWeight: 800, 
+                  fontFamily: "'Poppins', sans-serif", 
+                  lineHeight: 1.2,
+                  color: colors.black // 👈 On s'assure que le titre est bien noir et visible !
+                }}>
+                  {selectedObj.nom}
+                </h3>
+                <p style={{ 
+                  margin: 0, 
+                  fontSize: "11px", 
+                  color: "#555", 
+                  fontFamily: "'Poppins', sans-serif", 
+                  lineHeight: 1.3, 
+                  marginTop: "4px" 
+                }}>
+                  {selectedObj.description}
+                </p>
               </div>
-              <button onClick={() => setSelectedObj(null)} className="ml-2 w-8 h-8 flex items-center justify-center rounded-full" style={{ backgroundColor: colors.black, color: colors.cream, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>✕</button>
+
+              <button 
+                onClick={() => setSelectedObj(null)} 
+                className="ml-2 w-8 h-8 flex shrink-0 items-center justify-center rounded-full" 
+                style={{ backgroundColor: colors.black, color: colors.cream, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}
+              >
+                ✕
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
