@@ -394,6 +394,7 @@ export default function App() {
           >
             <StaticFondBackground />
             <SynthesisPage 
+              scannedObjectName={currentScannedName}
               onGoToCollection={() => setPage("collection")} 
             />
           </motion.div>
