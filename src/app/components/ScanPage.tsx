@@ -12,9 +12,19 @@ const colors = {
   black: "#131313"
 };
 
+// 🧠 Petite fonction d'aide pour lier le nom de l'objet à sa photo
+const getFallbackImage = (nom) => {
+  if (!nom) return "./image/1.png";
+  const nameLower = nom.toLowerCase();
+  if (nameLower.includes("wahaika") || nameLower.includes("massue")) return "./image/2.png";
+  // Tu pourras ajouter d'autres objets ici plus tard :
+  // if (nameLower.includes("masque")) return "./image/3.png"; 
+  return "./image/1.png"; // Vase par défaut
+};
+
 export function ScanPage({
-  userName,          // 👈 Le prénom du joueur
-  scannedIds = [],   // 👈 La liste des objets déjà scannés
+  userName,          
+  scannedIds = [],   
   scanCount,
   onScan,
   onGoToMap,
@@ -27,31 +37,29 @@ export function ScanPage({
   const scannerRef = useRef(null);
   const [step, setStep] = useState("camera");
   const [scannedData, setScannedData] = useState(null);
-  
-  // État pour afficher la pop-up de doublon
   const [showDuplicate, setShowDuplicate] = useState(false);
 
-  // 🔌 Cette fonction réceptionne ce que le Scanner a trouvé ET récupéré sur n8n
   const handleScanSuccess = (n8nResponse, className) => {
     
-    // Extraction de l'objet principal
     const mainObject = n8nResponse 
       ? (Array.isArray(n8nResponse) ? n8nResponse[0] : n8nResponse) 
-      : { nom: className, image: "./image/1.png", description: "" };
+      : { nom: className, description: "" };
 
-    // 🛡️ VÉRIFICATION DES DOUBLONS AVANT TOUT
-    // On utilise l'ID de l'objet ou son nom comme référence
-    const objectId = mainObject.id || className;
+    const objectName = mainObject.nom || className;
 
-    if (scannedIds.includes(objectId)) {
-      setShowDuplicate(true); // On affiche l'alerte !
-      setStep("camera");      // On remet la caméra en fond
-      return;                 // On arrête la fonction ici, on ne va pas à la validation
+    // 🛡️ VÉRIFICATION DES DOUBLONS (Version robuste)
+    // On met tout en minuscules et on enlève les espaces en trop pour être sûr que ça match.
+    const isDuplicate = scannedIds.some(
+      (id) => id.toLowerCase().trim() === objectName.toLowerCase().trim()
+    );
+
+    if (isDuplicate) {
+      setShowDuplicate(true); 
+      setStep("camera");      
+      return;                 
     }
 
-    // CAS 1 : N8N a répondu avec succès !
     if (n8nResponse) {
-      // TRANSMISSION DES COUSINS À APP.TSX
       if (n8nResponse.cousins) {
         onSaveN8NData(n8nResponse.cousins);
       } else if (Array.isArray(n8nResponse)) {
@@ -59,23 +67,22 @@ export function ScanPage({
       }
 
       setScannedData({
-        nom: mainObject.nom || className, 
-        image: mainObject.image || "./image/1.png", 
+        nom: objectName, 
+        // 🖼️ On utilise l'image de n8n SI elle existe, SINON on utilise notre fonction intelligente
+        image: mainObject.image || getFallbackImage(objectName), 
         description: mainObject.description || ""
       });
 
       setStep("validation"); 
 
     } else {
-      // CAS 2 : PARCOURS DE SÉCURITÉ (Si le Scanner a détecté une erreur réseau/CORS)
       console.warn("Utilisation du parcours de sécurité pour :", className);
-      
-      // On vide l'état n8n pour forcer l'application à utiliser le fallback local
       onSaveN8NData([]); 
       
       setScannedData({
-        nom: className,
-        image: "./image/1.png",
+        nom: objectName,
+        // 🖼️ Utilisation de la fonction intelligente pour trouver la bonne image
+        image: getFallbackImage(objectName),
         description: ""
       });
       setStep("validation");
@@ -94,7 +101,7 @@ export function ScanPage({
         onGoToInfo={onGoToInfo}
       />
 
-      {/* 📦 ÉTAT 1 : LA CAMÉRA ET LE BOUTON GROUPÉS */}
+      {/* LA CAMÉRA ET LE BOUTON */}
       {step === "camera" && (
         <div className="flex-1 flex flex-col items-center justify-center w-full">
           <div className="relative flex flex-col items-center w-full max-w-md">
@@ -109,10 +116,8 @@ export function ScanPage({
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => {
-                // Le déclenchement du chargement est maintenant géré par le scanner lui-même au clic
                 scannerRef.current?.lancerLeScan(); 
               }}
-              // 🛠️ z-10 et -mt-8 pour faire remonter le bouton par-dessus le bord du scanner
               className="relative z-10 -mt-8 shrink-0 rounded-full px-14 py-4 focus:outline-none focus-visible:ring-4"
               style={{
                 backgroundColor: colors.blue, color: colors.cream,
@@ -127,7 +132,7 @@ export function ScanPage({
         </div>
       )}
 
-      {/* ÉTAT 2 : LE CHARGEMENT */}
+      {/* LE CHARGEMENT */}
       {step === "loading" && (
         <div className="flex flex-1 flex-col items-center justify-center w-full pb-20">
            <motion.div
@@ -144,7 +149,7 @@ export function ScanPage({
         </div>
       )}
 
-      {/* ÉTAT 3 : LA PAGE DE VALIDATION */}
+      {/* LA PAGE DE VALIDATION */}
       {step === "validation" && scannedData && (
          <div className="flex flex-1 flex-col items-center justify-center w-full max-w-sm pb-6 z-10">
             <motion.div
@@ -166,6 +171,7 @@ export function ScanPage({
                </motion.div>
 
                <div className="flex flex-col items-center gap-4 w-full">
+                   {/* 🖼️ L'image qui s'adapte enfin ! */}
                    <img
                       src={scannedData.image}
                       alt="Objet scanné"
@@ -182,7 +188,6 @@ export function ScanPage({
                whileTap={{ scale: 0.95 }}
                onClick={() => {
                  onScan(); 
-                 // 🎯 C'EST ICI LA MODIFICATION CLÉ ! On envoie le nom exact de l'objet :
                  onGoToCousins(scannedData.nom); 
                }}
                className="w-full mt-10 rounded-[30px] py-4 shadow-xl"
@@ -196,7 +201,7 @@ export function ScanPage({
          </div>
       )}
 
-      {/* 🌟 LA POP-UP DE DOUBLON (Par-dessus tout le reste) */}
+      {/* LA POP-UP DE DOUBLON */}
       <AnimatePresence>
         {showDuplicate && (
           <motion.div 
@@ -227,7 +232,7 @@ export function ScanPage({
               
               <motion.button 
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setShowDuplicate(false)} // 👈 On ferme la pop-up
+                onClick={() => setShowDuplicate(false)} 
                 className="w-full py-4 rounded-full font-bold text-[16px] shadow-lg mt-2"
                 style={{ backgroundColor: colors.yellow, color: colors.black, border: `2px solid ${colors.black}`, fontFamily: "'Poppins', sans-serif" }}
               >
