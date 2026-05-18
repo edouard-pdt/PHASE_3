@@ -13,8 +13,8 @@ const colors = {
 };
 
 export function ScanPage({
-  userName,          // 👈 NOUVEAU : Le prénom du joueur
-  scannedIds = [],   // 👈 NOUVEAU : La liste des objets déjà scannés
+  userName,          // 👈 Le prénom du joueur
+  scannedIds = [],   // 👈 La liste des objets déjà scannés
   scanCount,
   onScan,
   onGoToMap,
@@ -28,7 +28,7 @@ export function ScanPage({
   const [step, setStep] = useState("camera");
   const [scannedData, setScannedData] = useState(null);
   
-  // 👈 NOUVEAU : État pour afficher la pop-up de doublon
+  // État pour afficher la pop-up de doublon
   const [showDuplicate, setShowDuplicate] = useState(false);
 
   // 🔌 Cette fonction réceptionne ce que le Scanner a trouvé ET récupéré sur n8n
@@ -182,7 +182,8 @@ export function ScanPage({
                whileTap={{ scale: 0.95 }}
                onClick={() => {
                  onScan(); 
-                 onGoToCousins(); 
+                 // 🎯 C'EST ICI LA MODIFICATION CLÉ ! On envoie le nom exact de l'objet :
+                 onGoToCousins(scannedData.nom); 
                }}
                className="w-full mt-10 rounded-[30px] py-4 shadow-xl"
                style={{
