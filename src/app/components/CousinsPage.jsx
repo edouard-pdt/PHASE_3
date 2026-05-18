@@ -34,9 +34,10 @@ const wahaikaCousinsData = [
 
 export default function CousinsPage({ 
   scanCount, 
-  scannedObjectName, // 👈 On récupère le nom de l'objet scanné ici
+  scannedObjectName, 
   onGoToMap, 
   onGoToHome, 
+  onGoToScan, // 👈 1. Ajout de la prop ici !
   onGoToCollection, 
   onGoToInfo,
   onGoToSynthesis, 
@@ -83,7 +84,8 @@ export default function CousinsPage({
         onGoToMap={onGoToMap} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
-        onGoToHome={() => setPage("final")}
+        onGoToHome={onGoToHome}
+        onGoToScan={onGoToScan} // 👈 2. On passe l'instruction au Header !
       />
 
       {/* CARRÉ CENTRAL */}
