@@ -16,7 +16,7 @@ import MapPage from "./components/MapPage";
 import CollectionPage from "./components/CollectionPage";
 import CousinsPage from "./components/CousinsPage"; 
 import InfoPage from "./components/InfoPage"; 
-import SynthesisPage from "./components/SynthesisPage"; // 🔌 Import de la nouvelle page
+import SynthesisPage from "./components/SynthesisPage"; 
 
 const colors = {
   yellow: "#F6C453",
@@ -187,8 +187,12 @@ export default function App() {
   const [scanCount, setScanCount] = useState(0);
   const [n8nCousins, setN8nCousins] = useState<any[]>([]);
 
-  // 🆕 NOUVEAU : État global pour mémoriser l'objet sélectionné destiné à la carte
+  // État global pour mémoriser l'objet sélectionné destiné à la carte
   const [mapTarget, setMapTarget] = useState<any>(null);
+
+  // 🧠 NOUVEAU : États pour l'intelligence de la page Cousins et les Doublons
+  const [currentScannedName, setCurrentScannedName] = useState("");
+  const [scannedIds, setScannedIds] = useState<string[]>([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -288,14 +292,24 @@ export default function App() {
           >
             <StaticFondBackground />
             <ScanPage
+              userName={userName} // 👈 On passe le prénom pour la pop-up de doublon
+              scannedIds={scannedIds} // 👈 On passe la liste pour vérifier les doublons
               scanCount={scanCount}
               onScan={() => setScanCount((c) => Math.min(c + 1, 10))}
-              onGoToMap={() => { setMapTarget(null); setPage("map"); }} // Nettoie le focus si navigation classique
+              onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")} 
+              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
               onGoToCollection={() => setPage("collection")}
-              onGoToCousins={() => setPage("cousins")}
               onGoToInfo={() => setPage("info")}
               onSaveN8NData={(data) => setN8nCousins(data)}
+              onGoToCousins={(nomObjet) => {
+                // 🧠 LIAISON INTELLIGENTE : on sauvegarde le nom et on l'ajoute aux objets déjà scannés !
+                if (nomObjet) {
+                  setCurrentScannedName(nomObjet);
+                  setScannedIds((prev) => [...prev, nomObjet]); 
+                }
+                setPage("cousins");
+              }}
             />
           </motion.div>
         )}
@@ -314,10 +328,11 @@ export default function App() {
               scanCount={scanCount}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")}
+              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
               onGoToCollection={() => setPage("collection")} 
               onGoToInfo={() => setPage("info")}
               n8nCousinsData={n8nCousins}
-              targetedObject={mapTarget} // 🔌 Liaison : Fournit l'objet mémorisé à la carte
+              targetedObject={mapTarget} 
             />
           </motion.div>
         )}
@@ -334,9 +349,9 @@ export default function App() {
             <StaticFondBackground />
             <CollectionPage
               scanCount={scanCount}
-              // 🔌 Liaison : Récupère l'objet cliqué dans la collection, le stocke, puis ouvre la carte
               onGoToMap={(item) => { setMapTarget(item); setPage("map"); }} 
               onGoToHome={() => setPage("scan")}
+              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
               onGoToCousins={() => setPage("cousins")}
@@ -356,17 +371,18 @@ export default function App() {
             <StaticFondBackground />
             <CousinsPage
               scanCount={scanCount}
+              scannedObjectName={currentScannedName} // 👈 On envoie le nom mémorisé à la page Cousins
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")}
+              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
-              onGoToSynthesis={() => setPage("synthesis")} // 🔌 LIAISON VERS SYNTHÈSE
+              onGoToSynthesis={() => setPage("synthesis")}
               n8nCousinsData={n8nCousins}
             />
           </motion.div>
         )}
 
-        {/* 🌟 NOUVELLE PAGE DE SYNTHÈSE */}
         {page === "synthesis" && (
           <motion.div
             key="synthesis"
@@ -397,6 +413,7 @@ export default function App() {
               scanCount={scanCount}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
               onGoToHome={() => setPage("scan")}
+              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
             />
