@@ -81,9 +81,9 @@ export default function CousinsPage({
       <Header 
         scanCount={scanCount} 
         onGoToMap={onGoToMap} 
-        onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
+        onGoToHome={() => setPage("final")}
       />
 
       {/* CARRÉ CENTRAL */}
