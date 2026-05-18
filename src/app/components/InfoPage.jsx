@@ -20,7 +20,14 @@ const museumPlans = [
   { id: 4, img: "./image/plan/th-930x620-plan--2-en-attente-corrections_930x620.jpg.jpg", title: "Plan Niveau 2" }
 ];
 
-export default function InfoPage({ scanCount, onGoToMap, onGoToHome, onGoToCollection, onGoToInfo }) {
+export default function InfoPage({ 
+  scanCount, 
+  onGoToMap, 
+  onGoToHome, 
+  onGoToScan, // 👈 1. Ajout de la prop ici !
+  onGoToCollection, 
+  onGoToInfo 
+}) {
   return (
     <div className="relative flex flex-col items-center min-h-screen p-5 gap-6 pb-12">
       
@@ -30,7 +37,8 @@ export default function InfoPage({ scanCount, onGoToMap, onGoToHome, onGoToColle
         onGoToMap={onGoToMap} 
         onGoToCollection={onGoToCollection}
         onGoToInfo={onGoToInfo}
-        onGoToHome={() => setPage("final")}
+        onGoToHome={onGoToHome} // (qui pointe vers "final" dans App.tsx)
+        onGoToScan={onGoToScan} // 👈 2. On passe l'instruction au Header !
       />
 
       {/* Titre de la page */}
