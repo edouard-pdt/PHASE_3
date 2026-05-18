@@ -26,12 +26,14 @@ const collectionData = [
 ];
 
 export default function FinalCollectionPage({ 
-  userName, // 👈 On récupère le prénom pour le bouton de fin
+  userName, 
   onGoToMap, 
   onGoToHome, 
+  onGoToScan, // 👈 1. Ajout de la prop
   onGoToCollection, 
   onGoToInfo, 
-  onGoToCousins 
+  onGoToCousins,
+  onFinish // 👈 2. Prop pour aller vers la page Thanks
 }) {
   const [selectedId, setSelectedId] = useState(null);
   const selectedItem = collectionData.find(item => item.id === selectedId);
@@ -44,6 +46,7 @@ export default function FinalCollectionPage({
         scanCount={6} 
         onGoToMap={onGoToMap} 
         onGoToHome={onGoToHome} 
+        onGoToScan={onGoToScan} // 👈 3. Passage au Header
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
       />
@@ -56,7 +59,6 @@ export default function FinalCollectionPage({
 
       <div className="grid grid-cols-2 gap-5 w-full">
         {collectionData.map((item) => {
-          // 🎯 L'ASTUCE : Tout est débloqué SAUF si ça s'appelle "À venir"
           const isUnlocked = item.nom !== "À venir";
           const isSelected = selectedId === item.id;
 
@@ -140,15 +142,18 @@ export default function FinalCollectionPage({
         })}
       </div>
 
-      {/* 🎬 LE BOUTON DE FIN DE PRÉSENTATION */}
-      <motion.div
+      {/* 🎬 LE BOUTON DE FIN DE PRÉSENTATION (Modifié pour être cliquable !) */}
+      <motion.button
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="w-full mt-6 flex justify-center z-10"
+        whileTap={{ scale: 0.95 }}
+        onClick={onFinish} // 👈 4. On déclenche la navigation
+        className="w-full mt-6 flex justify-center z-10 focus:outline-none"
+        style={{ background: 'none', border: 'none', padding: 0 }}
       >
         <div 
-          className="w-full max-w-sm rounded-[30px] py-5 px-6 shadow-xl text-center"
+          className="w-full max-w-sm rounded-[30px] py-5 px-6 shadow-xl text-center cursor-pointer"
           style={{
             backgroundColor: colors.orange, 
             color: colors.cream,
@@ -161,8 +166,11 @@ export default function FinalCollectionPage({
         >
           C'est déjà la fin de la visite,<br/>
           <span style={{ color: colors.yellow, fontSize: "1.3rem" }}>{userName || "l'ami"}</span> !
+          <div style={{ fontSize: "10px", marginTop: "4px", opacity: 0.8, fontWeight: 500 }}>
+            Appuyez pour terminer
+          </div>
         </div>
-      </motion.div>
+      </motion.button>
 
       {/* BANDEAU ACTION SUR L'OBJET SELECTIONNÉ */}
       <AnimatePresence>
