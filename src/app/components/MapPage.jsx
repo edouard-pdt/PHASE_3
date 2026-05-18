@@ -116,9 +116,9 @@ export default function MapPage({
       <Header 
         scanCount={scanCount} 
         onGoToMap={onGoToMap} 
-        onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
+        onGoToHome={() => setPage("final")}
       />
 
       {/* LA ZONE CARTE */}
