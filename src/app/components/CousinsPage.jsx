@@ -37,7 +37,7 @@ export default function CousinsPage({
   scannedObjectName, 
   onGoToMap, 
   onGoToHome, 
-  onGoToScan, // 👈 1. Ajout de la prop ici !
+  onGoToScan,
   onGoToCollection, 
   onGoToInfo,
   onGoToSynthesis, 
@@ -85,7 +85,7 @@ export default function CousinsPage({
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
         onGoToHome={onGoToHome}
-        onGoToScan={onGoToScan} // 👈 2. On passe l'instruction au Header !
+        onGoToScan={onGoToScan}
       />
 
       {/* CARRÉ CENTRAL */}
@@ -122,53 +122,55 @@ export default function CousinsPage({
           </button>
         )}
 
-        {/* Tags */}
-        <div className="absolute bottom-4 flex gap-2 w-full px-4 justify-center font-['Poppins']">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: colors.black, color: "white", fontSize: "14px", fontWeight: "500" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        {/* 🏷️ TAGS SUR L'IMAGE (Tailles réduites pour mobile) */}
+        <div className="absolute bottom-3 flex flex-wrap gap-2 w-full px-2 justify-center font-['Poppins']">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ backgroundColor: colors.black, color: "white", fontSize: "11px", fontWeight: "500" }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             {currentObj.pays}
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF5F0] text-black text-[14px] font-bold">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FAF5F0] text-black text-[11px] font-bold">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
             {currentObj.tag}
           </div>
         </div>
       </div>
 
-      {/* BOUTONS SOUS LE CARRÉ */}
-      <div className="flex gap-4 w-full justify-center mt-[-10px]">
-        <div className="px-6 py-2 rounded-full font-bold text-center" style={{ backgroundColor: currentObj.themeColor || colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "14px", transition: "background-color 0.5s" }}>
+      {/* 🏷️ BOUTONS SOUS LE CARRÉ (Tailles et paddings réduits) */}
+      <div className="flex flex-wrap gap-2 w-full justify-center mt-[-10px] z-10 px-2">
+        <div className="px-4 py-1.5 rounded-full font-bold text-center" style={{ backgroundColor: currentObj.themeColor || colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "12px", transition: "background-color 0.5s" }}>
           {currentObj.nom}
         </div>
-        <div className="px-6 py-2 rounded-full font-bold text-center" style={{ backgroundColor: currentObj.themeColor || colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "14px", transition: "background-color 0.5s" }}>
+        <div className="px-4 py-1.5 rounded-full font-bold text-center" style={{ backgroundColor: currentObj.themeColor || colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif", fontSize: "12px", transition: "background-color 0.5s" }}>
           {currentObj.relation}
         </div>
       </div>
 
-      {/* ZONE DE TEXTE */}
+      {/* 📖 ZONE DE TEXTE (Barre droite supprimée, texte prenant toute la largeur) */}
       <AnimatePresence mode="wait">
         <motion.div 
           key={currentObj.id || currentIndex}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="relative w-full px-2 mt-4 flex flex-col gap-4 pb-4"
+          className="relative w-full px-2 mt-2 flex flex-col gap-4 pb-4"
         >
-          <div className="absolute right-0 top-0 bottom-0 w-1 rounded-full transition-colors duration-500" style={{ backgroundColor: currentObj.themeColor || colors.yellow }}></div>
+          {/* ❌ La ligne avec la barre de droite a été retirée */}
 
           <div>
-            <h3 className="text-lg font-bold mb-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>À quoi sert cet objet ?</h3>
-            <p className="text-sm pr-6 leading-relaxed transition-colors duration-500" style={{ color: currentObj.themeColor || colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
+            <h3 className="text-base font-bold mb-1" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>À quoi sert cet objet ?</h3>
+            {/* Suppression du `pr-6` et réduction légère du texte (text-[13px]) */}
+            <p className="text-[13px] leading-relaxed transition-colors duration-500" style={{ color: currentObj.themeColor || colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
               {currentObj.description}
             </p>
           </div>
 
           {currentObj.bullets && (
             <div>
-              <h3 className="text-lg font-bold mb-2 mt-2" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>Ce que cet objet permet de faire</h3>
-              <div className="flex flex-col gap-3 pr-6">
+              <h3 className="text-base font-bold mb-2 mt-1" style={{ color: colors.cream, fontFamily: "'Poppins', sans-serif" }}>Ce que cet objet permet de faire</h3>
+              {/* Suppression du `pr-6` */}
+              <div className="flex flex-col gap-2">
                 {currentObj.bullets.map((bullet, i) => (
-                  <span key={i} className="text-sm transition-colors duration-500" style={{ color: currentObj.themeColor || colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
+                  <span key={i} className="text-[13px] transition-colors duration-500" style={{ color: currentObj.themeColor || colors.yellow, fontFamily: "'Poppins', sans-serif" }}>
                     • {bullet}
                   </span>
                 ))}
@@ -178,13 +180,13 @@ export default function CousinsPage({
         </motion.div>
       </AnimatePresence>
 
-      {/* BOUTON DÉCOUVERTE DU LIEN */}
+      {/* BOUTON DÉCOUVERTE DU LIEN (Taille réajustée pour petit écran) */}
       {hasSeenAll && (
         <motion.button 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={onGoToSynthesis}
-          className="w-[90%] py-4 rounded-full font-bold text-lg mb-8 shadow-lg"
+          className="w-[95%] py-3.5 rounded-full font-bold text-[15px] mb-8 shadow-lg"
           style={{ backgroundColor: colors.yellow, color: colors.black, fontFamily: "'Poppins', sans-serif" }}
         >
           Découvrir le point commun
