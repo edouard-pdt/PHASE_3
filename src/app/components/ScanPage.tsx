@@ -110,10 +110,10 @@ export function ScanPage({
 
       <Header 
         scanCount={scanCount} 
-        onGoToMap={onGoToMap} 
-        onGoToHome={onGoToHome} 
+        onGoToMap={onGoToMap}  
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
+        onGoToHome={() => setPage("final")}
       />
 
       {/* LA CAMÉRA ET LE BOUTON */}
