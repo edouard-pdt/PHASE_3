@@ -60,6 +60,7 @@ export default function MapPage({
   scanCount = 1, 
   onGoToMap, 
   onGoToHome, 
+  onGoToScan, // 👈 1. Ajout de la prop ici !
   onGoToCollection,
   onGoToInfo,
   targetedObject 
@@ -118,7 +119,8 @@ export default function MapPage({
         onGoToMap={onGoToMap} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
-        onGoToHome={() => setPage("final")}
+        onGoToHome={onGoToHome} // 👈 2. Modifié pour utiliser la prop (qui pointe vers "final" dans App.tsx)
+        onGoToScan={onGoToScan} // 👈 3. On passe l'instruction au Header !
       />
 
       {/* LA ZONE CARTE */}
