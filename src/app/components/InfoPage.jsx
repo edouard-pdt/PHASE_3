@@ -137,7 +137,7 @@ export default function InfoPage({
           </div>
           <div className="flex justify-between border-b pb-2" style={{ borderColor: '#333' }}>
             <span style={{ opacity: 0.7 }}>Design & Dévelopement</span>
-            <span style={{ fontWeight: 700, color: colors.yellow }}>Ton Équipe</span>
+            <span style={{ fontWeight: 700, color: colors.yellow }}>Edouard Poudat</span>
           </div>
           <div className="flex justify-between pb-2">
             <span style={{ opacity: 0.7 }}>IA & Détection</span>
