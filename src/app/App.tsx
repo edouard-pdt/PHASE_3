@@ -18,6 +18,7 @@ import CousinsPage from "./components/CousinsPage";
 import InfoPage from "./components/InfoPage"; 
 import SynthesisPage from "./components/SynthesisPage"; 
 import FinalCollectionPage from "./components/FinalCollectionPage";
+import ThanksPage from "./components/ThanksPage"; // 👈 NOUVEL IMPORT
 
 const colors = {
   yellow: "#F6C453",
@@ -183,7 +184,8 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "synthesis" | "final" | "info">("intro");
+  // 👈 1. Ajout de "thanks" dans la liste des pages possibles
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "synthesis" | "final" | "info" | "thanks">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
   const [n8nCousins, setN8nCousins] = useState<any[]>([]);
@@ -210,8 +212,8 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      {/* Cacher le header aussi sur synthesis et final */}
-      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "synthesis" && page !== "info" && page !== "final" && (
+      {/* 👈 2. Cacher le header aussi sur "thanks" */}
+      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "synthesis" && page !== "info" && page !== "final" && page !== "thanks" && (
         <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
           <Logo />
         </header>
@@ -298,7 +300,7 @@ export default function App() {
               scanCount={scanCount}
               onScan={() => setScanCount((c) => Math.min(c + 1, 10))}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToHome={() => setPage("final")} 
               onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
@@ -327,7 +329,7 @@ export default function App() {
             <MapPage
               scanCount={scanCount}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToHome={() => setPage("final")} 
               onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")} 
               onGoToInfo={() => setPage("info")}
@@ -350,7 +352,7 @@ export default function App() {
             <CollectionPage
               scanCount={scanCount}
               onGoToMap={(item) => { setMapTarget(item); setPage("map"); }} 
-              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToHome={() => setPage("final")} 
               onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
@@ -373,7 +375,7 @@ export default function App() {
               scanCount={scanCount}
               scannedObjectName={currentScannedName} 
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToHome={() => setPage("final")} 
               onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
@@ -413,7 +415,7 @@ export default function App() {
             <InfoPage
               scanCount={scanCount}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToHome={() => setPage("final")} 
               onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
@@ -421,7 +423,7 @@ export default function App() {
           </motion.div>
         )}
 
-        {/* 🎬 NOUVELLE PAGE FINALE DE PRÉSENTATION */}
+        {/* 🎬 PAGE FINALE DE PRÉSENTATION */}
         {page === "final" && (
           <motion.div
             key="final"
@@ -440,7 +442,23 @@ export default function App() {
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
               onGoToCousins={() => setPage("cousins")}
+              onFinish={() => setPage("thanks")} // 👈 3. Passage à la page remerciements !
             />
+          </motion.div>
+        )}
+
+        {/* 🙏 NOUVELLE PAGE DE REMERCIEMENTS (QR CODE) */}
+        {page === "thanks" && (
+          <motion.div
+            key="thanks"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative", minHeight: "100vh" }}
+          >
+            <StaticFondBackground />
+            <ThanksPage userName={userName} />
           </motion.div>
         )}
 
