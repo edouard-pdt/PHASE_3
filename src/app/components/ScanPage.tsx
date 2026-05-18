@@ -231,9 +231,6 @@ export function ScanPage({
               className="w-full max-w-sm rounded-[30px] p-8 flex flex-col items-center text-center gap-6 shadow-2xl"
               style={{ backgroundColor: colors.cream, border: `4px solid ${colors.black}` }}
             >
-              <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-inner" style={{ backgroundColor: colors.pink }}>
-                👀
-              </div>
               
               <h2 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "22px", color: colors.black, lineHeight: 1.2 }}>
                 Attends un peu,<br/>
@@ -241,7 +238,7 @@ export function ScanPage({
               </h2>
               
               <p style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 500, fontSize: "14px", color: "#333" }}>
-                Je crois bien que tu as déjà scanné cet objet. Essaie d'en trouver un nouveau pour agrandir ta collection !
+                Je crois bien que tu as déjà scanné cet objet. Essaie d'en trouver un nouveau pour compléter ta galerie !
               </p>
               
               <motion.button 
