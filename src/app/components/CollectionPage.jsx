@@ -40,9 +40,9 @@ export default function CollectionPage({ scanCount, onGoToMap, onGoToHome, onGoT
       <Header 
         scanCount={scanCount} 
         onGoToMap={onGoToMap} 
-        onGoToHome={onGoToHome} 
         onGoToCollection={onGoToCollection} 
         onGoToInfo={onGoToInfo}
+        onGoToHome={() => setPage("final")}
       />
 
       <div className="w-full flex justify-start px-2 mt-2">
