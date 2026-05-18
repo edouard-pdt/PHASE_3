@@ -39,7 +39,7 @@ const createCustomIcon = (color, isScanned) => {
 };
 
 const dataNetwork = [
-  // 🏺 OBJET 1 : LE VASE CHIMU (Thème : Récipients Rituels)
+  // 🏺 OBJET 1 : LE VASE CHIMU
   { id: "1", lat: -8.11, lng: -79.03, color: "cream", nom: "Vase Zoomorphe CHIMU", pays: "Pérou (Amériques)", description: "Récipient rituel en terre cuite de la culture Chimu.", image: "./image/1.png", isMain: true },
   { id: "1-c1", parentId: "1", lat: 29.97, lng: 31.13, color: "pink", nom: "Vase Canope", pays: "Égypte (Afrique)", description: "Récipient funéraire protégeant les organes vitaux de l'au-delà.", image: "./image/11.png", isMain: false },
   { id: "1-c2", parentId: "1", lat: 37.98, lng: 23.72, color: "blue", nom: "Cratère à figures rouges", pays: "Grèce (Europe)", description: "Vase antique pour le mélange de l'eau et du vin lors des banquets.", image: "./image/12.png", isMain: false },
@@ -47,7 +47,7 @@ const dataNetwork = [
   { id: "1-c4", parentId: "1", lat: -17.71, lng: 178.06, color: "purple", nom: "Coupe Tanoa", pays: "Fidji (Océanie)", description: "Grande coupe de bois sculptée pour la boisson partagée du kava.", image: "./image/14.png", isMain: false },
   { id: "1-c5", parentId: "1", lat: 32.42, lng: 53.68, color: "yellow", nom: "Rhyton Perse", pays: "Iran (Moyen-Orient)", description: "Vase cérémoniel d'apparat en métal précieux sculpté.", image: "./image/15.png", isMain: false },
 
-  // ✨ OBJET 4 : LE FLACON OTTOMAN (Thème : Parfums et Cosmétiques)
+  // ✨ OBJET 4 : LE FLACON OTTOMAN
   { id: "4", lat: 36.80, lng: 10.18, color: "pink", nom: "Flacon à parfum ottoman", pays: "Tunisie (Afrique)", description: "Hexagonal et en argent, surmonté d'oiseaux et de perles.", image: "./image/4.png", isMain: true },
   { id: "4-c1", parentId: "4", lat: 37.9, lng: 22.9, color: "blue", nom: "Aryballe Corinthien", pays: "Grèce (Europe)", description: "Petit vase antique servant à stocker l'huile parfumée des athlètes.", image: "./image/c_aryballe.png", isMain: false },
   { id: "4-c2", parentId: "4", lat: 35.0, lng: 105.0, color: "orange", nom: "Flacon Tabatière", pays: "Chine (Asie)", description: "Fiole miniature richement décorée pour conserver les poudres odorantes.", image: "./image/c_tabatiere.png", isMain: false },
@@ -170,7 +170,7 @@ export default function MapPage({
               </Marker>
             )}
 
-            {/* Les Cousins (Tooltip réactif au survol / clic) */}
+            {/* Les Cousins */}
             {activeObj && animationStep === 3 && cousins.map(obj => (
               <Marker 
                 key={`cousin-${activeBlockId}-${obj.id}`}
@@ -199,10 +199,23 @@ export default function MapPage({
               className="absolute bottom-4 left-4 right-4 z-[9999] flex p-3 items-center"
               style={{ backgroundColor: colors.cream, borderRadius: 24, border: `3px solid ${colors.black}`, boxShadow: "0 10px 25px rgba(0,0,0,0.3)" }}
             >
-              <img src={selectedObj.image} style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 12, border: `2px solid ${colors.black}` }} alt="" />
+              {/* 🛠️ MODIFICATION ICI : Image contenue et couleur dynamique */}
+              <img 
+                src={selectedObj.image} 
+                alt={selectedObj.nom}
+                style={{ 
+                  width: 60, 
+                  height: 60, 
+                  objectFit: "contain", // Rentre parfaitement dans le cadre
+                  padding: "4px",       // Petite marge pour respirer
+                  backgroundColor: colors[selectedObj.color] || colors.cream, // Couleur dynamique !
+                  borderRadius: 12, 
+                  border: `2px solid ${colors.black}` 
+                }} 
+              />
               <div className="ml-4 flex-1">
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, fontFamily: "'Poppins', sans-serif" }}>{selectedObj.nom}</h3>
-                <p style={{ margin: 0, fontSize: 11, color: "#555", fontFamily: "'Poppins', sans-serif", lineHeight: 1.2 }}>{selectedObj.description}</p>
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, fontFamily: "'Poppins', sans-serif", lineHeight: 1.1 }}>{selectedObj.nom}</h3>
+                <p style={{ margin: 0, fontSize: 11, color: "#555", fontFamily: "'Poppins', sans-serif", lineHeight: 1.2, marginTop: 4 }}>{selectedObj.description}</p>
               </div>
               <button onClick={() => setSelectedObj(null)} className="ml-2 w-8 h-8 flex items-center justify-center rounded-full" style={{ backgroundColor: colors.black, color: colors.cream, fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>✕</button>
             </motion.div>
@@ -231,7 +244,17 @@ export default function MapPage({
                  transition: "all 0.2s ease"
               }}
             >
-              <img src={obj.image} alt={obj.nom} className="w-14 h-14 object-cover rounded-full border-2 border-black bg-white" />
+              {/* 🛠️ MODIFICATION ICI : Image contenue pour la liste du bas */}
+              <img 
+                src={obj.image} 
+                alt={obj.nom} 
+                className="w-14 h-14 rounded-full border-2 border-black" 
+                style={{ 
+                  objectFit: "contain", 
+                  padding: "4px", 
+                  backgroundColor: colors.cream 
+                }} 
+              />
               <div className="ml-3">
                 <p style={{ margin: 0, fontSize: '13px', fontWeight: 800, fontFamily: "'Poppins', sans-serif", color: isActive ? colors.black : colors.cream }}>
                   {obj.nom}
