@@ -183,7 +183,7 @@ function StaticFondBackground() {
 }
 
 export default function App() {
-  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "synthesis" | "info">("intro");
+  const [page, setPage] = useState<"intro" | "name" | "validation" | "explication" | "scan" | "map" | "collection" | "cousins" | "synthesis" | "final" | "info">("intro");
   const [userName, setUserName] = useState("");
   const [scanCount, setScanCount] = useState(0);
   const [n8nCousins, setN8nCousins] = useState<any[]>([]);
@@ -210,8 +210,8 @@ export default function App() {
         minHeight: "100vh",
       }}
     >
-      {/* Cacher le header aussi sur synthesis */}
-      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "synthesis" && page !== "info" && (
+      {/* Cacher le header aussi sur synthesis et final */}
+      {page !== "scan" && page !== "map" && page !== "collection" && page !== "cousins" && page !== "synthesis" && page !== "info" && page !== "final" && (
         <header className="fixed top-0 left-0 right-0 z-30 flex justify-center px-6 pt-6 sm:justify-start sm:px-12">
           <Logo />
         </header>
@@ -293,18 +293,17 @@ export default function App() {
           >
             <StaticFondBackground />
             <ScanPage
-              userName={userName} // 👈 On passe le prénom pour la pop-up de doublon
-              scannedIds={scannedIds} // 👈 On passe la liste pour vérifier les doublons
+              userName={userName} 
+              scannedIds={scannedIds} 
               scanCount={scanCount}
               onScan={() => setScanCount((c) => Math.min(c + 1, 10))}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("scan")} 
-              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
+              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
               onSaveN8NData={(data) => setN8nCousins(data)}
               onGoToCousins={(nomObjet) => {
-                // 🧠 LIAISON INTELLIGENTE : on sauvegarde le nom et on l'ajoute aux objets déjà scannés !
                 if (nomObjet) {
                   setCurrentScannedName(nomObjet);
                   setScannedIds((prev) => [...prev, nomObjet]); 
@@ -328,8 +327,8 @@ export default function App() {
             <MapPage
               scanCount={scanCount}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("scan")}
-              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
+              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")} 
               onGoToInfo={() => setPage("info")}
               n8nCousinsData={n8nCousins}
@@ -351,8 +350,8 @@ export default function App() {
             <CollectionPage
               scanCount={scanCount}
               onGoToMap={(item) => { setMapTarget(item); setPage("map"); }} 
-              onGoToHome={() => setPage("scan")}
-              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
+              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
               onGoToCousins={() => setPage("cousins")}
@@ -372,10 +371,10 @@ export default function App() {
             <StaticFondBackground />
             <CousinsPage
               scanCount={scanCount}
-              scannedObjectName={currentScannedName} // 👈 On envoie le nom mémorisé à la page Cousins
+              scannedObjectName={currentScannedName} 
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("scan")}
-              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
+              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
               onGoToSynthesis={() => setPage("synthesis")}
@@ -414,10 +413,33 @@ export default function App() {
             <InfoPage
               scanCount={scanCount}
               onGoToMap={() => { setMapTarget(null); setPage("map"); }}
-              onGoToHome={() => setPage("scan")}
-              onGoToScan={() => setPage("scan")} // 👈 Nouveau bouton
+              onGoToHome={() => setPage("final")} // 👈 Le clic sur le logo mène à Final
+              onGoToScan={() => setPage("scan")} 
               onGoToCollection={() => setPage("collection")}
               onGoToInfo={() => setPage("info")}
+            />
+          </motion.div>
+        )}
+
+        {/* 🎬 NOUVELLE PAGE FINALE DE PRÉSENTATION */}
+        {page === "final" && (
+          <motion.div
+            key="final"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ position: "relative", minHeight: "100vh" }}
+          >
+            <StaticFondBackground />
+            <FinalCollectionPage
+              userName={userName}
+              onGoToMap={(item) => { setMapTarget(item); setPage("map"); }} 
+              onGoToHome={() => setPage("final")} 
+              onGoToScan={() => setPage("scan")} 
+              onGoToCollection={() => setPage("collection")}
+              onGoToInfo={() => setPage("info")}
+              onGoToCousins={() => setPage("cousins")}
             />
           </motion.div>
         )}
